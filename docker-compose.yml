@@ -1,0 +1,18 @@
+services:
+
+  axon-server:
+    image: axoniq/axonserver:latest
+    container_name: axon-server
+    ports:
+      - "8024:8024"  # HTTP Dashboard (UI)
+      - "8124:8124"  # gRPC (Axon apps connect here)
+    environment:
+      AXONIQ_AXONSERVER_NAME: axon-server
+      AXONIQ_AXONSERVER_HOSTNAME: axon-server
+    volumes:
+      - axon-data:/axonserver/data
+      - axon-events:/axonserver/events
+
+volumes:
+  axon-data:
+  axon-events:

@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: booking-saga-service
+#  datasource:
+#    url: jdbc:postgresql://localhost:5432/airline
+#    username: user
+#    password: password
+
+axon:
+  axonserver:
+    enabled: true
+    servers: localhost:8124
