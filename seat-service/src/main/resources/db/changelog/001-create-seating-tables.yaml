@@ -1,0 +1,45 @@
+databaseChangeLog:
+  - changeSet:
+      id: 001-create-seating-tables
+      author: vstebletsov
+
+      changes:
+        - createTable:
+            tableName: flights
+            columns:
+              - column:
+                  name: flight_number
+                  type: varchar(255)
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: total_seats
+                  type: int
+                  constraints:
+                    nullable: false
+              - column:
+                  name: reserved_seats
+                  type: int
+                  constraints:
+                    nullable: false
+              - column:
+                  name: overbooking_percentage
+                  type: double
+                  constraints:
+                    nullable: false
+
+        - createTable:
+            tableName: bookings
+            columns:
+              - column:
+                  name: booking_id
+                  type: varchar(255)
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: flight_number
+                  type: varchar(255)
+                  constraints:
+                    nullable: false

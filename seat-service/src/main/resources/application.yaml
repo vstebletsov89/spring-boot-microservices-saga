@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: seat-service
+  datasource:
+    url: jdbc:h2:mem:testdb
+    username: pguser
+    password: pgpass
+    driver-class-name: org.h2.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.yaml

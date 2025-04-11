@@ -1,5 +1,18 @@
 services:
 
+  postgres-db:
+    image: postgres:17-alpine
+    container_name: postgres-db
+    restart: always
+    environment:
+      POSTGRES_DB: pgdb
+      POSTGRES_USER: pguser
+      POSTGRES_PASSWORD: pgpass
+    ports:
+      - "5432:5432"
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+
   axon-server:
     image: axoniq/axonserver:latest
     container_name: axon-server
@@ -14,5 +27,6 @@ services:
       - axon-events:/axonserver/events
 
 volumes:
+  pg_data:
   axon-data:
   axon-events:
