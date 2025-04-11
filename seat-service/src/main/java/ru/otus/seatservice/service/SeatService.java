@@ -29,7 +29,8 @@ public class SeatService {
                 .orElseThrow(() -> new RuntimeException("No information about flight"));
 
         if (inventory.getReservedSeats() <
-                Math.floor(inventory.getTotalSeats() * 1.01)) {
+                Math.floor(inventory.getTotalSeats() *
+                        (1.0 + inventory.getOverbookingPercentage() / 100.0))) {
 
             inventory.setReservedSeats(inventory.getReservedSeats() + 1);
             inventoryRepository.save(inventory);

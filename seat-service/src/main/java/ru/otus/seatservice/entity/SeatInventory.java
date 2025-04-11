@@ -17,4 +17,5 @@ public class SeatInventory {
 
     private int totalSeats;
     private int reservedSeats;
+    private double overbookingPercentage;
 }
