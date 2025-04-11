@@ -28,6 +28,9 @@ public class BookingController {
                 request.flightNumber(),
                 request.price()
         );
+        //TODO: add write booking to pg db
+        //TODO: send event to kafka
+        //TODO: read kafka event and send command
         return commandGateway.send(cmd);
     }
 }
