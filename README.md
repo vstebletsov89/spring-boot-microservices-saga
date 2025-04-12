@@ -13,7 +13,7 @@ flight-query-service
 
 kafka streams
 
-Где	@Transactional нужно?
+Где	@Transactional нужно? везде где сохранение в БД
 SeatService	✅ Да
 BookingProjection	✅ Да
 
