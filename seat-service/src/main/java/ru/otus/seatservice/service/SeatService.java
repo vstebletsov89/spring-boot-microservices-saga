@@ -1,9 +1,10 @@
 package ru.otus.seatservice.service;
 
+
 import lombok.RequiredArgsConstructor;
 import org.axonframework.commandhandling.CommandHandler;
-import org.axonframework.modelling.command.AggregateLifecycle;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.otus.common.commands.ReleaseSeatCommand;
 import ru.otus.common.commands.ReserveSeatCommand;
 import ru.otus.common.events.SeatReservationFailedEvent;
@@ -22,6 +23,7 @@ public class SeatService {
     private final SeatInventoryRepository inventoryRepository;
     private final BookingSeatMappingRepository mappingRepository;
 
+    @Transactional
     @CommandHandler
     public void handle(ReserveSeatCommand cmd) {
         SeatInventory inventory = inventoryRepository
@@ -42,6 +44,7 @@ public class SeatService {
         }
     }
 
+    @Transactional
     @CommandHandler
     public void handle(ReleaseSeatCommand cmd) {
         mappingRepository.findById(cmd.bookingId())
