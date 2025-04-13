@@ -1,3 +1,10 @@
+app:
+  kafka:
+    topic:
+      outbound: ticket-service.outbound
+      retry: ticket-service.retry
+      dlt: ticket-service.dlt
+
 spring:
   application:
     name: ticket-service
@@ -7,25 +14,25 @@ spring:
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
-
     streams:
       application-id: ticket-service
       default-key-serde: org.apache.kafka.common.serialization.Serdes$StringSerde
       default-value-serde: org.springframework.kafka.support.serializer.JsonSerde
+    consumer:
+      properties:
+        spring.json.trusted.packages: ru.otus.common.events
+
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/ticketdb
-    username: user
-    password: pass
-    driver-class-name: org.postgresql.Driver
+    url: jdbc:h2:mem:testdb
+    username: pguser
+    password: pgpass
+    driver-class-name: org.h2.Driver
 
   jpa:
     hibernate:
       ddl-auto: update
     show-sql: true
 
-app:
-  kafka:
-    topic:
-      inbound: ticket-service.inbound
-      outbound: ticket-service.outbound
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.yaml

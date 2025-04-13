@@ -9,23 +9,23 @@ databaseChangeLog:
             columns:
               - column:
                   name: flight_number
-                  type: varchar(255)
+                  type: VARCHAR(255)
                   constraints:
                     primaryKey: true
                     nullable: false
               - column:
                   name: total_seats
-                  type: int
+                  type: INT
                   constraints:
                     nullable: false
               - column:
                   name: reserved_seats
-                  type: int
+                  type: INT
                   constraints:
                     nullable: false
               - column:
                   name: overbooking_percentage
-                  type: double
+                  type: DOUBLE
                   constraints:
                     nullable: false
 
@@ -34,12 +34,12 @@ databaseChangeLog:
             columns:
               - column:
                   name: booking_id
-                  type: varchar(255)
+                  type: VARCHAR(255)
                   constraints:
                     primaryKey: true
                     nullable: false
               - column:
                   name: flight_number
-                  type: varchar(255)
+                  type: VARCHAR(255)
                   constraints:
                     nullable: false
