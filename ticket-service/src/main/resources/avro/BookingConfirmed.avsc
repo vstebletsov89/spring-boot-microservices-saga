@@ -1,0 +1,12 @@
+{
+  "namespace": "ru.otus.avro",
+  "type": "record",
+  "name": "BookingConfirmed",
+  "fields": [
+    {"name": "bookingId", "type": "string"},
+    {"name": "flightNumber", "type": "string"},
+    {"name": "userId", "type": "string"},
+    {"name": "seatCount", "type": "int"},
+    {"name": "price", "type": "double"}
+  ]
+}
