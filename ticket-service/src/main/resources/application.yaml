@@ -4,8 +4,16 @@ spring:
 
   kafka:
     bootstrap-servers: localhost:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
     streams:
-      application-id: ticket-streams
-      properties:
-        default.key.serde: org.apache.kafka.common.serialization.Serdes$StringSerde
-        default.value.serde: org.apache.kafka.common.serialization.Serdes$ByteArraySerde
+      application-id: ticket-service
+      default-key-serde: org.apache.kafka.common.serialization.Serdes$StringSerde
+      default-value-serde: org.springframework.kafka.support.serializer.JsonSerde
+
+app:
+  kafka:
+    topic:
+      inbound: ticket-service.inbound
+      outbound: ticket-service.outbound

@@ -1,5 +1,23 @@
 TODO:
 
+REST POST /api/tickets
+|
+v
+TicketController
+|
++--> Kafka -> topic: ticket-service.inbound
+|
+v
+Kafka Streams (Processor)
+|
++--> produce to ticket-service.outbound
+|
+v
+TicketEventConsumer
+|
++--> commandGateway.send(new BookFlightCommand(...))
+
+
 booking-query-service
 
 flight-query-service

@@ -55,7 +55,19 @@
 			<artifactId>spring-kafka</artifactId>
 		</dependency>
 
-	</dependencies>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+		<dependency>
+			<groupId>io.apicurio</groupId>
+			<artifactId>apicurio-registry-serdes-avro-serde</artifactId>
+			<version>${apicurio.version}</version>
+		</dependency>
+
+    </dependencies>
 
 	<build>
 		<plugins>
