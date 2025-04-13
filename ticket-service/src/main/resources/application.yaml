@@ -7,10 +7,22 @@ spring:
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+
     streams:
       application-id: ticket-service
       default-key-serde: org.apache.kafka.common.serialization.Serdes$StringSerde
       default-value-serde: org.springframework.kafka.support.serializer.JsonSerde
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/ticketdb
+    username: user
+    password: pass
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
 
 app:
   kafka:

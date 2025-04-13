@@ -1,14 +1,14 @@
 package ru.otus.ticketservice.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.apache.kafka.clients.producer.KafkaProducer;
-import org.apache.kafka.clients.producer.ProducerRecord;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.otus.common.dto.BookingRequest;
+import ru.otus.common.events.BookingCreatedEvent;
+import ru.otus.ticketservice.service.TicketService;
 
 import java.util.UUID;
 
@@ -17,16 +17,18 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class TicketController {
 
-    private final KafkaProducer<String, BookingRequest> kafkaProducer;
-
-    @Value("${app.kafka.topic.inbound}")
-    private String inboundTopic;
+    private final TicketService ticketService;
 
     @PostMapping
-    public String createBooking(@RequestBody BookingRequest request) {
-        String bookingId = UUID.randomUUID().toString();
-        kafkaProducer.send(new ProducerRecord<>(inboundTopic, bookingId, request));
-        return "Booking request sent. Waiting confirmation";
+    public ResponseEntity<String> bookTicket(@RequestBody BookingRequest request) {
+        UUID bookingId = UUID.randomUUID();
+        BookingCreatedEvent event = new BookingCreatedEvent(
+                request.userId(),
+                request.flightNumber(),
+                bookingId.toString()
+        );
+        ticketService.createBookingRequest(event);
+        return ResponseEntity.ok("Booking request accepted. Waiting confirmation.");
     }
 }
 
