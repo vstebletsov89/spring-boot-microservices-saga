@@ -9,3 +9,7 @@ axon:
   axonserver:
     enabled: true
     servers: localhost:8124
+  serializer:
+    general: jackson
+    events: jackson
+    messages: jackson

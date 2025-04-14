@@ -1,5 +1,6 @@
 package ru.otus.booking.saga;
 
+import lombok.extern.slf4j.Slf4j;
 import org.axonframework.commandhandling.CommandHandler;
 import org.axonframework.eventsourcing.EventSourcingHandler;
 import org.axonframework.modelling.command.AggregateIdentifier;
@@ -14,6 +15,7 @@ import ru.otus.common.events.FlightBookedEvent;
 import static org.axonframework.modelling.command.AggregateLifecycle.apply;
 
 @Aggregate
+@Slf4j
 public class BookingAggregate {
 
     @AggregateIdentifier
@@ -24,6 +26,7 @@ public class BookingAggregate {
 
     @CommandHandler
     public BookingAggregate(BookFlightCommand cmd) {
+
         apply(new FlightBookedEvent(
                 cmd.bookingId(),
                 cmd.userId(),
