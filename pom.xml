@@ -12,6 +12,7 @@
         <module>booking-saga-service</module>
         <module>ticket-service</module>
         <module>seat-service</module>
+        <module>payment-service</module>
     </modules>
 
     <packaging>pom</packaging>
