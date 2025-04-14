@@ -27,8 +27,7 @@ public class BookingAggregate {
         apply(new FlightBookedEvent(
                 cmd.bookingId(),
                 cmd.userId(),
-                cmd.flightNumber(),
-                cmd.price()));
+                cmd.flightNumber()));
     }
 
     @EventSourcingHandler

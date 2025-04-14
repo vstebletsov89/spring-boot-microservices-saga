@@ -14,10 +14,12 @@ public class DltPublisher {
 
     public void publish(String topic, String key, String message) {
         kafkaTemplate.send(topic, key, message)
-                .addCallback(
-                        result -> log.info("Sent to DLT: {}", message),
-                        ex -> log.error("Failed to send to DLT", ex)
-                );
+                .thenAccept(result ->
+                        log.info("Sent to DLT: {}", message))
+                .exceptionally(ex -> {
+                    log.error("Failed to send to DLT", ex);
+                    return null;
+                });
     }
 }
 

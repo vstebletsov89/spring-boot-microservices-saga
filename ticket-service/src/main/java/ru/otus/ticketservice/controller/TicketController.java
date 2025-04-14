@@ -32,26 +32,3 @@ public class TicketController {
     }
 }
 
-//@RestController
-//@RequestMapping("/api/bookings")
-//public class TicketController {
-//
-//    @Autowired
-//    private CommandGateway commandGateway;
-//
-//    @PostMapping
-//    public CompletableFuture<String> createBooking(@RequestBody BookingRequest request) {
-//        String bookingId = UUID.randomUUID().toString();
-//        BookFlightCommand cmd = new BookFlightCommand(
-//                bookingId,
-//                request.userId(),
-//                request.flightNumber(),
-//                request.price()
-//        );
-//        //TODO: add write booking to pg db
-//        //TODO: send event to kafka
-//        //TODO: read kafka event and send command
-//        return commandGateway.send(cmd);
-//    }
-//}
-

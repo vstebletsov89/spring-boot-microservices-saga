@@ -2,7 +2,6 @@ app:
   kafka:
     topic:
       outbound: ticket-service.outbound
-      retry: ticket-service.retry
       dlt: ticket-service.dlt
 
 spring:
@@ -13,11 +12,11 @@ spring:
     bootstrap-servers: localhost:9092
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
-      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
     streams:
       application-id: ticket-service
       default-key-serde: org.apache.kafka.common.serialization.Serdes$StringSerde
-      default-value-serde: org.springframework.kafka.support.serializer.JsonSerde
+      default-value-serde: org.apache.kafka.common.serialization.Serdes$StringSerde
     consumer:
       properties:
         spring.json.trusted.packages: ru.otus.common.events

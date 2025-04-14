@@ -15,9 +15,6 @@ public class KafkaTopicsConfig {
     @Value("${app.kafka.topic.dlt}")
     private String dltTopic;
 
-    @Value("${app.kafka.topic.retry}")
-    private String retryTopic;
-
     @Bean
     public NewTopic outboundTopic() {
         return TopicBuilder.name(outboundTopic)
@@ -32,14 +29,5 @@ public class KafkaTopicsConfig {
                 .name(dltTopic)
                 .partitions(1)
                 .replicas(1).build();
-    }
-
-    @Bean
-    public NewTopic retryTopic() {
-        return TopicBuilder
-                .name(retryTopic)
-                .partitions(1)
-                .replicas(1)
-                .build();
     }
 }
