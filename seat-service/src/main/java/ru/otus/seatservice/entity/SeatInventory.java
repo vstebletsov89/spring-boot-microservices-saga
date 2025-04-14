@@ -15,6 +15,7 @@ public class SeatInventory {
     @Id
     private String flightNumber;
 
+    private double price;
     private int totalSeats;
     private int reservedSeats;
     private double overbookingPercentage;

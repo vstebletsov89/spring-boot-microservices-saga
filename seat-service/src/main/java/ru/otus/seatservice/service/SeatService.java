@@ -43,7 +43,12 @@ public class SeatService {
             inventoryRepository.save(inventory);
             mappingRepository.save(new BookingSeatMapping(cmd.bookingId(), cmd.flightNumber()));
             log.info("Seat was reserved for: {}", cmd);
-            eventGateway.publish(new SeatReservedEvent(cmd.bookingId()));
+            eventGateway.publish(
+                    new SeatReservedEvent(
+                            cmd.bookingId(),
+                            cmd.flightNumber(),
+                            cmd.userId(),
+                            inventory.getPrice()));
         } else {
             log.info("Reservation failed for: {}", cmd);
             eventGateway.publish(new SeatReservationFailedEvent(cmd.bookingId()));

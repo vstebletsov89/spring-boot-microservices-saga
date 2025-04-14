@@ -9,8 +9,12 @@ import org.axonframework.spring.stereotype.Saga;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.otus.common.commands.CancelBookingCommand;
 import ru.otus.common.commands.ConfirmBookingCommand;
+import ru.otus.common.commands.ProcessPaymentCommand;
+import ru.otus.common.commands.ReleaseSeatCommand;
 import ru.otus.common.commands.ReserveSeatCommand;
 import ru.otus.common.events.FlightBookedEvent;
+import ru.otus.common.events.PaymentFailedEvent;
+import ru.otus.common.events.PaymentProcessedEvent;
 import ru.otus.common.events.SeatReservationFailedEvent;
 import ru.otus.common.events.SeatReservedEvent;
 
@@ -35,7 +39,25 @@ public class BookingSaga {
     @SagaEventHandler(associationProperty = "bookingId")
     public void on(SeatReservedEvent event) {
         log.info("Seat reserved for: {}", event);
+        commandGateway.send(new ProcessPaymentCommand(
+                event.bookingId(),
+                event.userId(),
+                event.amount()
+        ));
+    }
+
+    @SagaEventHandler(associationProperty = "bookingId")
+    public void on(PaymentProcessedEvent event) {
+        log.info("Payment successful: {}", event);
         commandGateway.send(new ConfirmBookingCommand(event.bookingId()));
+        SagaLifecycle.end();
+    }
+
+    @SagaEventHandler(associationProperty = "bookingId")
+    public void on(PaymentFailedEvent event) {
+        log.warn("Payment failed: {}", event);
+        commandGateway.send(new CancelBookingCommand(event.bookingId()));
+        commandGateway.send(new ReleaseSeatCommand(event.bookingId()));
         SagaLifecycle.end();
     }
 
