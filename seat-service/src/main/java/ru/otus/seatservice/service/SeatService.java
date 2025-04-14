@@ -4,6 +4,7 @@ package ru.otus.seatservice.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.axonframework.commandhandling.CommandHandler;
+import org.axonframework.eventhandling.gateway.EventGateway;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.otus.common.commands.ReleaseSeatCommand;
@@ -24,6 +25,7 @@ public class SeatService {
 
     private final SeatInventoryRepository inventoryRepository;
     private final BookingSeatMappingRepository mappingRepository;
+    private final EventGateway eventGateway;
 
     @Transactional
     @CommandHandler
@@ -41,10 +43,10 @@ public class SeatService {
             inventoryRepository.save(inventory);
             mappingRepository.save(new BookingSeatMapping(cmd.bookingId(), cmd.flightNumber()));
             log.info("Seat was reserved for: {}", cmd);
-            apply(new SeatReservedEvent(cmd.bookingId()));
+            eventGateway.publish(new SeatReservedEvent(cmd.bookingId()));
         } else {
             log.info("Reservation failed for: {}", cmd);
-            apply(new SeatReservationFailedEvent(cmd.bookingId()));
+            eventGateway.publish(new SeatReservationFailedEvent(cmd.bookingId()));
         }
     }
 
