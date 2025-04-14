@@ -2,7 +2,7 @@ spring:
   application:
     name: seat-service
   datasource:
-    url: jdbc:h2:mem:testdb
+    url: jdbc:h2:mem:seatdb
     username: pguser
     password: pgpass
     driver-class-name: org.h2.Driver
