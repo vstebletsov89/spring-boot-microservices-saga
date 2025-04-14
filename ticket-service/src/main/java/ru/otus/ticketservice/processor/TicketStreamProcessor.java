@@ -30,6 +30,7 @@ public class TicketStreamProcessor {
     @Bean
     public KStream<String, String> kStream(StreamsBuilder builder)  {
         KStream<String, String> stream = builder.stream(topic);
+        log.info("Kafka Streams is starting to listen to topic: {}", topic);
 
         stream.foreach((key, value) -> {
             try {

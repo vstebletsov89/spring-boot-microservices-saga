@@ -1,46 +1,39 @@
 package ru.otus.ticketservice.config;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.kafka.streams.StreamsConfig;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
-import org.springframework.boot.ssl.SslBundles;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import ru.otus.ticketservice.service.BookingProcessor;
+import org.springframework.kafka.annotation.KafkaStreamsDefaultConfiguration;
+import org.springframework.kafka.config.KafkaStreamsConfiguration;
 
+import java.util.HashMap;
 import java.util.Map;
 
-@Slf4j
+import static org.apache.kafka.streams.StreamsConfig.*;
+
 @Configuration
 public class KafkaStreamsConfig {
 
-    private final KafkaProperties kafkaProperties;
-    private final BookingProcessor bookingProcessor;
-    private final ObjectMapper objectMapper;
-    private final String applicationId;
-    private final String outboundTopic;
+    @Value("${spring.kafka.bootstrap-servers}")
+    private String bootstrapServers;
 
-    public KafkaStreamsConfig(
-            KafkaProperties kafkaProperties,
-            BookingProcessor bookingProcessor,
-            ObjectMapper objectMapper,
-            @Value("${spring.kafka.streams.application-id}") String applicationId,
-            @Value("${app.kafka.topic.outbound}") String outboundTopic
-    ) {
-        this.kafkaProperties = kafkaProperties;
-        this.bookingProcessor = bookingProcessor;
-        this.objectMapper = objectMapper;
-        this.applicationId = applicationId;
-        this.outboundTopic = outboundTopic;
+    @Value("${spring.kafka.streams.application-id}")
+    private String applicationId;
+
+    @Value("${spring.kafka.streams.default-key-serde}")
+    private String defaultKeySerde;
+
+    @Value("${spring.kafka.streams.default-value-serde}")
+    private String defaultValueSerde;
+
+    @Bean(name = KafkaStreamsDefaultConfiguration.DEFAULT_STREAMS_CONFIG_BEAN_NAME)
+    KafkaStreamsConfiguration kStreamsConfig() {
+        Map<String, Object> props = new HashMap<>();
+        props.put(APPLICATION_ID_CONFIG, applicationId);
+        props.put(BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
+        props.put(DEFAULT_KEY_SERDE_CLASS_CONFIG, defaultKeySerde);
+        props.put(DEFAULT_VALUE_SERDE_CLASS_CONFIG, defaultValueSerde);
+
+        return new KafkaStreamsConfiguration(props);
     }
-
-    @Bean
-    public StreamsConfig streamsConfig(SslBundles sslBundles) {
-        Map<String, Object> props = kafkaProperties.buildStreamsProperties(sslBundles);
-        props.put(StreamsConfig.APPLICATION_ID_CONFIG, applicationId);
-        return new StreamsConfig(props);
-    }
-
 }
