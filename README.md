@@ -10,6 +10,7 @@ TODO:
 !все сервисы в docker
 !eventual consistency?
 !нарисовать диаграмму
+!добавить avro и schema registry?
 
 ---
 
