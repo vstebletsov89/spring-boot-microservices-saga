@@ -2,6 +2,7 @@ package ru.otus.seatservice.service;
 
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.axonframework.commandhandling.CommandHandler;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,6 +19,7 @@ import static org.axonframework.modelling.command.AggregateLifecycle.apply;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class SeatService {
 
     private final SeatInventoryRepository inventoryRepository;
@@ -26,6 +28,7 @@ public class SeatService {
     @Transactional
     @CommandHandler
     public void handle(ReserveSeatCommand cmd) {
+        log.info("Try to reserve seat: {}", cmd);
         SeatInventory inventory = inventoryRepository
                 .findById(cmd.flightNumber())
                 .orElseThrow(() -> new RuntimeException("No information about flight"));
@@ -37,9 +40,10 @@ public class SeatService {
             inventory.setReservedSeats(inventory.getReservedSeats() + 1);
             inventoryRepository.save(inventory);
             mappingRepository.save(new BookingSeatMapping(cmd.bookingId(), cmd.flightNumber()));
-
+            log.info("Seat was reserved for: {}", cmd);
             apply(new SeatReservedEvent(cmd.bookingId()));
         } else {
+            log.info("Reservation failed for: {}", cmd);
             apply(new SeatReservationFailedEvent(cmd.bookingId()));
         }
     }
@@ -47,6 +51,7 @@ public class SeatService {
     @Transactional
     @CommandHandler
     public void handle(ReleaseSeatCommand cmd) {
+        log.info("Cancel seat reservation for: {}", cmd);
         mappingRepository.findById(cmd.bookingId())
                 .flatMap(mapping ->
                         inventoryRepository
