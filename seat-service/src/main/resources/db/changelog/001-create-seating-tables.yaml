@@ -5,7 +5,7 @@ databaseChangeLog:
 
       changes:
         - createTable:
-            tableName: flights
+            tableName: seat_inventory
             columns:
               - column:
                   name: flight_number

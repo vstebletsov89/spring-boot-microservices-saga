@@ -2,6 +2,6 @@ POST http://localhost:8083/api/tickets
 Content-Type: application/json
 
 {
-  "userId": 1,
-  "flightNumber": "AA1404"
+  "userId": "1",
+  "flightNumber": "AA1001"
 }
