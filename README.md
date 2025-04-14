@@ -1,14 +1,15 @@
 TODO:
 
-!ticket-read-service
 !flight-service
+!ticket-read-service
 !notification-service
-!payment-service
 !тесты для kafka/kafka streams
 !тесты для основной логики saga в оркестраторе
 !discovery-service
 !api-gateway
-
+!все сервисы в docker
+!eventual consistency?
+!нарисовать диаграмму
 
 ---
 
@@ -132,15 +133,6 @@ kafka streams
 Где	@Transactional нужно? везде где сохранение в БД
 SeatService	✅ Да
 BookingProjection	✅ Да
-
-
-
-тесты для:
-<module>booking-saga-service</module>
-<module>ticket-service</module>
-<module>seat-service</module>
-<module>booking-query-service</module>
-<module>flight-query-service</module>
 
 добавить все сервисы в docker и docker compose
 
