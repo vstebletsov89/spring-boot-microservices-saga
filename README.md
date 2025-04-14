@@ -137,3 +137,34 @@ BookingProjection	✅ Да
 добавить все сервисы в docker и docker compose
 
 переключени на Postgresql
+
+Вот верная, чёткая и подробная диаграмма **Booking Saga**, полностью соответствующая вашему коду:
+
+```
+FlightBookedEvent (Старт Саги)
+          │
+          ▼
+Команда ReserveSeatCommand ────▶ Seat Service (резервирование мест)
+          │                                      │
+          │                                      ├── SeatReservedEvent ────▶ ProcessPaymentCommand ────▶ Payment Service
+          │                                      │                                      │
+          │                                      │                                      ├── PaymentProcessedEvent ────▶ ConfirmBookingCommand ────▶ Booking Service (Конец Саги)
+          │                                      │                                      │
+          │                                      │                                      └── PaymentFailedEvent ────▶ CancelBookingCommand ────▶ Booking Service
+          │                                      │                                                              │
+          │                                      │                                                              └── ReleaseSeatCommand ────▶ Seat Service (освобождение места) (Конец Саги)
+          │                                      │
+          │                                      └── SeatReservationFailedEvent ────▶ CancelBookingCommand ────▶ Booking Service (Конец Саги)
+```
+
+### Пояснения:
+- **Happy Path** (успешный сценарий):
+    - FlightBookedEvent → ReserveSeatCommand → SeatReservedEvent → ProcessPaymentCommand → PaymentProcessedEvent → ConfirmBookingCommand.
+
+- **Ошибка платежа**:
+    - FlightBookedEvent → ReserveSeatCommand → SeatReservedEvent → ProcessPaymentCommand → PaymentFailedEvent → CancelBookingCommand и ReleaseSeatCommand.
+
+- **Ошибка резервирования места**:
+    - FlightBookedEvent → ReserveSeatCommand → SeatReservationFailedEvent → CancelBookingCommand.
+
+Это полностью отражает реализацию вашего кода саги и корректные сценарии, обработку успешных и неуспешных случаев.
