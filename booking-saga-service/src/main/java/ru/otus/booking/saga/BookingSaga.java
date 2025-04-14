@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.axonframework.modelling.saga.SagaEventHandler;
 import org.axonframework.modelling.saga.SagaLifecycle;
+import org.axonframework.modelling.saga.StartSaga;
 import org.axonframework.spring.stereotype.Saga;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.otus.common.commands.CancelBookingCommand;
@@ -20,6 +21,7 @@ public class BookingSaga {
     @Autowired
     private transient CommandGateway commandGateway;
 
+    @StartSaga
     @SagaEventHandler(associationProperty = "bookingId")
     public void on(FlightBookedEvent event) {
         log.info("Try to reserve seat for: {}", event);
