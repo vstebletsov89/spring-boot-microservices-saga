@@ -1,11 +1,13 @@
 TODO:
 
+!добавить миграцию таблицы flights в query сервис
+!добавить публикацию событиый в flight-service
+!проверить интеграцию flight сервисов, что события синхронизируются
 
 FlightQueryService
 └── Отдельная проекция для оптимизированных запросов на чтение
 
-!flight-service merge with seat service
-!ticket-read-service
+
 !notification-service
 !тесты для kafka/kafka streams
 !тесты для основной логики saga в оркестраторе
