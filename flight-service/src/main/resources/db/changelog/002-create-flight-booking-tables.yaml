@@ -34,10 +34,10 @@ databaseChangeLog:
                   name: overbooking_percentage
                   type: NUMERIC(5,2)
               - column:
-                  name: departure_airport
+                  name: departure_airport_code
                   type: varchar(10)
               - column:
-                  name: arrival_airport
+                  name: arrival_airport_code
                   type: varchar(10)
 
   - changeSet:

@@ -14,8 +14,8 @@ databaseChangeLog:
               - column: { name: total_seats, valueNumeric: 180 }
               - column: { name: reserved_seats, valueNumeric: 20 }
               - column: { name: overbooking_percentage, valueNumeric: 5.00 }
-              - column: { name: departure_airport, value: "JFK" }
-              - column: { name: arrival_airport, value: "LAX" }
+              - column: { name: departure_airport_code, value: "JFK" }
+              - column: { name: arrival_airport_code, value: "LAX" }
         - insert:
             tableName: flights
             columns:
@@ -27,8 +27,8 @@ databaseChangeLog:
               - column: { name: total_seats, valueNumeric: 200 }
               - column: { name: reserved_seats, valueNumeric: 40 }
               - column: { name: overbooking_percentage, valueNumeric: 7.00 }
-              - column: { name: departure_airport, value: "CDG" }
-              - column: { name: arrival_airport, value: "JFK" }
+              - column: { name: departure_airport_code, value: "CDG" }
+              - column: { name: arrival_airport_code, value: "JFK" }
         - insert:
             tableName: flights
             columns:
@@ -40,8 +40,8 @@ databaseChangeLog:
               - column: { name: total_seats, valueNumeric: 150 }
               - column: { name: reserved_seats, valueNumeric: 30 }
               - column: { name: overbooking_percentage, valueNumeric: 6.00 }
-              - column: { name: departure_airport, value: "CDG" }
-              - column: { name: arrival_airport, value: "HND" }
+              - column: { name: departure_airport_code, value: "CDG" }
+              - column: { name: arrival_airport_code, value: "HND" }
         - insert:
             tableName: flights
             columns:
@@ -53,8 +53,8 @@ databaseChangeLog:
               - column: { name: total_seats, valueNumeric: 220 }
               - column: { name: reserved_seats, valueNumeric: 50 }
               - column: { name: overbooking_percentage, valueNumeric: 4.50 }
-              - column: { name: departure_airport, value: "DXB" }
-              - column: { name: arrival_airport, value: "JFK" }
+              - column: { name: departure_airport_code, value: "DXB" }
+              - column: { name: arrival_airport_code, value: "JFK" }
         - insert:
             tableName: flights
             columns:
@@ -66,5 +66,5 @@ databaseChangeLog:
               - column: { name: total_seats, valueNumeric: 190 }
               - column: { name: reserved_seats, valueNumeric: 35 }
               - column: { name: overbooking_percentage, valueNumeric: 6.50 }
-              - column: { name: departure_airport, value: "HND" }
-              - column: { name: arrival_airport, value: "LAX" }
+              - column: { name: departure_airport_code, value: "HND" }
+              - column: { name: arrival_airport_code, value: "LAX" }
