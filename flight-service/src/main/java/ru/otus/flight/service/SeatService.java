@@ -9,14 +9,19 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.otus.common.commands.ReleaseSeatCommand;
 import ru.otus.common.commands.ReserveSeatCommand;
+import ru.otus.common.enums.BookingStatus;
 import ru.otus.common.events.SeatReservationFailedEvent;
 import ru.otus.common.events.SeatReservedEvent;
 import ru.otus.flight.entity.BookingSeatMapping;
-import ru.otus.flight.entity.SeatInventory;
+import ru.otus.flight.entity.Flight;
 import ru.otus.flight.repository.BookingSeatMappingRepository;
 import ru.otus.flight.repository.FlightRepository;
 
-import static org.axonframework.modelling.command.AggregateLifecycle.apply;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.time.OffsetDateTime;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -30,44 +35,86 @@ public class SeatService {
     @Transactional
     @CommandHandler
     public void handle(ReserveSeatCommand cmd) {
-        log.info("Try to reserve seat: {}", cmd);
+        log.info("Attempting to reserve seat: {}", cmd);
+
         var flight = flightRepository
                 .findById(cmd.flightNumber())
-                .orElseThrow(() -> new RuntimeException("No information about flight"));
+                .orElseThrow(() -> new RuntimeException("Flight not found: " + cmd.flightNumber()));
 
-        if (flight.getReservedSeats() <
-                Math.floor(flight.getTotalSeats() *
-                        (1.0 + flight.getOverbookingPercentage() / 100.0))) {
+        // freeSeats = totalSeats * (1.0 + (overbookingPercentage / 100.0))
+        BigDecimal freeSeats = BigDecimal.valueOf(flight.getTotalSeats())
+                .multiply(BigDecimal.ONE
+                        .add(flight.getOverbookingPercentage()
+                                .divide(BigDecimal.valueOf(100), 4, RoundingMode.HALF_UP)));
 
-            flight.setReservedSeats(flight.getReservedSeats() + 1);
-            flightRepository.save(flight);
-            mappingRepository.save(new BookingSeatMapping(cmd.bookingId(), cmd.flightNumber()));
-            log.info("Seat was reserved for: {}", cmd);
-            eventGateway.publish(
-                    new SeatReservedEvent(
-                            cmd.bookingId(),
-                            cmd.flightNumber(),
-                            cmd.userId(),
-                            inventory.getPrice()));
+
+        if (BigDecimal.valueOf(flight.getReservedSeats()).compareTo(freeSeats) < 0) {
+            reserveSeat(flight, cmd);
         } else {
             log.info("Reservation failed for: {}", cmd);
             eventGateway.publish(new SeatReservationFailedEvent(cmd.bookingId()));
         }
     }
 
+    private void reserveSeat(Flight flight, ReserveSeatCommand cmd) {
+        flight.setReservedSeats(flight.getReservedSeats() + 1);
+        flightRepository.save(flight);
+
+        BookingSeatMapping seatMapping = new BookingSeatMapping();
+        seatMapping.setBookingId(cmd.bookingId());
+        seatMapping.setFlightNumber(cmd.flightNumber());
+        seatMapping.setSeatNumber(generateSeatNumber(flight.getFlightNumber()));
+        seatMapping.setReservedAt(OffsetDateTime.now());
+        seatMapping.setStatus(BookingStatus.RESERVED);
+        mappingRepository.save(seatMapping);
+
+        log.info("Seat reserved successfully for bookingId: {}", cmd.bookingId());
+        eventGateway.publish(new SeatReservedEvent(
+                cmd.bookingId(),
+                cmd.flightNumber(),
+                cmd.userId(),
+                flight.getPrice()
+        ));
+    }
+
+    private String generateSeatNumber(String flightNumber) {
+        Set<String> reservedSeats = mappingRepository
+                .findAllByFlightNumber(flightNumber)
+                .stream()
+                .map(BookingSeatMapping::getSeatNumber)
+                .collect(Collectors.toSet());
+
+        int rows = 30;
+        char[] seatLetters = {'A', 'B', 'C', 'D', 'E', 'F'};
+
+        for (int row = 1; row <= rows; row++) {
+            for (char seat : seatLetters) {
+                String seatNumber = seat + String.valueOf(row);
+                if (!reservedSeats.contains(seatNumber)) {
+                    return seatNumber;
+                }
+            }
+        }
+
+        throw new RuntimeException("No available seats");
+    }
+
     @Transactional
     @CommandHandler
     public void handle(ReleaseSeatCommand cmd) {
-        log.info("Cancel seat reservation for: {}", cmd);
-        mappingRepository.findByBookingId(cmd.bookingId())
-                .flatMap(mapping ->
-                        inventoryRepository
-                                .findById(mapping.getFlightNumber()))
-                .ifPresent(inventory -> {
+        log.info("Release seat for: {}", cmd);
 
-            inventory.setReservedSeats(Math.max(0, inventory.getReservedSeats() - 1));
-            inventoryRepository.save(inventory);
-            mappingRepository.deleteById(cmd.bookingId());
+        mappingRepository.findByBookingId(cmd.bookingId())
+                .ifPresent(mapping -> {
+
+            var flightOpt = flightRepository.findById(mapping.getFlightNumber());
+            flightOpt.ifPresent(flight -> {
+                flight.setReservedSeats(Math.max(0, flight.getReservedSeats() - 1));
+                flightRepository.save(flight);
+            });
+
+            mapping.setStatus(BookingStatus.CANCELLED);
+            mappingRepository.save(mapping);
         });
     }
 }

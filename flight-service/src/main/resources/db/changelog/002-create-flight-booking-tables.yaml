@@ -33,6 +33,16 @@ databaseChangeLog:
               - column:
                   name: overbooking_percentage
                   type: NUMERIC(5,2)
+              - column:
+                  name: departure_airport
+                  type: varchar(10)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: arrival_airport
+                  type: varchar(10)
+                  constraints:
+                    nullable: false
 
   - changeSet:
       id: 001-create-booking_seat_mapping-table

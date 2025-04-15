@@ -1,5 +1,9 @@
 TODO:
 
+Seat service
+Flight service + controller
+check migration
+
 FlightInventoryService
 ├── Aggregate Flight (управление расписанием, деталями рейса)
 └── Aggregate SeatInventory (управление местами и овербукингом)

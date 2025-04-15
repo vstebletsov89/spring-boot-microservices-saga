@@ -2,6 +2,7 @@ package ru.otus.flight.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import ru.otus.common.enums.BookingStatus;
 
 import java.time.OffsetDateTime;
 
@@ -38,10 +39,7 @@ public class BookingSeatMapping {
     private OffsetDateTime reservedAt;
 
     @Enumerated(EnumType.STRING)
-    private Status status;
+    private BookingStatus status;
 
-    public enum Status {
-        RESERVED,
-        CANCELLED
-    }
+
 }

@@ -44,13 +44,4 @@ public class Flight {
     @Column(precision = 5, scale = 2)
     private BigDecimal overbookingPercentage;
 
-    public enum FlightStatus {
-        SCHEDULED,
-        BOARDING,
-        DEPARTED,
-        LANDED,
-        CANCELLED,
-        DELAYED
-    }
-
 }

@@ -22,11 +22,5 @@ public class Airport {
     private String city;
 
     private String country;
-
-    private String timezone;
-
-    private String latitude;
-
-    private String longitude;
 }
 
