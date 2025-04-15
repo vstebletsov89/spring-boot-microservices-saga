@@ -15,7 +15,7 @@ import ru.otus.ticket.service.BookingProcessor;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class TicketStreamProcessor {
+public class KafkaTicketStreamProcessor {
 
     private final ObjectMapper objectMapper;
     private final BookingProcessor bookingProcessor;

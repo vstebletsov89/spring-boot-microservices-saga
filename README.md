@@ -1,10 +1,5 @@
 TODO:
 
-Flight service + controller
-
-FlightInventoryService
-├── Aggregate Flight (управление расписанием, деталями рейса)
-└── Aggregate SeatInventory (управление местами и овербукингом)
 
 FlightQueryService
 └── Отдельная проекция для оптимизированных запросов на чтение
