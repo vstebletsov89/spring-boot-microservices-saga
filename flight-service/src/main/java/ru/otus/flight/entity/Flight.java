@@ -2,6 +2,7 @@ package ru.otus.flight.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import ru.otus.common.enums.FlightStatus;
 
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;

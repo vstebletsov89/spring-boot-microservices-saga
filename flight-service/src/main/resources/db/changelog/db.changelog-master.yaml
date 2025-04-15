@@ -6,4 +6,4 @@ databaseChangeLog:
   - include:
       file: db/changelog/003-insert-dummy-airports.yaml
   - include:
-      file: db/changelog/004-insert-dummy-airports.yaml
+      file: db/changelog/004-insert-dummy-flights.yaml
