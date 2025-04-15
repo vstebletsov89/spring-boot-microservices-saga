@@ -7,16 +7,16 @@ import org.axonframework.modelling.saga.SagaLifecycle;
 import org.axonframework.modelling.saga.StartSaga;
 import org.axonframework.spring.stereotype.Saga;
 import org.springframework.beans.factory.annotation.Autowired;
-import ru.otus.common.commands.CancelBookingCommand;
-import ru.otus.common.commands.ConfirmBookingCommand;
-import ru.otus.common.commands.ProcessPaymentCommand;
-import ru.otus.common.commands.ReleaseSeatCommand;
-import ru.otus.common.commands.ReserveSeatCommand;
-import ru.otus.common.events.FlightBookedEvent;
-import ru.otus.common.events.PaymentFailedEvent;
-import ru.otus.common.events.PaymentProcessedEvent;
-import ru.otus.common.events.SeatReservationFailedEvent;
-import ru.otus.common.events.SeatReservedEvent;
+import ru.otus.common.command.CancelBookingCommand;
+import ru.otus.common.command.ConfirmBookingCommand;
+import ru.otus.common.command.ProcessPaymentCommand;
+import ru.otus.common.command.ReleaseSeatCommand;
+import ru.otus.common.command.ReserveSeatCommand;
+import ru.otus.common.event.FlightBookedEvent;
+import ru.otus.common.event.PaymentFailedEvent;
+import ru.otus.common.event.PaymentProcessedEvent;
+import ru.otus.common.event.SeatReservationFailedEvent;
+import ru.otus.common.event.SeatReservedEvent;
 
 @Saga
 @Slf4j

@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.otus.common.events.BookingCreatedEvent;
+import ru.otus.common.event.BookingCreatedEvent;
 import ru.otus.ticket.entity.BookingOutboxEvent;
 import ru.otus.ticket.repository.BookingOutboxRepository;
 

@@ -5,12 +5,12 @@ import org.axonframework.commandhandling.CommandHandler;
 import org.axonframework.eventsourcing.EventSourcingHandler;
 import org.axonframework.modelling.command.AggregateIdentifier;
 import org.axonframework.spring.stereotype.Aggregate;
-import ru.otus.common.commands.BookFlightCommand;
-import ru.otus.common.commands.CancelBookingCommand;
-import ru.otus.common.commands.ConfirmBookingCommand;
-import ru.otus.common.events.BookingCancelledEvent;
-import ru.otus.common.events.BookingConfirmedEvent;
-import ru.otus.common.events.FlightBookedEvent;
+import ru.otus.common.command.BookFlightCommand;
+import ru.otus.common.command.CancelBookingCommand;
+import ru.otus.common.command.ConfirmBookingCommand;
+import ru.otus.common.event.BookingCancelledEvent;
+import ru.otus.common.event.BookingConfirmedEvent;
+import ru.otus.common.event.FlightBookedEvent;
 
 import static org.axonframework.modelling.command.AggregateLifecycle.apply;
 

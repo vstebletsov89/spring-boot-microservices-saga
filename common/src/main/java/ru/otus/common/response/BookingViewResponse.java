@@ -1,4 +1,4 @@
-package ru.otus.common.dto;
+package ru.otus.common.response;
 
 public record BookingViewResponse(
         String bookingId,

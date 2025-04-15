@@ -7,11 +7,11 @@ import org.axonframework.commandhandling.CommandHandler;
 import org.axonframework.eventhandling.gateway.EventGateway;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.otus.common.commands.ReleaseSeatCommand;
-import ru.otus.common.commands.ReserveSeatCommand;
+import ru.otus.common.command.ReleaseSeatCommand;
+import ru.otus.common.command.ReserveSeatCommand;
 import ru.otus.common.enums.BookingStatus;
-import ru.otus.common.events.SeatReservationFailedEvent;
-import ru.otus.common.events.SeatReservedEvent;
+import ru.otus.common.event.SeatReservationFailedEvent;
+import ru.otus.common.event.SeatReservedEvent;
 import ru.otus.flight.entity.BookingSeatMapping;
 import ru.otus.flight.entity.Flight;
 import ru.otus.flight.repository.BookingSeatMappingRepository;
@@ -60,12 +60,14 @@ public class SeatService {
         flight.setReservedSeats(flight.getReservedSeats() + 1);
         flightRepository.save(flight);
 
-        BookingSeatMapping seatMapping = new BookingSeatMapping();
-        seatMapping.setBookingId(cmd.bookingId());
-        seatMapping.setFlightNumber(cmd.flightNumber());
-        seatMapping.setSeatNumber(generateSeatNumber(flight.getFlightNumber()));
-        seatMapping.setReservedAt(OffsetDateTime.now());
-        seatMapping.setStatus(BookingStatus.RESERVED);
+        BookingSeatMapping seatMapping = BookingSeatMapping.builder()
+                .bookingId(cmd.bookingId())
+                .flightNumber(cmd.flightNumber())
+                .seatNumber(generateSeatNumber(flight.getFlightNumber()))
+                .reservedAt(OffsetDateTime.now())
+                .status(BookingStatus.RESERVED)
+                .build();
+
         mappingRepository.save(seatMapping);
 
         log.info("Seat reserved successfully for bookingId: {}", cmd.bookingId());

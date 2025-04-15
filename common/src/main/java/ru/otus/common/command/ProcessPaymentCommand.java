@@ -1,4 +1,4 @@
-package ru.otus.common.commands;
+package ru.otus.common.command;
 
 import org.axonframework.modelling.command.TargetAggregateIdentifier;
 

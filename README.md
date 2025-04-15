@@ -1,8 +1,6 @@
 TODO:
 
-Seat service
 Flight service + controller
-check migration
 
 FlightInventoryService
 ├── Aggregate Flight (управление расписанием, деталями рейса)
@@ -142,7 +140,7 @@ flight-query-service
 
 kafka streams
 
-Где	@Transactional нужно? везде где сохранение в БД
+Где	Transactional нужно? везде где сохранение в БД
 SeatService	✅ Да
 BookingProjection	✅ Да
 

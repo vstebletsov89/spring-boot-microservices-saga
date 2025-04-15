@@ -8,7 +8,7 @@ import org.apache.kafka.streams.kstream.KStream;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
-import ru.otus.common.events.BookingCreatedEvent;
+import ru.otus.common.event.BookingCreatedEvent;
 import ru.otus.ticket.publisher.DltPublisher;
 import ru.otus.ticket.service.BookingProcessor;
 

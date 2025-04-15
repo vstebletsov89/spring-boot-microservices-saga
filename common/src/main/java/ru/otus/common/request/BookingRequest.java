@@ -1,4 +1,4 @@
-package ru.otus.common.dto;
+package ru.otus.common.request;
 
 public record BookingRequest(
         String userId,

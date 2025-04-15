@@ -5,9 +5,9 @@ import org.axonframework.modelling.command.AggregateIdentifier;
 import org.axonframework.spring.stereotype.Aggregate;
 import org.axonframework.commandhandling.CommandHandler;
 import org.axonframework.eventsourcing.EventSourcingHandler;
-import ru.otus.common.commands.ReleaseSeatCommand;
-import ru.otus.common.commands.ReserveSeatCommand;
-import ru.otus.common.events.SeatReservedEvent;
+import ru.otus.common.command.ReleaseSeatCommand;
+import ru.otus.common.command.ReserveSeatCommand;
+import ru.otus.common.event.SeatReservedEvent;
 import ru.otus.flight.service.SeatService;
 
 @Aggregate

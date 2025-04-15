@@ -1,4 +1,4 @@
-package ru.otus.common.events;
+package ru.otus.common.event;
 
 import java.math.BigDecimal;
 

@@ -1,8 +1,8 @@
-package ru.otus.common.commands;
+package ru.otus.common.command;
 
 import org.axonframework.modelling.command.TargetAggregateIdentifier;
 
-public record BookFlightCommand(
+public record ReserveSeatCommand(
         @TargetAggregateIdentifier String bookingId,
-        String userId,
-        String flightNumber) {}
+        String flightNumber,
+        String userId) {}

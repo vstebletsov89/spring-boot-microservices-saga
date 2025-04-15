@@ -6,8 +6,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import ru.otus.common.dto.BookingRequest;
-import ru.otus.common.events.BookingCreatedEvent;
+import ru.otus.common.request.BookingRequest;
+import ru.otus.common.event.BookingCreatedEvent;
 import ru.otus.ticket.service.TicketService;
 
 import java.util.UUID;
