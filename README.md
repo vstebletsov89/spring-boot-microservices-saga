@@ -1,6 +1,13 @@
 TODO:
 
-!flight-service
+FlightInventoryService
+├── Aggregate Flight (управление расписанием, деталями рейса)
+└── Aggregate SeatInventory (управление местами и овербукингом)
+
+FlightQueryService
+└── Отдельная проекция для оптимизированных запросов на чтение
+
+!flight-service merge with seat service
 !ticket-read-service
 !notification-service
 !тесты для kafka/kafka streams

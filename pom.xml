@@ -11,7 +11,7 @@
         <module>common</module>
         <module>booking-saga-service</module>
         <module>ticket-service</module>
-        <module>seat-service</module>
+        <module>flight-service</module>
         <module>payment-service</module>
     </modules>
 
