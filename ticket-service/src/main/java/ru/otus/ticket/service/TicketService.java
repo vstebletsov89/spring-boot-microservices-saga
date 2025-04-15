@@ -32,7 +32,6 @@ public class TicketService {
                 .id(UUID.randomUUID())
                 .aggregateType("Booking")
                 .aggregateId(bookingCreatedEvent.bookingId())
-                .type("BookingRequested")
                 .payload(payload)
                 .createdAt(OffsetDateTime.now())
                 .sent(false)

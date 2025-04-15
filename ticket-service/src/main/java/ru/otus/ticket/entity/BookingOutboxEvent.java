@@ -27,7 +27,6 @@ public class BookingOutboxEvent {
 
     private String aggregateType;
     private String aggregateId;
-    private String type;
 
     @Lob
     private String payload;
