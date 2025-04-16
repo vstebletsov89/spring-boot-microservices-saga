@@ -3,8 +3,8 @@ package ru.otus.common.request;
 import java.time.ZonedDateTime;
 
 public record FlightSearchRequest(
-        String fromCity,
-        String toCity,
+        String fromCode,
+        String toCode,
         ZonedDateTime departureDate,
         ZonedDateTime returnDate,
-        int passengers) {}
+        int passengerCount) {}

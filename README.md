@@ -1,19 +1,13 @@
 TODO:
 
-!добавить миграцию таблицы flights в query сервис
-!добавить публикацию событиый в flight-service
 !проверить интеграцию flight сервисов, что события синхронизируются
 
-FlightQueryService
-└── Отдельная проекция для оптимизированных запросов на чтение
-
-
-!notification-service
+!все сервисы в docker
+!notification-service?
 !тесты для kafka/kafka streams
 !тесты для основной логики saga в оркестраторе
 !discovery-service
 !api-gateway
-!все сервисы в docker
 !eventual consistency?
 !нарисовать диаграмму
 !добавить avro и schema registry?

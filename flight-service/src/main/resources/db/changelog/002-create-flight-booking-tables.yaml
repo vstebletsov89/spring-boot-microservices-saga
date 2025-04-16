@@ -35,10 +35,10 @@ databaseChangeLog:
                   type: NUMERIC(5,2)
               - column:
                   name: departure_airport_code
-                  type: varchar(10)
+                  type: VARCHAR(10)
               - column:
                   name: arrival_airport_code
-                  type: varchar(10)
+                  type: VARCHAR(10)
 
   - changeSet:
       id: 001-create-booking_seat_mapping-table
