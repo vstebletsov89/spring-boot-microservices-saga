@@ -3,13 +3,15 @@ TODO:
 !проверить интеграцию flight сервисов, что события синхронизируются
 
 !все сервисы в docker
-!notification-service?
 !тесты для kafka/kafka streams
 !тесты для основной логики saga в оркестраторе
-!discovery-service
-!api-gateway
-!eventual consistency?
 !нарисовать диаграмму
+
+!helm, k8s
+!notification-service?
+!discovery-service?
+!api-gateway?
+
 !добавить avro и schema registry?
 
 ---
