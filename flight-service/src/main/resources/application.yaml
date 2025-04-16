@@ -1,9 +1,20 @@
 server:
   port: 8083
 
+app:
+  kafka:
+    topic:
+      flights: flight-service.flights
+
 spring:
   application:
     name: flight-service
+
+  kafka:
+    bootstrap-servers: localhost:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
   datasource:
     url: jdbc:h2:mem:flightdb
     username: pguser

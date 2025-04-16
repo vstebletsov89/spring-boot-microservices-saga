@@ -12,6 +12,7 @@
         <module>booking-saga-service</module>
         <module>ticket-service</module>
         <module>flight-service</module>
+        <module>flight-query-service</module>
         <module>payment-service</module>
     </modules>
 

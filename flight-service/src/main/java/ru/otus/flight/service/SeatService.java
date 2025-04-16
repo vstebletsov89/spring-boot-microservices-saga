@@ -10,10 +10,13 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.otus.common.command.ReleaseSeatCommand;
 import ru.otus.common.command.ReserveSeatCommand;
 import ru.otus.common.enums.BookingStatus;
+import ru.otus.common.event.FlightCreatedEvent;
+import ru.otus.common.event.FlightUpdatedEvent;
 import ru.otus.common.event.SeatReservationFailedEvent;
 import ru.otus.common.event.SeatReservedEvent;
 import ru.otus.flight.entity.BookingSeatMapping;
 import ru.otus.flight.entity.Flight;
+import ru.otus.flight.publisher.FlightPublisher;
 import ru.otus.flight.repository.BookingSeatMappingRepository;
 import ru.otus.flight.repository.FlightRepository;
 
@@ -31,6 +34,7 @@ public class SeatService {
     private final FlightRepository flightRepository;
     private final BookingSeatMappingRepository mappingRepository;
     private final EventGateway eventGateway;
+    private final FlightPublisher flightPublisher;
 
     @Transactional
     @CommandHandler
@@ -59,6 +63,7 @@ public class SeatService {
     private void reserveSeat(Flight flight, ReserveSeatCommand cmd) {
         flight.setReservedSeats(flight.getReservedSeats() + 1);
         flightRepository.save(flight);
+        publishFlightUpdatedEvent(flight);
 
         BookingSeatMapping seatMapping = BookingSeatMapping.builder()
                 .bookingId(cmd.bookingId())
@@ -113,10 +118,27 @@ public class SeatService {
             flightOpt.ifPresent(flight -> {
                 flight.setReservedSeats(Math.max(0, flight.getReservedSeats() - 1));
                 flightRepository.save(flight);
+                publishFlightUpdatedEvent(flight);
             });
 
             mapping.setStatus(BookingStatus.CANCELLED);
             mappingRepository.save(mapping);
         });
+    }
+
+    private void publishFlightUpdatedEvent(Flight flight) {
+
+        FlightUpdatedEvent event = new FlightUpdatedEvent(
+                flight.getFlightNumber(),
+                flight.getStatus(),
+                flight.getDepartureTime(),
+                flight.getArrivalTime(),
+                flight.getPrice(),
+                flight.getTotalSeats(),
+                flight.getReservedSeats(),
+                flight.getOverbookingPercentage()
+        );
+
+        flightPublisher.publish(flight.getFlightNumber(), event);
     }
 }
