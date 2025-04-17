@@ -26,7 +26,7 @@ public class FlightPublisher {
                     .thenAccept(result ->
                             log.info("Sent to flights topic: {}", payload))
                     .exceptionally(ex -> {
-                        log.error("Failed to send to flight event", ex);
+                        log.error("Failed to send to flights topic", ex);
                         return null;
                     });
         } catch (JsonProcessingException e) {
