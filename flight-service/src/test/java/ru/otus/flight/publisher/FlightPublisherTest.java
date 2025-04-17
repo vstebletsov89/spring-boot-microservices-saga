@@ -1,7 +1,9 @@
 package ru.otus.flight.publisher;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import org.apache.kafka.clients.producer.RecordMetadata;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -37,6 +39,8 @@ class FlightPublisherTest {
 
     @BeforeEach
     void setUp() {
+        objectMapper.findAndRegisterModules();
+        objectMapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
         MockitoAnnotations.openMocks(this);
         TestUtils.setField(flightPublisher, "topic", "flights-topic");
     }
