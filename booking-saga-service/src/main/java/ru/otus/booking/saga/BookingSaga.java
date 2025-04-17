@@ -23,7 +23,7 @@ import ru.otus.common.event.SeatReservedEvent;
 public class BookingSaga {
 
     @Autowired
-    private transient CommandGateway commandGateway;
+    transient CommandGateway commandGateway;
 
     @StartSaga
     @SagaEventHandler(associationProperty = "bookingId")

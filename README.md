@@ -2,9 +2,11 @@ TODO:
 
 !проверить интеграцию flight сервисов, что события синхронизируются
 
+!тесты для основной логики saga в оркестратореs
+
 !все сервисы в docker
 !тесты для kafka/kafka streams
-!тесты для основной логики saga в оркестраторе
+!добавить avro и schema registry (поместить avro в common?)
 !нарисовать диаграмму
 
 !helm, k8s
@@ -12,7 +14,7 @@ TODO:
 !discovery-service?
 !api-gateway?
 
-!добавить avro и schema registry?
+
 
 ---
 

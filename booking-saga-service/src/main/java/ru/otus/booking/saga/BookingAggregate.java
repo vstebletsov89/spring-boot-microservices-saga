@@ -1,5 +1,6 @@
 package ru.otus.booking.saga;
 
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.axonframework.commandhandling.CommandHandler;
 import org.axonframework.eventsourcing.EventSourcingHandler;
@@ -16,6 +17,7 @@ import static org.axonframework.modelling.command.AggregateLifecycle.apply;
 
 @Aggregate
 @Slf4j
+@Getter
 public class BookingAggregate {
 
     @AggregateIdentifier
