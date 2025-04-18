@@ -2,9 +2,11 @@ TODO:
 
 !проверить интеграцию flight сервисов, что события синхронизируются
 
-!тесты для основной логики saga в оркестратореs
+!тесты для ticket-service
+!тесты для flight-query-service
 !тесты для kafka/kafka streams
-!тесты для сервисов
+!запустить coverage для всего проекта
+!интеграционные тесты?
 
 !все сервисы в docker
 !добавить avro и schema registry (поместить avro в common?)
