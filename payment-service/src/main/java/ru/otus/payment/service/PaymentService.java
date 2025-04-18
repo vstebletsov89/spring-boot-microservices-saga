@@ -20,7 +20,7 @@ public class PaymentService {
     public void process(ProcessPaymentCommand cmd) {
         log.info("Processing payment: {}", cmd);
 
-        if (cmd.amount().compareTo(BigDecimal.ZERO) == 0) {
+        if (cmd.amount().compareTo(BigDecimal.ZERO) <= 0) {
             eventGateway.publish(new PaymentFailedEvent(
                     cmd.bookingId(),
                     cmd.userId(),
