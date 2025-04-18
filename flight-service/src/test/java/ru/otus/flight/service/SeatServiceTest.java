@@ -3,12 +3,15 @@ package ru.otus.flight.service;
 import org.axonframework.eventhandling.gateway.EventGateway;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import ru.otus.common.command.ReleaseSeatCommand;
 import ru.otus.common.command.ReserveSeatCommand;
 import ru.otus.common.enums.BookingStatus;
 import ru.otus.common.enums.FlightStatus;
+import ru.otus.common.event.FlightCreatedEvent;
+import ru.otus.common.event.FlightUpdatedEvent;
 import ru.otus.common.event.SeatReservationFailedEvent;
 import ru.otus.common.event.SeatReservedEvent;
 import ru.otus.flight.entity.BookingSeatMapping;
@@ -49,12 +52,8 @@ public class SeatServiceTest {
     @MockitoBean
     private FlightPublisher flightPublisher;
 
+    @Autowired
     private SeatService seatService;
-
-    @BeforeEach
-    void setup() {
-        seatService = new SeatService(flightRepository, mappingRepository, eventGateway, flightPublisher);
-    }
 
     @Test
     void shouldReserveSeatSuccessfully() {
@@ -69,7 +68,7 @@ public class SeatServiceTest {
         verify(mappingRepository).save(any(BookingSeatMapping.class));
         verify(flightRepository).save(flight);
         verify(eventGateway).publish(any(SeatReservedEvent.class));
-        verify(flightPublisher).publish(eq(FLIGHT_NUMBER), any());
+        verify(flightPublisher).publish(eq(FLIGHT_NUMBER), any(FlightUpdatedEvent.class));
     }
 
     @Test
@@ -102,6 +101,7 @@ public class SeatServiceTest {
 
         verify(flightRepository).save(any());
         verify(mappingRepository).save(any());
+        verify(flightPublisher).publish(eq(FLIGHT_NUMBER), any(FlightUpdatedEvent.class));
     }
 
     @Test
