@@ -77,8 +77,6 @@ class KafkaTicketStreamProcessorTest {
         String value = """
         {
           "bookingId": "invalid",
-          "flightNumber": "invalid",
-          "userId": null
         }
         """;
 
