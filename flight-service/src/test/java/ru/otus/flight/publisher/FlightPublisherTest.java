@@ -2,67 +2,88 @@ package ru.otus.flight.publisher;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import org.junit.jupiter.api.BeforeEach;
+import org.apache.kafka.clients.consumer.ConsumerRecord;
+import org.apache.kafka.clients.consumer.KafkaConsumer;
+import org.apache.kafka.common.serialization.StringDeserializer;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.mockito.Spy;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.kafka.support.SendResult;
+import org.springframework.kafka.test.EmbeddedKafkaBroker;
+import org.springframework.kafka.test.context.EmbeddedKafka;
+import org.springframework.kafka.test.utils.KafkaTestUtils;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
+import org.springframework.test.context.TestPropertySource;
 import ru.otus.common.enums.FlightStatus;
 import ru.otus.common.event.FlightCreatedEvent;
-import utils.TestUtils;
+import ru.otus.flight.config.JacksonConfig;
+import ru.otus.flight.config.KafkaTestConfig;
 
 import java.math.BigDecimal;
+import java.time.Duration;
 import java.time.ZonedDateTime;
-import java.util.concurrent.CompletableFuture;
+import java.util.Collections;
+import java.util.Map;
+import java.util.UUID;
 
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
+@SpringBootTest(classes = {FlightPublisher.class, KafkaTestConfig.class, JacksonConfig.class})
+@EmbeddedKafka(partitions = 1, topics = {"flights-topic"})
+@TestPropertySource(properties = {
+        "spring.kafka.bootstrap-servers=${spring.embedded.kafka.brokers}",
+        "app.kafka.topic.flights=flights-topic"
+})
 class FlightPublisherTest {
 
-    @Mock
+
+    @Autowired
+    private ObjectMapper objectMapper;
+
+    @Autowired
+    private EmbeddedKafkaBroker embeddedKafkaBroker;
+
+    @Autowired
     private KafkaTemplate<String, String> kafkaTemplate;
 
-    @Spy
-    private ObjectMapper objectMapper = new ObjectMapper();
-
-    @InjectMocks
+    @Autowired
     private FlightPublisher flightPublisher;
 
-    @BeforeEach
-    void setUp() {
-        objectMapper.findAndRegisterModules();
-        objectMapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
-        MockitoAnnotations.openMocks(this);
-        TestUtils.setField(flightPublisher, "topic", "flights-topic");
+    private static KafkaConsumer<String, String> consumer;
+
+    @BeforeAll
+    static void setUp(@Autowired EmbeddedKafkaBroker broker) {
+        Map<String, Object> consumerProps = KafkaTestUtils.consumerProps("testGroup", "true", broker);
+        consumer = new KafkaConsumer<>(consumerProps, new StringDeserializer(), new StringDeserializer());
+        consumer.subscribe(Collections.singleton("flights-topic"));
+    }
+
+    @AfterAll
+    static void tearDown() {
+        consumer.close();
+    }
+
+    @DynamicPropertySource
+    static void configureKafka(DynamicPropertyRegistry registry) {
+        registry.add("spring.kafka.bootstrap-servers", () -> "localhost:9092");
     }
 
     @Test
-    void shouldPublishEventSuccessfully() throws Exception {
+    void shouldPublishFlightCreatedEventToKafka() throws JsonProcessingException {
+        String key = UUID.randomUUID().toString();
         FlightCreatedEvent event = getSampleEvent();
-        CompletableFuture<SendResult<String, String>> future = CompletableFuture.completedFuture(
-                new SendResult<>(null, null));
-        when(kafkaTemplate.send(anyString(), anyString(), anyString()))
-                .thenReturn(future);
 
-        flightPublisher.publish("key-123", event);
+        flightPublisher.publish(key, event);
 
-        verify(kafkaTemplate, times(1))
-                .send(eq("flights-topic"), eq("key-123"), anyString());
-    }
+        ConsumerRecord<String, String> record =
+                KafkaTestUtils.getSingleRecord(consumer, "flights-topic", Duration.ofSeconds(10));
 
-    @Test
-    void shouldLogSerializationError() throws Exception {
-        Object badObject = mock(Object.class);
-        when(objectMapper.writeValueAsString(badObject)).thenThrow(JsonProcessingException.class);
-
-        flightPublisher.publish("key-bad", badObject);
-
-        verify(kafkaTemplate, never()).send(any(), any(), any());
+        assertThat(record).isNotNull();
+        assertThat(record.key()).isEqualTo(key);
+        assertThat(record.value()).isEqualTo(objectMapper.writeValueAsString(event));
     }
 
     private FlightCreatedEvent getSampleEvent() {
