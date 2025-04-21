@@ -1,29 +1,43 @@
 package ru.otus.ticket.processor;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.kafka.streams.StreamsBuilder;
-import org.apache.kafka.streams.kstream.ForeachAction;
-import org.apache.kafka.streams.kstream.KStream;
+import org.apache.kafka.clients.producer.ProducerRecord;
+import org.apache.kafka.common.serialization.StringSerializer;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.kafka.core.DefaultKafkaProducerFactory;
+import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.kafka.test.EmbeddedKafkaBroker;
+import org.springframework.kafka.test.context.EmbeddedKafka;
+import org.springframework.kafka.test.utils.KafkaTestUtils;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import ru.otus.common.event.BookingCreatedEvent;
 import ru.otus.ticket.publisher.DltPublisher;
 import ru.otus.ticket.service.BookingProcessor;
 
-import static org.mockito.Mockito.*;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
-@SpringBootTest(classes = KafkaTicketStreamProcessor.class)
+import static org.awaitility.Awaitility.await;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
+
+@SpringBootTest
+@EmbeddedKafka(partitions = 1, topics = {"test-topic", "test-dlt"})
 @TestPropertySource(properties = {
         "app.kafka.topic.outbound=test-topic",
-        "app.kafka.topic.dlt=test-dlt"
+        "app.kafka.topic.dlt=test-dlt",
+        "spring.kafka.bootstrap-servers=${spring.embedded.kafka.brokers}"
 })
 class KafkaTicketStreamProcessorTest {
 
-    @MockitoBean
+    @Autowired
+    private EmbeddedKafkaBroker embeddedKafka;
+
+    @Autowired
     private ObjectMapper objectMapper;
 
     @MockitoBean
@@ -32,70 +46,40 @@ class KafkaTicketStreamProcessorTest {
     @MockitoBean
     private DltPublisher dltPublisher;
 
-    @MockitoBean
-    private StreamsBuilder builder;
-
-    @MockitoBean
-    private KStream<String, String> stream;
-
-    @Autowired
-    private KafkaTicketStreamProcessor processor;
-
-    @Test
-    void shouldProcessValidBookingEvent() throws Exception {
-        String key = "b1";
-        String value = """
-            {
-              "bookingId": "b1",
-              "flightNumber": "FL123",
-              "userId": "1"
-            }
-            """;
-        BookingCreatedEvent event = new BookingCreatedEvent("1", "FL123", "b1");
-
-        KStream<String, String> mockStream = mock(KStream.class);
-        when(builder.<String, String>stream(eq("test-topic"))).thenReturn(mockStream);
-        when(objectMapper.readValue(value, BookingCreatedEvent.class)).thenReturn(event);
-
-        ArgumentCaptor<ForeachAction<String, String>> captor = ArgumentCaptor.forClass(ForeachAction.class);
-        doAnswer(invocation -> {
-            ForeachAction<String, String> action = invocation.getArgument(0);
-            action.apply(key, value);
-            return null;
-        }).when(mockStream).foreach(captor.capture());
-
-        processor.kStream(builder);
-
-        verify(objectMapper).readValue(value, BookingCreatedEvent.class);
-        verify(bookingProcessor).process(event);
-        verifyNoInteractions(dltPublisher);
+    private KafkaTemplate<String, String> createKafkaTemplate() {
+        Map<String, Object> configs = KafkaTestUtils.producerProps(embeddedKafka);
+        var producerFactory = new DefaultKafkaProducerFactory<>(configs, new StringSerializer(), new StringSerializer());
+        return new KafkaTemplate<>(producerFactory);
     }
 
     @Test
-    void shouldSendToDltOnJsonParseException() throws Exception {
-        String key = "b1";
-        String value = """
-        {
-          "bookingId": "invalid",
-        }
-        """;
+    void shouldProcessValidBookingEvent() throws Exception {
+        var event = new BookingCreatedEvent("1", "FL123", "b1");
+        String payload = objectMapper.writeValueAsString(event);
 
-        KStream<String, String> mockStream = mock(KStream.class);
-        when(builder.<String, String>stream(eq("test-topic"))).thenReturn(mockStream);
-        when(objectMapper.readValue(value, BookingCreatedEvent.class))
-                .thenThrow(new RuntimeException("Invalid JSON"));
+        KafkaTemplate<String, String> kafkaTemplate = createKafkaTemplate();
+        kafkaTemplate.send(new ProducerRecord<>("test-topic", "b1", payload));
 
-        ArgumentCaptor<ForeachAction<String, String>> captor = ArgumentCaptor.forClass(ForeachAction.class);
-        doAnswer(invocation -> {
-            ForeachAction<String, String> action = invocation.getArgument(0);
-            action.apply(key, value);
-            return null;
-        }).when(mockStream).foreach(captor.capture());
+        await().atMost(5, TimeUnit.SECONDS).untilAsserted(() -> {
+            verify(bookingProcessor).process(eq(event));
+            verifyNoInteractions(dltPublisher);
+        });
+    }
 
-        processor.kStream(builder);
+    @Test
+    void shouldSendToDltOnJsonParseError() {
+        String invalidJson = """
+            {
+              "bookingId": "b1",
+            }
+            """;
 
-        verify(objectMapper).readValue(value, BookingCreatedEvent.class);
-        verifyNoInteractions(bookingProcessor);
-        verify(dltPublisher).publish("test-dlt", key, value);
+        KafkaTemplate<String, String> kafkaTemplate = createKafkaTemplate();
+        kafkaTemplate.send("test-topic", "b1", invalidJson);
+
+        await().atMost(5, TimeUnit.SECONDS).untilAsserted(() -> {
+            verify(dltPublisher).publish(eq("test-dlt"), eq("b1"), eq(invalidJson));
+            verifyNoInteractions(bookingProcessor);
+        });
     }
 }
