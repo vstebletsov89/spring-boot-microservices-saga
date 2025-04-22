@@ -10,13 +10,9 @@ import ru.otus.common.event.BookingCreatedEvent;
 import ru.otus.ticket.config.JacksonConfig;
 import ru.otus.ticket.repository.BookingOutboxRepository;
 
-import java.lang.reflect.Field;
 import java.time.OffsetDateTime;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.assertj.core.api.Assertions.catchThrowable;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.*;
 
