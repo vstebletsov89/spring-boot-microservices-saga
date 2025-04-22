@@ -1,6 +1,5 @@
 TODO:
 
-!тесты для ticket-service (сервисы, контроллер?)
 !тесты для flight-query-service (kafka, сервисы, контроллер)
 !тесты для kafka/kafka streams
 !подключить JaCoCo ко всему мультимодульному Maven-проекту и установить порог покрытия 80%
