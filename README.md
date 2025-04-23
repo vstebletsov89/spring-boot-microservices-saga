@@ -1,15 +1,17 @@
 mvn clean verify - проверить 70% покрытие тестами
 Rule violated for bundle flight-query-service: instructions covered ratio is 0.04, but expected minimum is 0.70
+----------------------------------------------------
 
 TODO:
 
-!тесты для flight-query-service (kafka, сервисы, контроллер)
-!подключить JaCoCo ко всему мультимодульному Maven-проекту и установить порог покрытия 70%
+!тесты для flight-query-service (FlightSyncService)
+!все сервисы в docker
+!добавить swagger
+!добавить java agent для трейсов
+!добавить grafana + prometheus
 
 !проверить интеграцию flight сервисов, что события синхронизируются
 
-!все сервисы в docker
-!добавить swagger
 !добавить avro и schema registry (поместить avro в common?)
 !нарисовать диаграмму
 
