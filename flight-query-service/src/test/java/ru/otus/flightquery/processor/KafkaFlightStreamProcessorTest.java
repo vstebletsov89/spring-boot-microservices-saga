@@ -16,7 +16,9 @@ import org.springframework.kafka.test.context.EmbeddedKafka;
 import org.springframework.kafka.test.utils.KafkaTestUtils;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import ru.otus.common.enums.FlightStatus;
 import ru.otus.common.event.FlightCreatedEvent;
+import ru.otus.common.event.FlightUpdatedEvent;
 import ru.otus.flightquery.config.JacksonConfig;
 import ru.otus.flightquery.config.KafkaStreamsTestConfig;
 import ru.otus.flightquery.publisher.DltPublisher;
@@ -84,6 +86,34 @@ class KafkaFlightStreamProcessorTest {
             verify(flightSyncService).handleCreated(eq(event));
             verifyNoInteractions(dltPublisher);
         });
+    }
+
+    @Test
+    void shouldProcessFlightUpdatedEvent() throws Exception {
+
+        ZonedDateTime departureTime = ZonedDateTime.parse("2025-04-25T12:00:00Z");
+        ZonedDateTime arrivalTime = departureTime.plusHours(6);
+
+        FlightUpdatedEvent event = new FlightUpdatedEvent(
+                "FL456",
+                FlightStatus.DELAYED,
+                departureTime,
+                arrivalTime,
+                new BigDecimal("799.99"),
+                200,
+                50,
+                new BigDecimal("5.00")
+        );
+
+        String payload = objectMapper.writeValueAsString(event);
+
+        kafkaTemplate.send(new ProducerRecord<>("test-topic", "FL456", payload));
+
+        Awaitility.await().atMost(5, TimeUnit.SECONDS)
+                .untilAsserted(() -> {
+                    verify(flightSyncService).handleUpdated(eq(event));
+                    verifyNoInteractions(dltPublisher);
+                });
     }
 
     @Test
