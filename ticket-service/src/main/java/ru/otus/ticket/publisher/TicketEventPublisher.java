@@ -2,9 +2,8 @@ package ru.otus.ticket.publisher;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.kafka.clients.producer.KafkaProducer;
-import org.apache.kafka.clients.producer.ProducerRecord;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,7 +18,7 @@ import java.util.List;
 public class TicketEventPublisher {
 
     private final BookingOutboxRepository repository;
-    private final KafkaProducer<String, String> producer;
+    private final KafkaTemplate<String, String> kafkaTemplate;
 
     @Value("${app.kafka.topic.outbound}")
     private String topic;
@@ -30,19 +29,16 @@ public class TicketEventPublisher {
         List<BookingOutboxEvent> events = repository.findTop50BySentFalseOrderByCreatedAtAsc();
 
         for (BookingOutboxEvent event : events) {
-            producer.send(new ProducerRecord<>(topic,
-                    event.getAggregateId(), event.getPayload()),
-                    (metadata, exception) -> {
-                if (exception == null) {
-                    event.setSent(true);
-                    repository.save(event);
-                    log.info("Published pending event {}", event);
-                } else {
-                    log.info("Error during publishing event {} {}",
-                            event,
-                            exception.getMessage());
-                }
-            });
+            kafkaTemplate.send(topic, event.getAggregateId(), event.getPayload())
+                    .whenComplete((result, ex) -> {
+                        if (ex == null) {
+                            event.setSent(true);
+                            repository.save(event);
+                            log.info("Published pending event {}", event.getId());
+                        } else {
+                            log.error("Failed to publish event: {}", event.getId(), ex);
+                        }
+                    });
         }
     }
 }
