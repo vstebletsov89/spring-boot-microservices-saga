@@ -1,4 +1,5 @@
 mvn clean verify - проверить 70% покрытие тестами
+Rule violated for bundle flight-query-service: instructions covered ratio is 0.04, but expected minimum is 0.70
 
 TODO:
 
