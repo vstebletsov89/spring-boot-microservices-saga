@@ -13,4 +13,4 @@ public record FlightUpdatedEvent(
         BigDecimal price,
         int totalSeats,
         int reservedSeats,
-        BigDecimal overbookingPercentage) {}
+        BigDecimal overbookingPercentage) implements FlightEvent {}

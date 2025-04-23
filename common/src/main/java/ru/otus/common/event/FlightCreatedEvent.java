@@ -15,4 +15,4 @@ public record FlightCreatedEvent(
         BigDecimal price,
         int totalSeats,
         int reservedSeats,
-        BigDecimal overbookingPercentage) {}
+        BigDecimal overbookingPercentage) implements FlightEvent {}

@@ -43,12 +43,12 @@ public class KafkaFlightStreamProcessor {
                     case "FlightCreatedEvent" -> {
                         FlightCreatedEvent event = objectMapper.readValue(value, FlightCreatedEvent.class);
                         flightSyncService.handleCreated(event);
-                        log.info("Processed FlightCreatedEvent: {}", event.flightNumber());
+                        log.info("Processed FlightCreatedEvent: {}", event);
                     }
                     case "FlightUpdatedEvent" -> {
                         FlightUpdatedEvent event = objectMapper.readValue(value, FlightUpdatedEvent.class);
                         flightSyncService.handleUpdated(event);
-                        log.info("Processed FlightUpdatedEvent: {}", event.flightNumber());
+                        log.info("Processed FlightUpdatedEvent: {}", event);
                     }
                     default -> log.warn("Unknown event type: {}", type);
                 }
