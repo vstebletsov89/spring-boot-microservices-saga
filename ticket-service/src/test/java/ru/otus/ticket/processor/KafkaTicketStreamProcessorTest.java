@@ -3,6 +3,7 @@ package ru.otus.ticket.processor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.serialization.StringSerializer;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -14,6 +15,8 @@ import org.springframework.kafka.test.utils.KafkaTestUtils;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import ru.otus.common.event.BookingCreatedEvent;
+import ru.otus.ticket.config.JacksonConfig;
+import ru.otus.ticket.config.KafkaStreamsTestConfig;
 import ru.otus.ticket.publisher.DltPublisher;
 import ru.otus.ticket.service.BookingProcessor;
 
@@ -25,7 +28,7 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 
-@SpringBootTest
+@SpringBootTest(classes = {KafkaTicketStreamProcessor.class, JacksonConfig.class, KafkaStreamsTestConfig.class})
 @EmbeddedKafka(partitions = 1, topics = {"test-topic", "test-dlt"})
 @TestPropertySource(properties = {
         "app.kafka.topic.outbound=test-topic",
@@ -46,10 +49,12 @@ class KafkaTicketStreamProcessorTest {
     @MockitoBean
     private DltPublisher dltPublisher;
 
-    private KafkaTemplate<String, String> createKafkaTemplate() {
-        Map<String, Object> configs = KafkaTestUtils.producerProps(embeddedKafka);
-        var producerFactory = new DefaultKafkaProducerFactory<>(configs, new StringSerializer(), new StringSerializer());
-        return new KafkaTemplate<>(producerFactory);
+    private KafkaTemplate<String, String> kafkaTemplate;
+
+    @BeforeEach
+    void setupKafkaTemplate() {
+        Map<String, Object> producerProps = KafkaTestUtils.producerProps(embeddedKafka);
+        kafkaTemplate = new KafkaTemplate<>(new DefaultKafkaProducerFactory<>(producerProps, new StringSerializer(), new StringSerializer()));
     }
 
     @Test
@@ -57,7 +62,6 @@ class KafkaTicketStreamProcessorTest {
         var event = new BookingCreatedEvent("1", "FL123", "b1");
         String payload = objectMapper.writeValueAsString(event);
 
-        KafkaTemplate<String, String> kafkaTemplate = createKafkaTemplate();
         kafkaTemplate.send(new ProducerRecord<>("test-topic", "b1", payload));
 
         await().atMost(5, TimeUnit.SECONDS).untilAsserted(() -> {
@@ -74,7 +78,6 @@ class KafkaTicketStreamProcessorTest {
             }
             """;
 
-        KafkaTemplate<String, String> kafkaTemplate = createKafkaTemplate();
         kafkaTemplate.send("test-topic", "b1", invalidJson);
 
         await().atMost(5, TimeUnit.SECONDS).untilAsserted(() -> {
