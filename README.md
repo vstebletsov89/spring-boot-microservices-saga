@@ -4,7 +4,6 @@ Rule violated for bundle flight-query-service: instructions covered ratio is 0.0
 
 TODO:
 
-!тесты для flight-query-service (FlightSyncService)
 !все сервисы в docker
 !добавить swagger
 !добавить java agent для трейсов
@@ -16,6 +15,7 @@ TODO:
 !нарисовать диаграмму
 
 !helm, k8s
+!add linter (findbugs?)
 !notification-service?
 !discovery-service?
 !api-gateway?

@@ -1,5 +1,63 @@
 services:
 
+  booking-saga-service:
+    build: ./booking-saga-service
+    container_name: booking-saga-service
+    ports:
+      - "8081:8080"
+    environment:
+      SERVER_PORT: 8080
+
+  ticket-service:
+    build: ./ticket-service
+    container_name: ticket-service
+    ports:
+      - "8082:8080"
+    environment:
+      SERVER_PORT: 8080
+      SPRING_DATASOURCE_URL: jdbc:h2:mem:tickets
+      SPRING_DATASOURCE_DRIVER_CLASS_NAME: org.h2.Driver
+      SPRING_DATASOURCE_USERNAME: user
+      SPRING_DATASOURCE_PASSWORD: pass
+      SPRING_JPA_HIBERNATE_DDL_AUTO: none
+      SPRING_JPA_SHOW_SQL: "true"
+
+  flight-service:
+    build: ./flight-service
+    container_name: flight-service
+    ports:
+      - "8083:8080"
+    environment:
+      SERVER_PORT: 8080
+      SPRING_DATASOURCE_URL: jdbc:h2:mem:flights_write
+      SPRING_DATASOURCE_DRIVER_CLASS_NAME: org.h2.Driver
+      SPRING_DATASOURCE_USERNAME: user
+      SPRING_DATASOURCE_PASSWORD: pass
+      SPRING_JPA_HIBERNATE_DDL_AUTO: none
+      SPRING_JPA_SHOW_SQL: "true"
+
+  flight-query-service:
+    build: ./flight-query-service
+    container_name: flight-query-service
+    ports:
+      - "8084:8080"
+    environment:
+      SERVER_PORT: 8080
+      SPRING_DATASOURCE_URL: jdbc:h2:mem:flights_read
+      SPRING_DATASOURCE_DRIVER_CLASS_NAME: org.h2.Driver
+      SPRING_DATASOURCE_USERNAME: user
+      SPRING_DATASOURCE_PASSWORD: pass
+      SPRING_JPA_HIBERNATE_DDL_AUTO: none
+      SPRING_JPA_SHOW_SQL: "true"
+
+  payment-service:
+    build:  ./payment-service
+    container_name: payment-service
+    ports:
+      - "8085:8080"
+    environment:
+      SERVER_PORT: 8080
+
   kafka:
     image: apache/kafka:4.0.0
     container_name: kafka
