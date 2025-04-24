@@ -11,7 +11,7 @@ spring:
     name: flight-service
 
   kafka:
-    bootstrap-servers: localhost:9092
+    bootstrap-servers: kafka:29092
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.apache.kafka.common.serialization.StringSerializer
@@ -30,7 +30,7 @@ spring:
 axon:
   axonserver:
     enabled: true
-    servers: localhost:8124
+    servers: axon-server:8124
   serializer:
     general: jackson
     events: jackson

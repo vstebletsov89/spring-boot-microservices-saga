@@ -4,12 +4,10 @@ Rule violated for bundle flight-query-service: instructions covered ratio is 0.0
 
 TODO:
 
-!все сервисы в docker
+!проверить интеграцию flight сервисов, что события синхронизируются
 !добавить swagger
 !добавить java agent для трейсов
 !добавить grafana + prometheus
-
-!проверить интеграцию flight сервисов, что события синхронизируются
 
 !добавить avro и schema registry (поместить avro в common?)
 !нарисовать диаграмму
