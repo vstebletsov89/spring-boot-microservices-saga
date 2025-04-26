@@ -7,7 +7,7 @@ import jakarta.validation.constraints.NotNull;
 import ru.otus.common.enums.FlightStatus;
 
 import java.math.BigDecimal;
-import java.time.ZonedDateTime;
+import java.time.LocalDateTime;
 
 public record CreateFlightRequest(
 
@@ -24,10 +24,10 @@ public record CreateFlightRequest(
         FlightStatus status,
 
         @NotNull
-        ZonedDateTime departureTime,
+        LocalDateTime departureTime,
 
         @NotNull
-        ZonedDateTime arrivalTime,
+        LocalDateTime arrivalTime,
 
         @NotNull @DecimalMin("0.0")
         BigDecimal price,

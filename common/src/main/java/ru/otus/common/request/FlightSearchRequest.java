@@ -1,10 +1,10 @@
 package ru.otus.common.request;
 
-import java.time.ZonedDateTime;
+import java.time.LocalDateTime;
 
 public record FlightSearchRequest(
         String fromCode,
         String toCode,
-        ZonedDateTime departureDate,
-        ZonedDateTime returnDate,
+        LocalDateTime departureDate,
+        LocalDateTime returnDate,
         int passengerCount) {}

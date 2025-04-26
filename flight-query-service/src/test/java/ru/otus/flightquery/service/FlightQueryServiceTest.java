@@ -10,7 +10,7 @@ import ru.otus.flightquery.entity.Flight;
 import ru.otus.flightquery.repository.FlightRepository;
 
 import java.math.BigDecimal;
-import java.time.ZonedDateTime;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -29,7 +29,7 @@ class FlightQueryServiceTest {
     void shouldReturnAvailableFlightsForRoundTrip() {
         Flight outbound = createFlight("FL123", "SVO", "JFK", 180, 100);
         Flight inbound = createFlight("FL321", "JFK", "SVO", 180, 50);
-        var request = new FlightSearchRequest("SVO", "JFK", ZonedDateTime.now(), ZonedDateTime.now().plusDays(7), 2);
+        var request = new FlightSearchRequest("SVO", "JFK", LocalDateTime.now(), LocalDateTime.now().plusDays(7), 2);
 
         when(flightRepository.findFlightsBetweenDates("SVO", "JFK", request.departureDate(), request.returnDate()))
                 .thenReturn(List.of(outbound));
@@ -45,7 +45,7 @@ class FlightQueryServiceTest {
     @Test
     void shouldReturnEmptyIfNotEnoughSeats() {
         Flight outbound = createFlight("FL999", "SVO", "JFK", 180, 179);
-        var request = new FlightSearchRequest("SVO", "JFK", ZonedDateTime.now(), ZonedDateTime.now().plusDays(7), 2);
+        var request = new FlightSearchRequest("SVO", "JFK", LocalDateTime.now(), LocalDateTime.now().plusDays(7), 2);
 
         when(flightRepository.findFlightsBetweenDates("SVO", "JFK", request.departureDate(), request.returnDate()))
                 .thenReturn(List.of(outbound));
@@ -63,8 +63,8 @@ class FlightQueryServiceTest {
                 .flightNumber(number)
                 .departureAirportCode(from)
                 .arrivalAirportCode(to)
-                .departureTime(ZonedDateTime.now().plusDays(1))
-                .arrivalTime(ZonedDateTime.now().plusDays(1).plusHours(8))
+                .departureTime(LocalDateTime.now().plusDays(1))
+                .arrivalTime(LocalDateTime.now().plusDays(1).plusHours(8))
                 .price(new BigDecimal("500.00"))
                 .totalSeats(totalSeats)
                 .reservedSeats(reservedSeats)

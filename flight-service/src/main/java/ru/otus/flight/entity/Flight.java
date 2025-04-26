@@ -5,7 +5,7 @@ import lombok.*;
 import ru.otus.common.enums.FlightStatus;
 
 import java.math.BigDecimal;
-import java.time.ZonedDateTime;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -31,9 +31,9 @@ public class Flight {
     @Enumerated(EnumType.STRING)
     private FlightStatus status;
 
-    private ZonedDateTime departureTime;
+    private LocalDateTime departureTime;
 
-    private ZonedDateTime arrivalTime;
+    private LocalDateTime arrivalTime;
 
     @Column(precision = 19, scale = 4)
     private BigDecimal price;

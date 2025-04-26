@@ -4,7 +4,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import ru.otus.flightquery.entity.Flight;
 
-import java.time.ZonedDateTime;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface FlightRepository extends JpaRepository<Flight, String> {
@@ -15,5 +15,5 @@ public interface FlightRepository extends JpaRepository<Flight, String> {
           AND f.arrivalAirportCode = :to
           AND f.departureTime BETWEEN :start AND :end
     """)
-    List<Flight> findFlightsBetweenDates(String from, String to, ZonedDateTime start, ZonedDateTime end);
+    List<Flight> findFlightsBetweenDates(String from, String to, LocalDateTime start, LocalDateTime end);
 }

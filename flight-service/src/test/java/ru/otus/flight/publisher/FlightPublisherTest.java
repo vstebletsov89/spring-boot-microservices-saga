@@ -24,7 +24,7 @@ import ru.otus.flight.config.KafkaTestConfig;
 
 import java.math.BigDecimal;
 import java.time.Duration;
-import java.time.ZonedDateTime;
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.Map;
 import java.util.UUID;
@@ -92,8 +92,8 @@ class FlightPublisherTest {
                 "SVO",
                 "JFK",
                 FlightStatus.SCHEDULED,
-                ZonedDateTime.now().plusDays(1),
-                ZonedDateTime.now().plusDays(1).plusHours(8),
+                LocalDateTime.now().plusDays(1),
+                LocalDateTime.now().plusDays(1).plusHours(8),
                 new BigDecimal("999.99"),
                 180,
                 0,

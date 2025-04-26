@@ -11,7 +11,7 @@ import ru.otus.flightquery.entity.Flight;
 import ru.otus.flightquery.repository.FlightRepository;
 
 import java.math.BigDecimal;
-import java.time.ZonedDateTime;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
@@ -30,8 +30,8 @@ class FlightSyncServiceTest {
     private FlightSyncService flightSyncService;
 
 
-    private final ZonedDateTime departureTime = ZonedDateTime.now().plusDays(1);
-    private final ZonedDateTime arrivalTime = departureTime.plusHours(8);
+    private final LocalDateTime departureTime = LocalDateTime.now().plusDays(1);
+    private final LocalDateTime arrivalTime = departureTime.plusHours(8);
 
 
     @Test

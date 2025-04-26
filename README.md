@@ -6,8 +6,8 @@ http://localhost:8024/ - axon server
 
 TODO:
 
+!исправить все на localdate для простоты
 !проверить интеграцию flight сервисов, что события синхронизируются <--
- axon problem?
 !добавить swagger
 !добавить java agent для трейсов
 !добавить grafana + prometheus

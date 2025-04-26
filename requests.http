@@ -1,0 +1,23 @@
+### Ищем доступные рейсы
+POST http://localhost:8084/api/flights/search
+Content-Type: application/json
+Accept: application/json
+
+{
+  "fromCode": "DXB",
+  "toCode": "JFK",
+  "departureDate": "2025-06-04T11:30:00Z",
+  "returnDate": "2025-06-20T11:30:00Z",
+  "passengerCount": 2
+}
+
+#### Бронируем рейс
+POST http://localhost:8082/api/tickets
+Content-Type: application/json
+
+{
+  "userId": "1",
+  "flightNumber": "EK4004"
+}
+
+

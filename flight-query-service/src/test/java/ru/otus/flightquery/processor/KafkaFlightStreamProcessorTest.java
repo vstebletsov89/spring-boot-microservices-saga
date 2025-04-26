@@ -3,7 +3,6 @@ package ru.otus.flightquery.processor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.serialization.StringSerializer;
-import org.apache.kafka.streams.StreamsBuilder;
 import org.awaitility.Awaitility;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -25,11 +24,10 @@ import ru.otus.flightquery.publisher.DltPublisher;
 import ru.otus.flightquery.service.FlightSyncService;
 
 import java.math.BigDecimal;
-import java.time.ZonedDateTime;
+import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
@@ -66,8 +64,8 @@ class KafkaFlightStreamProcessorTest {
     @Test
     void shouldProcessFlightCreatedEvent() throws Exception {
 
-        ZonedDateTime departureTime = ZonedDateTime.parse("2025-04-23T15:07:15.934709900Z");
-        ZonedDateTime arrivalTime = departureTime.plusHours(8);
+        LocalDateTime departureTime = LocalDateTime.parse("2025-04-23T15:07:15");
+        LocalDateTime arrivalTime = departureTime.plusHours(8);
 
         FlightCreatedEvent event = new FlightCreatedEvent(
                 "FL123", "SVO", "JFK",
@@ -91,8 +89,8 @@ class KafkaFlightStreamProcessorTest {
     @Test
     void shouldProcessFlightUpdatedEvent() throws Exception {
 
-        ZonedDateTime departureTime = ZonedDateTime.parse("2025-04-25T12:00:00Z");
-        ZonedDateTime arrivalTime = departureTime.plusHours(6);
+        LocalDateTime departureTime = LocalDateTime.parse("2025-04-25T12:00:00");
+        LocalDateTime arrivalTime = departureTime.plusHours(6);
 
         FlightUpdatedEvent event = new FlightUpdatedEvent(
                 "FL456",

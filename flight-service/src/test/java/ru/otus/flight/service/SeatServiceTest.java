@@ -1,7 +1,6 @@
 package ru.otus.flight.service;
 
 import org.axonframework.eventhandling.gateway.EventGateway;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -10,7 +9,6 @@ import ru.otus.common.command.ReleaseSeatCommand;
 import ru.otus.common.command.ReserveSeatCommand;
 import ru.otus.common.enums.BookingStatus;
 import ru.otus.common.enums.FlightStatus;
-import ru.otus.common.event.FlightCreatedEvent;
 import ru.otus.common.event.FlightUpdatedEvent;
 import ru.otus.common.event.SeatReservationFailedEvent;
 import ru.otus.common.event.SeatReservedEvent;
@@ -21,7 +19,7 @@ import ru.otus.flight.repository.BookingSeatMappingRepository;
 import ru.otus.flight.repository.FlightRepository;
 
 import java.math.BigDecimal;
-import java.time.ZonedDateTime;
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -123,8 +121,8 @@ public class SeatServiceTest {
         return Flight.builder()
                 .flightNumber(FLIGHT_NUMBER)
                 .status(FlightStatus.SCHEDULED)
-                .departureTime(ZonedDateTime.now())
-                .arrivalTime(ZonedDateTime.now().plusHours(2))
+                .departureTime(LocalDateTime.now())
+                .arrivalTime(LocalDateTime.now().plusHours(2))
                 .price(BigDecimal.valueOf(100))
                 .totalSeats(180)
                 .reservedSeats(reservedSeats)

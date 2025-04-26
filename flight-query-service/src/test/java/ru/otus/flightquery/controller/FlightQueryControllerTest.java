@@ -15,7 +15,7 @@ import ru.otus.common.request.FlightSearchRequest;
 import ru.otus.common.response.RoundTripFlightResponse;
 import ru.otus.flightquery.service.FlightQueryService;
 
-import java.time.ZonedDateTime;
+import java.time.LocalDateTime;
 import java.util.Collections;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -52,8 +52,8 @@ class FlightQueryControllerTest {
     void shouldReturnRoundTripFlights() throws Exception {
         FlightSearchRequest request = new FlightSearchRequest(
                 "SVO", "CDG",
-                ZonedDateTime.now().plusDays(1),
-                ZonedDateTime.now().plusDays(7),
+                LocalDateTime.now().plusDays(1),
+                LocalDateTime.now().plusDays(7),
                 2
         );
 

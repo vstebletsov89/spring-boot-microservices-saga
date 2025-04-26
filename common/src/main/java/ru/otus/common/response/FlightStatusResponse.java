@@ -1,9 +1,9 @@
 package ru.otus.common.response;
 
-import java.time.ZonedDateTime;
+import java.time.LocalDateTime;
 
 public record FlightStatusResponse(
         String flightNumber,
         String status,
-        ZonedDateTime departureTime,
-        ZonedDateTime arrivalTime) {}
+        LocalDateTime departureTime,
+        LocalDateTime arrivalTime) {}

@@ -17,10 +17,10 @@ databaseChangeLog:
                   type: VARCHAR(50)
               - column:
                   name: departure_time
-                  type: TIMESTAMP WITH TIME ZONE
+                  type: TIMESTAMP
               - column:
                   name: arrival_time
-                  type: TIMESTAMP WITH TIME ZONE
+                  type: TIMESTAMP
               - column:
                   name: price
                   type: NUMERIC(19,4)

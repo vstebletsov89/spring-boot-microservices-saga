@@ -4,10 +4,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,7 +15,7 @@ import ru.otus.common.enums.FlightStatus;
 
 
 import java.math.BigDecimal;
-import java.time.ZonedDateTime;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -40,9 +37,9 @@ public class Flight {
     @Enumerated(EnumType.STRING)
     private FlightStatus status;
 
-    private ZonedDateTime departureTime;
+    private LocalDateTime departureTime;
 
-    private ZonedDateTime arrivalTime;
+    private LocalDateTime arrivalTime;
 
     @Column(precision = 19, scale = 4)
     private BigDecimal price;

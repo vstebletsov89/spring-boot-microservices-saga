@@ -3,15 +3,15 @@ package ru.otus.common.event;
 import ru.otus.common.enums.FlightStatus;
 
 import java.math.BigDecimal;
-import java.time.ZonedDateTime;
+import java.time.LocalDateTime;
 
 public record FlightCreatedEvent(
         String flightNumber,
         String departureAirportCode,
         String arrivalAirportCode,
         FlightStatus status,
-        ZonedDateTime departureTime,
-        ZonedDateTime arrivalTime,
+        LocalDateTime departureTime,
+        LocalDateTime arrivalTime,
         BigDecimal price,
         int totalSeats,
         int reservedSeats,

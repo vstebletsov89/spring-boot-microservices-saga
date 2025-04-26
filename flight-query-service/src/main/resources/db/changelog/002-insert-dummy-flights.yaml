@@ -58,6 +58,19 @@ databaseChangeLog:
         - insert:
             tableName: flights
             columns:
+              - column: { name: flight_number, value: "EK4005" }
+              - column: { name: status, value: "SCHEDULED" }
+              - column: { name: departure_time, valueDate: "2025-06-19 11:30:00" }
+              - column: { name: arrival_time, valueDate: "2025-06-19 18:30:00" }
+              - column: { name: price, valueNumeric: 500.00 }
+              - column: { name: total_seats, valueNumeric: 220 }
+              - column: { name: reserved_seats, valueNumeric: 50 }
+              - column: { name: overbooking_percentage, valueNumeric: 4.50 }
+              - column: { name: departure_airport_code, value: "JFK" }
+              - column: { name: arrival_airport_code, value: "DXB" }
+        - insert:
+            tableName: flights
+            columns:
               - column: { name: flight_number, value: "JL5005" }
               - column: { name: status, value: "SCHEDULED" }
               - column: { name: departure_time, valueDate: "2025-06-05 07:45:00" }

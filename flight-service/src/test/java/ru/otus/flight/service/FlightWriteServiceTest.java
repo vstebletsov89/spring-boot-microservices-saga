@@ -15,7 +15,7 @@ import ru.otus.flight.repository.AirportRepository;
 import ru.otus.flight.repository.FlightRepository;
 
 import java.math.BigDecimal;
-import java.time.ZonedDateTime;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -57,8 +57,8 @@ class FlightWriteServiceTest {
             "SVO",
             "JFK",
             FlightStatus.SCHEDULED,
-            ZonedDateTime.now().plusDays(1),
-            ZonedDateTime.now().plusDays(1).plusHours(10),
+            LocalDateTime.now().plusDays(1),
+            LocalDateTime.now().plusDays(1).plusHours(10),
             new BigDecimal("999.99"),
             180,
             new BigDecimal("10.00")
