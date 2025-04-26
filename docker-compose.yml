@@ -7,6 +7,8 @@ services:
       - "8081:8080"
     environment:
       SERVER_PORT: 8080
+    networks:
+      - app-network
 
   ticket-service:
     build: ./ticket-service
@@ -21,6 +23,8 @@ services:
       SPRING_DATASOURCE_PASSWORD: pass
       SPRING_JPA_HIBERNATE_DDL_AUTO: none
       SPRING_JPA_SHOW_SQL: "true"
+    networks:
+      - app-network
 
   flight-service:
     build: ./flight-service
@@ -35,6 +39,8 @@ services:
       SPRING_DATASOURCE_PASSWORD: pass
       SPRING_JPA_HIBERNATE_DDL_AUTO: none
       SPRING_JPA_SHOW_SQL: "true"
+    networks:
+      - app-network
 
   flight-query-service:
     build: ./flight-query-service
@@ -49,6 +55,8 @@ services:
       SPRING_DATASOURCE_PASSWORD: pass
       SPRING_JPA_HIBERNATE_DDL_AUTO: none
       SPRING_JPA_SHOW_SQL: "true"
+    networks:
+      - app-network
 
   payment-service:
     build:  ./payment-service
@@ -57,6 +65,8 @@ services:
       - "8085:8080"
     environment:
       SERVER_PORT: 8080
+    networks:
+      - app-network
 
   kafka:
     image: apache/kafka:4.0.0
@@ -81,6 +91,8 @@ services:
       interval: 10s
       timeout: 5s
       retries: 10
+    networks:
+      - app-network
 
   kafdrop:
     image: obsidiandynamics/kafdrop
@@ -91,6 +103,8 @@ services:
       KAFKA_BROKERCONNECT: kafka:29092
     depends_on:
       - kafka
+    networks:
+      - app-network
 
   postgres-db:
     image: postgres:17-alpine
@@ -104,6 +118,8 @@ services:
       - "5432:5432"
     volumes:
       - pg_data:/var/lib/postgresql/data
+    networks:
+      - app-network
 
   axon-server:
     image: axoniq/axonserver:latest
@@ -114,12 +130,19 @@ services:
     environment:
       AXONIQ_AXONSERVER_NAME: axon-server
       AXONIQ_AXONSERVER_HOSTNAME: axon-server
+      AXONIQ_AXONSERVER_DEVMODE_ENABLED: "true"
     volumes:
       - axon-data:/axonserver/data
       - axon-events:/axonserver/events
+    networks:
+      - app-network
 
 volumes:
   pg_data:
   axon-data:
   axon-events:
   kafka-data:
+
+networks:
+  app-network:
+    driver: bridge

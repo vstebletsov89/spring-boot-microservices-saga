@@ -1,13 +1,17 @@
 mvn clean verify - проверить 70% покрытие тестами
 Rule violated for bundle flight-query-service: instructions covered ratio is 0.04, but expected minimum is 0.70
+http://localhost:8024/ - axon server
+
 ----------------------------------------------------
 
 TODO:
 
-!проверить интеграцию flight сервисов, что события синхронизируются
+!проверить интеграцию flight сервисов, что события синхронизируются <--
+ axon problem?
 !добавить swagger
 !добавить java agent для трейсов
 !добавить grafana + prometheus
+!переключиться на postgredb как в дз по графане
 
 !добавить avro и schema registry (поместить avro в common?)
 !нарисовать диаграмму
