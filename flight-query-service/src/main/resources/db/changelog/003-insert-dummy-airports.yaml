@@ -1,0 +1,40 @@
+databaseChangeLog:
+  - changeSet:
+      id: 003-insert-dummy-airports
+      author: vstebletsov
+      changes:
+        - insert:
+            tableName: airports
+            columns:
+              - column: { name: code, value: "JFK" }
+              - column: { name: name, value: "John F. Kennedy International Airport" }
+              - column: { name: city, value: "New York" }
+              - column: { name: country, value: "USA" }
+        - insert:
+            tableName: airports
+            columns:
+              - column: { name: code, value: "LAX" }
+              - column: { name: name, value: "Los Angeles International Airport" }
+              - column: { name: city, value: "Los Angeles" }
+              - column: { name: country, value: "USA" }
+        - insert:
+            tableName: airports
+            columns:
+              - column: { name: code, value: "CDG" }
+              - column: { name: name, value: "Charles de Gaulle Airport" }
+              - column: { name: city, value: "Paris" }
+              - column: { name: country, value: "France" }
+        - insert:
+            tableName: airports
+            columns:
+              - column: { name: code, value: "HND" }
+              - column: { name: name, value: "Tokyo Haneda Airport" }
+              - column: { name: city, value: "Tokyo" }
+              - column: { name: country, value: "Japan" }
+        - insert:
+            tableName: airports
+            columns:
+              - column: { name: code, value: "DXB" }
+              - column: { name: name, value: "Dubai International Airport" }
+              - column: { name: city, value: "Dubai" }
+              - column: { name: country, value: "UAE" }

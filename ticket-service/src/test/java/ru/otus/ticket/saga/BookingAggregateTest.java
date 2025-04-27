@@ -1,4 +1,4 @@
-package ru.otus.booking.saga;
+package ru.otus.ticket.saga;
 
 import org.axonframework.test.aggregate.AggregateTestFixture;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,7 +13,6 @@ import ru.otus.common.event.FlightBookedEvent;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
-
 
 class BookingAggregateTest {
 

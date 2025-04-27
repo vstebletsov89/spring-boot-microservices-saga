@@ -4,9 +4,9 @@ import ru.otus.common.enums.BookingStatus;
 
 import java.time.OffsetDateTime;
 
-public record BookingEvent(
+public record BookingSeatUpdatedEvent(
         String bookingId,
         String flightNumber,
         String seatNumber,
         OffsetDateTime reservedAt,
-        BookingStatus status) {}
+        BookingStatus status) implements BookingSeatEvent {}

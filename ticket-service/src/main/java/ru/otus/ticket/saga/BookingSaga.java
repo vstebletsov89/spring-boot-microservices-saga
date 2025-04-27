@@ -1,4 +1,4 @@
-package ru.otus.booking.saga;
+package ru.otus.ticket.saga;
 
 import lombok.extern.slf4j.Slf4j;
 import org.axonframework.commandhandling.gateway.CommandGateway;

@@ -18,22 +18,17 @@ import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.context.TestPropertySource;
 import ru.otus.common.enums.BookingStatus;
-import ru.otus.common.enums.FlightStatus;
-import ru.otus.common.event.BookingEvent;
-import ru.otus.common.event.FlightCreatedEvent;
+import ru.otus.common.event.BookingSeatCreatedEvent;
 import ru.otus.flight.config.JacksonConfig;
 import ru.otus.flight.config.KafkaTestConfig;
 
-import java.math.BigDecimal;
 import java.time.Duration;
-import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.util.Collections;
 import java.util.Map;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(classes = {BookingPublisher.class, KafkaTestConfig.class, JacksonConfig.class})
 @EmbeddedKafka(partitions = 1, topics = {"bookings-topic"})
@@ -76,7 +71,7 @@ class BookingPublisherTest {
     @Test
     void shouldPublishBookingEventToKafka() throws JsonProcessingException {
         String key = UUID.randomUUID().toString();
-        BookingEvent event = getSampleEvent();
+        BookingSeatCreatedEvent event = getSampleEvent();
 
         bookingPublisher.publish(key, event);
 
@@ -88,8 +83,8 @@ class BookingPublisherTest {
         assertThat(record.value()).isEqualTo(objectMapper.writeValueAsString(event));
     }
 
-    private BookingEvent getSampleEvent() {
-        return new BookingEvent(
+    private BookingSeatCreatedEvent getSampleEvent() {
+        return new BookingSeatCreatedEvent(
                   "B123",
                 "FL123",
                 "13A",

@@ -6,6 +6,11 @@ http://localhost:8024/ - axon server
 
 TODO:
 
+!common-entity сделать только для entity
+!проверить запросы из requests
+!покрыть тестами?
+
+
 !добавить BookingQueryController, service, repository, entity,
   !а также eventual consistency из BookingSeatMapping через kafka
 !добавить swagger

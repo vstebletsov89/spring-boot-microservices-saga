@@ -9,7 +9,7 @@
     <version>1.0.0</version>
     <modules>
         <module>common</module>
-        <module>booking-saga-service</module>
+        <module>common-entity</module>
         <module>ticket-service</module>
         <module>flight-service</module>
         <module>flight-query-service</module>
@@ -31,6 +31,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <axon.version>4.11.1</axon.version>
         <common.version>1.0.0</common.version>
+        <common.entity.version>1.0.0</common.entity.version>
         <jacoco.version>0.8.13</jacoco.version>
     </properties>
 

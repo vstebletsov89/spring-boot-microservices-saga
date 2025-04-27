@@ -50,6 +50,12 @@
         </dependency>
 
         <dependency>
+            <groupId>ru.otus</groupId>
+            <artifactId>common-entity</artifactId>
+            <version>${common.entity.version}</version>
+        </dependency>
+
+        <dependency>
             <groupId>org.apache.kafka</groupId>
             <artifactId>kafka-streams</artifactId>
         </dependency>

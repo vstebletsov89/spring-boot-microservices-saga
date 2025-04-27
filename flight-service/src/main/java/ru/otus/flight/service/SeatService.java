@@ -11,8 +11,8 @@ import ru.otus.common.command.ReleaseSeatCommand;
 import ru.otus.common.command.ReserveSeatCommand;
 import ru.otus.common.enums.BookingStatus;
 import ru.otus.common.event.*;
-import ru.otus.flight.entity.BookingSeatMapping;
-import ru.otus.flight.entity.Flight;
+import ru.otus.common.entity.BookingSeatMapping;
+import ru.otus.common.entity.Flight;
 import ru.otus.flight.publisher.BookingPublisher;
 import ru.otus.flight.publisher.FlightPublisher;
 import ru.otus.flight.repository.BookingSeatMappingRepository;
@@ -73,7 +73,7 @@ public class SeatService {
                 .build();
 
         mappingRepository.save(seatMapping);
-        bookingPublisher.publish(seatMapping.getBookingId(), new BookingEvent(
+        bookingPublisher.publish(seatMapping.getBookingId(), new BookingSeatCreatedEvent(
                 seatMapping.getBookingId(),
                 seatMapping.getFlightNumber(),
                 seatMapping.getSeatNumber(),
@@ -129,7 +129,7 @@ public class SeatService {
 
             seatMapping.setStatus(BookingStatus.CANCELLED);
             mappingRepository.save(seatMapping);
-            bookingPublisher.publish(seatMapping.getBookingId(), new BookingEvent(
+            bookingPublisher.publish(seatMapping.getBookingId(), new BookingSeatUpdatedEvent(
                     seatMapping.getBookingId(),
                     seatMapping.getFlightNumber(),
                     seatMapping.getSeatNumber(),

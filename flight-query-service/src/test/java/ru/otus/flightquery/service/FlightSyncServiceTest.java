@@ -4,10 +4,12 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import ru.otus.common.entity.Airport;
+import ru.otus.common.entity.Flight;
 import ru.otus.common.enums.FlightStatus;
 import ru.otus.common.event.FlightCreatedEvent;
 import ru.otus.common.event.FlightUpdatedEvent;
-import ru.otus.flightquery.entity.Flight;
+import ru.otus.flightquery.repository.AirportRepository;
 import ru.otus.flightquery.repository.FlightRepository;
 
 import java.math.BigDecimal;
@@ -26,29 +28,37 @@ class FlightSyncServiceTest {
     @MockitoBean
     private FlightRepository flightRepository;
 
+    @MockitoBean
+    private AirportRepository airportRepository;
+
     @Autowired
     private FlightSyncService flightSyncService;
 
 
     private final LocalDateTime departureTime = LocalDateTime.now().plusDays(1);
     private final LocalDateTime arrivalTime = departureTime.plusHours(8);
-
+    private final Airport departureAirport = new Airport("DXB", "Dubai airport", "Dubai", "UAE");
+    private final Airport arrivalAirport = new Airport("SVO", "Sheremetyevo airport", "Moscow", "Russia");
 
     @Test
     void shouldHandleFlightCreatedEvent() {
         FlightCreatedEvent event = new FlightCreatedEvent(
-                "FL123", "SVO", "JFK",
+                "FL123", "DXB", "SVO",
                 FlightStatus.SCHEDULED,
                 departureTime, arrivalTime, new BigDecimal("999.99"),
                 180, 0, new BigDecimal("10.00")
         );
+        when(airportRepository.findById(event.departureAirportCode()))
+                .thenReturn(Optional.of(departureAirport));
+        when(airportRepository.findById(event.arrivalAirportCode()))
+                .thenReturn(Optional.of(arrivalAirport));
 
         flightSyncService.handleCreated(event);
 
         verify(flightRepository).save(argThat(f ->
                 f.getFlightNumber().equals(event.flightNumber()) &&
-                f.getDepartureAirportCode().equals(event.departureAirportCode()) &&
-                f.getArrivalAirportCode().equals(event.arrivalAirportCode()) &&
+                f.getDepartureAirport().getCode().equals(event.departureAirportCode()) &&
+                f.getArrivalAirport().getCode().equals(event.arrivalAirportCode()) &&
                 f.getStatus() == event.status() &&
                 f.getDepartureTime().equals(departureTime) &&
                 f.getArrivalTime().equals(arrivalTime) &&

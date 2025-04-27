@@ -4,9 +4,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import ru.otus.common.entity.Airport;
+import ru.otus.common.entity.Flight;
 import ru.otus.common.request.FlightSearchRequest;
 import ru.otus.common.response.RoundTripFlightResponse;
-import ru.otus.flightquery.entity.Flight;
 import ru.otus.flightquery.repository.FlightRepository;
 
 import java.math.BigDecimal;
@@ -61,8 +62,8 @@ class FlightQueryServiceTest {
     private Flight createFlight(String number, String from, String to, int totalSeats, int reservedSeats) {
         return Flight.builder()
                 .flightNumber(number)
-                .departureAirportCode(from)
-                .arrivalAirportCode(to)
+                .departureAirport(new Airport("DXB", "Dubai airport", "Dubai", "UAE"))
+                .arrivalAirport(new Airport("SVO", "Sheremetyevo airport", "Moscow", "Russia"))
                 .departureTime(LocalDateTime.now().plusDays(1))
                 .arrivalTime(LocalDateTime.now().plusDays(1).plusHours(8))
                 .price(new BigDecimal("500.00"))

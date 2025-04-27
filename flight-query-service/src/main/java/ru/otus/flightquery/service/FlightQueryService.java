@@ -3,10 +3,10 @@ package ru.otus.flightquery.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import ru.otus.common.entity.Flight;
 import ru.otus.common.request.FlightSearchRequest;
 import ru.otus.common.response.FlightResponse;
 import ru.otus.common.response.RoundTripFlightResponse;
-import ru.otus.flightquery.entity.Flight;
 import ru.otus.flightquery.repository.FlightRepository;
 
 import java.util.List;
@@ -37,8 +37,8 @@ public class FlightQueryService {
                         f.getTotalSeats() - f.getReservedSeats() >= request.passengerCount())
                 .map(f -> new FlightResponse(
                         f.getFlightNumber(),
-                        f.getDepartureAirportCode(),
-                        f.getArrivalAirportCode(),
+                        f.getDepartureAirport().getCode(),
+                        f.getArrivalAirport().getCode(),
                         f.getDepartureTime(),
                         f.getArrivalTime(),
                         f.getPrice()))
@@ -49,8 +49,8 @@ public class FlightQueryService {
                         f.getTotalSeats() - f.getReservedSeats() >= request.passengerCount())
                 .map(f -> new FlightResponse(
                         f.getFlightNumber(),
-                        f.getDepartureAirportCode(),
-                        f.getArrivalAirportCode(),
+                        f.getDepartureAirport().getCode(),
+                        f.getArrivalAirport().getCode(),
                         f.getDepartureTime(),
                         f.getArrivalTime(),
                         f.getPrice()))

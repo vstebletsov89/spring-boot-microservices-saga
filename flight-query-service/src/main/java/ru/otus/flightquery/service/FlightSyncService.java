@@ -4,9 +4,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.otus.common.entity.Airport;
+import ru.otus.common.entity.Flight;
 import ru.otus.common.event.FlightCreatedEvent;
 import ru.otus.common.event.FlightUpdatedEvent;
-import ru.otus.flightquery.entity.Flight;
+import ru.otus.flightquery.repository.AirportRepository;
 import ru.otus.flightquery.repository.FlightRepository;
 
 @Service
@@ -16,14 +18,22 @@ public class FlightSyncService {
 
     private final FlightRepository flightRepository;
 
+    private final AirportRepository airportRepository;
+
     @Transactional
     public void handleCreated(FlightCreatedEvent event) {
         log.info("Syncing new flight from event: {}", event);
 
+        Airport departureAirport = airportRepository.findById(event.departureAirportCode())
+                .orElseThrow(() -> new RuntimeException("Invalid departure airport code"));
+
+        Airport arrivalAirport = airportRepository.findById(event.arrivalAirportCode())
+                .orElseThrow(() -> new RuntimeException("Invalid arrival airport code"));
+
         Flight flight = Flight.builder()
                 .flightNumber(event.flightNumber())
-                .departureAirportCode(event.departureAirportCode())
-                .arrivalAirportCode(event.arrivalAirportCode())
+                .departureAirport(departureAirport)
+                .arrivalAirport(arrivalAirport)
                 .status(event.status())
                 .departureTime(event.departureTime())
                 .arrivalTime(event.arrivalTime())

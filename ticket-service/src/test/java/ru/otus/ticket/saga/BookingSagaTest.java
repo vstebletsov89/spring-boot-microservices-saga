@@ -1,4 +1,4 @@
-package ru.otus.booking.saga;
+package ru.otus.ticket.saga;
 
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.axonframework.modelling.saga.SagaLifecycle;
