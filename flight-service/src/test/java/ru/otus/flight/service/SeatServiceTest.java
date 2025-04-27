@@ -9,11 +9,13 @@ import ru.otus.common.command.ReleaseSeatCommand;
 import ru.otus.common.command.ReserveSeatCommand;
 import ru.otus.common.enums.BookingStatus;
 import ru.otus.common.enums.FlightStatus;
+import ru.otus.common.event.BookingEvent;
 import ru.otus.common.event.FlightUpdatedEvent;
 import ru.otus.common.event.SeatReservationFailedEvent;
 import ru.otus.common.event.SeatReservedEvent;
 import ru.otus.flight.entity.BookingSeatMapping;
 import ru.otus.flight.entity.Flight;
+import ru.otus.flight.publisher.BookingPublisher;
 import ru.otus.flight.publisher.FlightPublisher;
 import ru.otus.flight.repository.BookingSeatMappingRepository;
 import ru.otus.flight.repository.FlightRepository;
@@ -50,6 +52,9 @@ public class SeatServiceTest {
     @MockitoBean
     private FlightPublisher flightPublisher;
 
+    @MockitoBean
+    private BookingPublisher bookingPublisher;
+
     @Autowired
     private SeatService seatService;
 
@@ -67,6 +72,7 @@ public class SeatServiceTest {
         verify(flightRepository).save(flight);
         verify(eventGateway).publish(any(SeatReservedEvent.class));
         verify(flightPublisher).publish(eq(FLIGHT_NUMBER), any(FlightUpdatedEvent.class));
+        verify(bookingPublisher).publish(eq(BOOKING_ID), any(BookingEvent.class));
     }
 
     @Test
@@ -100,6 +106,7 @@ public class SeatServiceTest {
         verify(flightRepository).save(any());
         verify(mappingRepository).save(any());
         verify(flightPublisher).publish(eq(FLIGHT_NUMBER), any(FlightUpdatedEvent.class));
+        verify(bookingPublisher).publish(eq(BOOKING_ID), any(BookingEvent.class));
     }
 
     @Test

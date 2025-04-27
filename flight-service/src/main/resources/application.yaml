@@ -5,6 +5,7 @@ app:
   kafka:
     topic:
       flights: flight-service.flights
+      bookings: flight-service.bookings
 
 spring:
   application:

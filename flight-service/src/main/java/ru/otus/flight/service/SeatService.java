@@ -10,12 +10,10 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.otus.common.command.ReleaseSeatCommand;
 import ru.otus.common.command.ReserveSeatCommand;
 import ru.otus.common.enums.BookingStatus;
-import ru.otus.common.event.FlightCreatedEvent;
-import ru.otus.common.event.FlightUpdatedEvent;
-import ru.otus.common.event.SeatReservationFailedEvent;
-import ru.otus.common.event.SeatReservedEvent;
+import ru.otus.common.event.*;
 import ru.otus.flight.entity.BookingSeatMapping;
 import ru.otus.flight.entity.Flight;
+import ru.otus.flight.publisher.BookingPublisher;
 import ru.otus.flight.publisher.FlightPublisher;
 import ru.otus.flight.repository.BookingSeatMappingRepository;
 import ru.otus.flight.repository.FlightRepository;
@@ -35,6 +33,7 @@ public class SeatService {
     private final BookingSeatMappingRepository mappingRepository;
     private final EventGateway eventGateway;
     private final FlightPublisher flightPublisher;
+    private final BookingPublisher bookingPublisher;
 
     @Transactional
     @CommandHandler
@@ -74,6 +73,13 @@ public class SeatService {
                 .build();
 
         mappingRepository.save(seatMapping);
+        bookingPublisher.publish(seatMapping.getBookingId(), new BookingEvent(
+                seatMapping.getBookingId(),
+                seatMapping.getFlightNumber(),
+                seatMapping.getSeatNumber(),
+                seatMapping.getReservedAt(),
+                seatMapping.getStatus()
+        ));
 
         log.info("Seat reserved successfully for bookingId: {}", cmd.bookingId());
         eventGateway.publish(new SeatReservedEvent(
@@ -112,17 +118,24 @@ public class SeatService {
         log.info("Release seat for: {}", cmd);
 
         mappingRepository.findByBookingId(cmd.bookingId())
-                .ifPresent(mapping -> {
+                .ifPresent(seatMapping -> {
 
-            var flightOpt = flightRepository.findById(mapping.getFlightNumber());
+            var flightOpt = flightRepository.findById(seatMapping.getFlightNumber());
             flightOpt.ifPresent(flight -> {
                 flight.setReservedSeats(Math.max(0, flight.getReservedSeats() - 1));
                 flightRepository.save(flight);
                 publishFlightUpdatedEvent(flight);
             });
 
-            mapping.setStatus(BookingStatus.CANCELLED);
-            mappingRepository.save(mapping);
+            seatMapping.setStatus(BookingStatus.CANCELLED);
+            mappingRepository.save(seatMapping);
+            bookingPublisher.publish(seatMapping.getBookingId(), new BookingEvent(
+                    seatMapping.getBookingId(),
+                    seatMapping.getFlightNumber(),
+                    seatMapping.getSeatNumber(),
+                    seatMapping.getReservedAt(),
+                    seatMapping.getStatus()
+            ));
         });
     }
 

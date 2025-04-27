@@ -6,9 +6,10 @@ http://localhost:8024/ - axon server
 
 TODO:
 
-!исправить все на localdate для простоты
-!проверить интеграцию flight сервисов, что события синхронизируются <--
+!добавить BookingQueryController, service, repository, entity,
+  !а также eventual consistency из BookingSeatMapping через kafka
 !добавить swagger
+!helm
 !добавить java agent для трейсов
 !добавить grafana + prometheus
 !переключиться на postgredb как в дз по графане
@@ -16,9 +17,7 @@ TODO:
 !добавить avro и schema registry (поместить avro в common?)
 !нарисовать диаграмму
 
-!helm, k8s
 !add linter (findbugs?)
-!notification-service?
 !discovery-service?
 !api-gateway?
 
