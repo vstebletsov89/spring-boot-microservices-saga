@@ -1,4 +1,4 @@
-package ru.otus.common.event;
+package ru.otus.common.kafka;
 
 import ru.otus.common.enums.FlightStatus;
 

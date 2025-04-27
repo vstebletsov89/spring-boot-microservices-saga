@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import ru.otus.common.enums.FlightStatus;
-import ru.otus.common.event.FlightCreatedEvent;
+import ru.otus.common.kafka.FlightCreatedEvent;
 import ru.otus.common.request.CreateFlightRequest;
 import ru.otus.common.entity.Airport;
 import ru.otus.common.entity.Flight;

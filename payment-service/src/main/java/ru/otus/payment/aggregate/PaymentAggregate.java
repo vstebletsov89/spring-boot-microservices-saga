@@ -6,8 +6,8 @@ import org.axonframework.eventsourcing.EventSourcingHandler;
 import org.axonframework.modelling.command.AggregateIdentifier;
 import org.axonframework.spring.stereotype.Aggregate;
 import ru.otus.common.command.ProcessPaymentCommand;
-import ru.otus.common.event.PaymentFailedEvent;
-import ru.otus.common.event.PaymentProcessedEvent;
+import ru.otus.common.saga.PaymentFailedEvent;
+import ru.otus.common.saga.PaymentProcessedEvent;
 import ru.otus.payment.service.PaymentService;
 
 @Aggregate

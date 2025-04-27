@@ -6,9 +6,9 @@ import org.junit.jupiter.api.Test;
 import ru.otus.common.command.BookFlightCommand;
 import ru.otus.common.command.CancelBookingCommand;
 import ru.otus.common.command.ConfirmBookingCommand;
-import ru.otus.common.event.BookingCancelledEvent;
-import ru.otus.common.event.BookingConfirmedEvent;
-import ru.otus.common.event.FlightBookedEvent;
+import ru.otus.common.saga.BookingCancelledEvent;
+import ru.otus.common.saga.BookingConfirmedEvent;
+import ru.otus.common.saga.FlightBookedEvent;
 
 import java.util.UUID;
 

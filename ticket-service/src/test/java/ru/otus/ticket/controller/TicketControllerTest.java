@@ -12,7 +12,7 @@ import org.springframework.http.MediaType;
 import org.springframework.kafka.annotation.KafkaStreamsDefaultConfiguration;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
-import ru.otus.common.event.BookingCreatedEvent;
+import ru.otus.common.saga.BookingCreatedEvent;
 import ru.otus.common.request.BookingRequest;
 import ru.otus.ticket.service.TicketService;
 

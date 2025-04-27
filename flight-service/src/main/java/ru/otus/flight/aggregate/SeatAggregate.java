@@ -7,7 +7,7 @@ import org.axonframework.commandhandling.CommandHandler;
 import org.axonframework.eventsourcing.EventSourcingHandler;
 import ru.otus.common.command.ReleaseSeatCommand;
 import ru.otus.common.command.ReserveSeatCommand;
-import ru.otus.common.event.SeatReservedEvent;
+import ru.otus.common.saga.SeatReservedEvent;
 import ru.otus.flight.service.SeatService;
 
 @Aggregate

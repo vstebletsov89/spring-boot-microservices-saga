@@ -5,7 +5,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.otus.common.command.ReleaseSeatCommand;
 import ru.otus.common.command.ReserveSeatCommand;
-import ru.otus.common.event.SeatReservedEvent;
+import ru.otus.common.saga.SeatReservedEvent;
 import ru.otus.flight.service.SeatService;
 
 import static org.mockito.Mockito.mock;

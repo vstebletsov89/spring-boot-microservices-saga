@@ -4,7 +4,7 @@ package ru.otus.flight.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.otus.common.event.FlightCreatedEvent;
+import ru.otus.common.kafka.FlightCreatedEvent;
 import ru.otus.common.request.CreateFlightRequest;
 import ru.otus.common.entity.Airport;
 import ru.otus.common.entity.Flight;

@@ -6,7 +6,6 @@ http://localhost:8024/ - axon server
 
 TODO:
 
-!common-entity сделать только для entity
 !проверить запросы из requests
 !покрыть тестами?
 

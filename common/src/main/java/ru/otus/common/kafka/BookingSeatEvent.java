@@ -1,4 +1,4 @@
-package ru.otus.common.event;
+package ru.otus.common.kafka;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;

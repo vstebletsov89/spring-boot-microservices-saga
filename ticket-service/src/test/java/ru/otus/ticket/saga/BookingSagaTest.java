@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import ru.otus.common.command.*;
-import ru.otus.common.event.*;
+import ru.otus.common.saga.*;
 
 import java.math.BigDecimal;
 import java.util.UUID;

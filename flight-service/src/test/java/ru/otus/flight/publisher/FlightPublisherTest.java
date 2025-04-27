@@ -18,7 +18,7 @@ import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.context.TestPropertySource;
 import ru.otus.common.enums.FlightStatus;
-import ru.otus.common.event.FlightCreatedEvent;
+import ru.otus.common.kafka.FlightCreatedEvent;
 import ru.otus.flight.config.JacksonConfig;
 import ru.otus.flight.config.KafkaTestConfig;
 

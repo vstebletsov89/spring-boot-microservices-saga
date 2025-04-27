@@ -5,8 +5,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.axonframework.eventhandling.gateway.EventGateway;
 import org.springframework.stereotype.Service;
 import ru.otus.common.command.ProcessPaymentCommand;
-import ru.otus.common.event.PaymentFailedEvent;
-import ru.otus.common.event.PaymentProcessedEvent;
+import ru.otus.common.saga.PaymentFailedEvent;
+import ru.otus.common.saga.PaymentProcessedEvent;
 
 import java.math.BigDecimal;
 

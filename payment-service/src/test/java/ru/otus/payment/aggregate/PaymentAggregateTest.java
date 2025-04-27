@@ -5,13 +5,10 @@ import org.axonframework.test.aggregate.FixtureConfiguration;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.otus.common.command.ProcessPaymentCommand;
-import ru.otus.common.event.PaymentFailedEvent;
-import ru.otus.common.event.PaymentProcessedEvent;
 import ru.otus.payment.service.PaymentService;
 
 import java.math.BigDecimal;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;

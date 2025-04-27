@@ -1,4 +1,4 @@
-package ru.otus.common.event;
+package ru.otus.common.saga;
 
 public record PaymentFailedEvent(
         String bookingId,

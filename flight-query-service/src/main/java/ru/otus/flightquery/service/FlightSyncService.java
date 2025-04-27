@@ -6,8 +6,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.otus.common.entity.Airport;
 import ru.otus.common.entity.Flight;
-import ru.otus.common.event.FlightCreatedEvent;
-import ru.otus.common.event.FlightUpdatedEvent;
+import ru.otus.common.kafka.FlightCreatedEvent;
+import ru.otus.common.kafka.FlightUpdatedEvent;
 import ru.otus.flightquery.repository.AirportRepository;
 import ru.otus.flightquery.repository.FlightRepository;
 

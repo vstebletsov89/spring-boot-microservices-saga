@@ -5,7 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.springframework.stereotype.Service;
 import ru.otus.common.command.BookFlightCommand;
-import ru.otus.common.event.BookingCreatedEvent;
+import ru.otus.common.saga.BookingCreatedEvent;
 
 @Service
 @RequiredArgsConstructor

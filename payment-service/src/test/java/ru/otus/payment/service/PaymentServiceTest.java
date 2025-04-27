@@ -7,8 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import ru.otus.common.command.ProcessPaymentCommand;
-import ru.otus.common.event.PaymentFailedEvent;
-import ru.otus.common.event.PaymentProcessedEvent;
+import ru.otus.common.saga.PaymentFailedEvent;
+import ru.otus.common.saga.PaymentProcessedEvent;
 
 import java.math.BigDecimal;
 

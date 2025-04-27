@@ -5,8 +5,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.otus.common.entity.BookingSeatMapping;
-import ru.otus.common.event.BookingSeatCreatedEvent;
-import ru.otus.common.event.BookingSeatUpdatedEvent;
+import ru.otus.common.kafka.BookingSeatCreatedEvent;
+import ru.otus.common.kafka.BookingSeatUpdatedEvent;
 import ru.otus.flightquery.repository.BookingSeatMappingRepository;
 
 @Service

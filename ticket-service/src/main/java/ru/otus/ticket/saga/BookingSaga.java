@@ -12,11 +12,11 @@ import ru.otus.common.command.ConfirmBookingCommand;
 import ru.otus.common.command.ProcessPaymentCommand;
 import ru.otus.common.command.ReleaseSeatCommand;
 import ru.otus.common.command.ReserveSeatCommand;
-import ru.otus.common.event.FlightBookedEvent;
-import ru.otus.common.event.PaymentFailedEvent;
-import ru.otus.common.event.PaymentProcessedEvent;
-import ru.otus.common.event.SeatReservationFailedEvent;
-import ru.otus.common.event.SeatReservedEvent;
+import ru.otus.common.saga.FlightBookedEvent;
+import ru.otus.common.saga.PaymentFailedEvent;
+import ru.otus.common.saga.PaymentProcessedEvent;
+import ru.otus.common.saga.SeatReservationFailedEvent;
+import ru.otus.common.saga.SeatReservedEvent;
 
 @Saga
 @Slf4j

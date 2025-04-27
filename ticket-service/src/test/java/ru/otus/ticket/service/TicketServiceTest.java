@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
-import ru.otus.common.event.BookingCreatedEvent;
+import ru.otus.common.saga.BookingCreatedEvent;
 import ru.otus.ticket.config.JacksonConfig;
 import ru.otus.ticket.repository.BookingOutboxRepository;
 

@@ -9,8 +9,8 @@ import org.apache.kafka.streams.kstream.KStream;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
-import ru.otus.common.event.FlightCreatedEvent;
-import ru.otus.common.event.FlightUpdatedEvent;
+import ru.otus.common.kafka.FlightCreatedEvent;
+import ru.otus.common.kafka.FlightUpdatedEvent;
 import ru.otus.flightquery.publisher.DltPublisher;
 import ru.otus.flightquery.service.FlightSyncService;
 

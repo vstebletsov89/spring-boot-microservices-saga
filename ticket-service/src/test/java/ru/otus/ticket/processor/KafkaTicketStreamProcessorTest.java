@@ -14,7 +14,7 @@ import org.springframework.kafka.test.context.EmbeddedKafka;
 import org.springframework.kafka.test.utils.KafkaTestUtils;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
-import ru.otus.common.event.BookingCreatedEvent;
+import ru.otus.common.saga.BookingCreatedEvent;
 import ru.otus.ticket.config.JacksonConfig;
 import ru.otus.ticket.config.KafkaStreamsTestConfig;
 import ru.otus.ticket.publisher.DltPublisher;
