@@ -106,7 +106,7 @@ public class SeatService {
 
         for (int row = 1; row <= rows; row++) {
             for (char seat : seatLetters) {
-                String seatNumber = seat + String.valueOf(row);
+                String seatNumber = String.valueOf(row) + seat;
                 if (!reservedSeats.contains(seatNumber)) {
                     return seatNumber;
                 }

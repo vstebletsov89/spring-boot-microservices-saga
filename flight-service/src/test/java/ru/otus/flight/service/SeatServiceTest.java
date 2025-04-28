@@ -23,16 +23,17 @@ import ru.otus.flight.repository.FlightRepository;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @SpringBootTest(classes = SeatService.class)
 public class SeatServiceTest {
@@ -74,6 +75,48 @@ public class SeatServiceTest {
         verify(eventGateway).publish(any(SeatReservedEvent.class));
         verify(flightPublisher).publish(eq(FLIGHT_NUMBER), any(FlightUpdatedEvent.class));
         verify(bookingPublisher).publish(eq(BOOKING_ID), any(BookingSeatCreatedEvent.class));
+    }
+
+    @Test
+    void shouldReserveMultipleSeatsInOrder() {
+        Flight flight = createFlight(0);
+        when(flightRepository.findById(FLIGHT_NUMBER)).thenReturn(Optional.of(flight));
+
+        List<String> expectedSeatNumbers = List.of(
+                "1A", "1B", "1C", "1D", "1E", "1F", "2A", "2B", "2C", "2D"
+        );
+        List<BookingSeatMapping> savedMappings = new ArrayList<>();
+
+        when(mappingRepository.findAllByFlightNumber(FLIGHT_NUMBER)).thenAnswer(invocation -> new ArrayList<>(savedMappings));
+
+        doAnswer(invocation -> {
+            BookingSeatMapping mapping = invocation.getArgument(0);
+            savedMappings.add(mapping);
+            return null;
+        }).when(mappingRepository).save(any(BookingSeatMapping.class));
+
+        for (int i = 0; i < 10; i++) {
+            ReserveSeatCommand cmd = new ReserveSeatCommand(
+                    BOOKING_ID + i,
+                    FLIGHT_NUMBER,
+                    USER_ID + i
+            );
+            seatService.handle(cmd);
+        }
+
+        assertEquals(10, savedMappings.size());
+
+        List<String> actualSeatNumbers = savedMappings.stream()
+                .map(BookingSeatMapping::getSeatNumber)
+                .collect(Collectors.toList());
+
+        assertEquals(expectedSeatNumbers, actualSeatNumbers, "Места должны быть в порядке возрастания");
+
+        verify(flightRepository, times(10)).save(flight);
+        verify(mappingRepository, times(10)).save(any(BookingSeatMapping.class));
+        verify(eventGateway, times(10)).publish(any(SeatReservedEvent.class));
+        verify(flightPublisher, times(10)).publish(eq(FLIGHT_NUMBER), any(FlightUpdatedEvent.class));
+        verify(bookingPublisher, times(10)).publish(anyString(), any(BookingSeatCreatedEvent.class));
     }
 
     @Test
@@ -143,7 +186,7 @@ public class SeatServiceTest {
         for (int i = 1; i <= rows; i++) {
             for (char c : letters) {
                 list.add(BookingSeatMapping.builder()
-                        .seatNumber(c + String.valueOf(i))
+                        .seatNumber(i + String.valueOf(c))
                         .build());
             }
         }
