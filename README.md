@@ -8,15 +8,16 @@ TODO:
 
 !проверить запросы из requests
 !покрыть тестами?
-
+!добавить swagger
+!переключиться на postgredb как в дз по графане
+!добавить grafana + prometheus
+!добавить java agent для трейсов?s
+!helm
 
 !добавить BookingQueryController, service, repository, entity,
   !а также eventual consistency из BookingSeatMapping через kafka
-!добавить swagger
-!helm
-!добавить java agent для трейсов
-!добавить grafana + prometheus
-!переключиться на postgredb как в дз по графане
+
+
 
 !добавить avro и schema registry (поместить avro в common?)
 !нарисовать диаграмму
