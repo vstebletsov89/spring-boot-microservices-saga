@@ -6,11 +6,11 @@ http://localhost:8024/ - axon server
 
 TODO:
 
-!depend on axon server
+!переключиться на postgredb как в дз по графане
 !добавить response для контроллеров во flight-query
+!добавить dto, mappers
 !проверить запросы из requests (eventual consistency for query service)
 !добавить swagger
-!переключиться на postgredb как в дз по графане
 !добавить grafana + prometheus
 !добавить java agent для трейсов?s
 !helm
