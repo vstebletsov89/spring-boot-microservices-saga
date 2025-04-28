@@ -6,7 +6,6 @@ http://localhost:8024/ - axon server
 
 TODO:
 
-!места распределяются неверно, добавить тест
 !depend on axon server
 !добавить response для контроллеров во flight-query
 !проверить запросы из requests (eventual consistency for query service)

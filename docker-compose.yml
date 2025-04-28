@@ -13,6 +13,9 @@ services:
       SPRING_DATASOURCE_PASSWORD: pass
       SPRING_JPA_HIBERNATE_DDL_AUTO: none
       SPRING_JPA_SHOW_SQL: "true"
+    depends_on:
+      - kafka
+      - axon-server
     networks:
       - app-network
 
@@ -29,6 +32,9 @@ services:
       SPRING_DATASOURCE_PASSWORD: pass
       SPRING_JPA_HIBERNATE_DDL_AUTO: none
       SPRING_JPA_SHOW_SQL: "true"
+    depends_on:
+      - kafka
+      - axon-server
     networks:
       - app-network
 
@@ -45,6 +51,9 @@ services:
       SPRING_DATASOURCE_PASSWORD: pass
       SPRING_JPA_HIBERNATE_DDL_AUTO: none
       SPRING_JPA_SHOW_SQL: "true"
+    depends_on:
+      - kafka
+      - axon-server
     networks:
       - app-network
 
@@ -55,6 +64,9 @@ services:
       - "8085:8080"
     environment:
       SERVER_PORT: 8080
+    depends_on:
+      - kafka
+      - axon-server
     networks:
       - app-network
 
