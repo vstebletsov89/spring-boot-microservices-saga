@@ -6,18 +6,12 @@ http://localhost:8024/ - axon server
 
 TODO:
 
-!проверить запросы из requests
-!покрыть тестами?
+!проверить запросы из requests (eventual consistency for query service)
 !добавить swagger
 !переключиться на postgredb как в дз по графане
 !добавить grafana + prometheus
 !добавить java agent для трейсов?s
 !helm
-
-!добавить BookingQueryController, service, repository, entity,
-  !а также eventual consistency из BookingSeatMapping через kafka
-
-
 
 !добавить avro и schema registry (поместить avro в common?)
 !нарисовать диаграмму
