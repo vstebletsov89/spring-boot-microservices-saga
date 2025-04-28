@@ -7,6 +7,7 @@ http://localhost:8024/ - axon server
 TODO:
 
 !места распределяются неверно, добавить тест
+!depend on axon server
 !проверить запросы из requests (eventual consistency for query service)
 !добавить swagger
 !переключиться на postgredb как в дз по графане
