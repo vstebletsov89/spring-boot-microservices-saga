@@ -6,8 +6,9 @@ http://localhost:8024/ - axon server
 
 TODO:
 
-!добавить в payment сервис отправку сообщения, или команды о том что booking оплачен
 !добавить swagger
+!добавить в payment сервис отправку сообщения, или команды о том что booking оплачен
+!добавить мапперы events->commands
 !проверить запросы из requests (eventual consistency for query service)
 !добавить grafana + prometheus
 !добавить java agent для трейсов?
