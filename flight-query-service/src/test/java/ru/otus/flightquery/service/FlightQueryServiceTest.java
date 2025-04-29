@@ -8,6 +8,7 @@ import ru.otus.common.entity.Airport;
 import ru.otus.common.entity.Flight;
 import ru.otus.common.request.FlightSearchRequest;
 import ru.otus.common.response.RoundTripFlightResponse;
+import ru.otus.flightquery.mapper.FlightMapperImpl;
 import ru.otus.flightquery.repository.FlightRepository;
 
 import java.math.BigDecimal;
@@ -17,7 +18,7 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
-@SpringBootTest(classes = FlightQueryService.class)
+@SpringBootTest(classes = {FlightQueryService.class, FlightMapperImpl.class})
 class FlightQueryServiceTest {
 
     @MockitoBean

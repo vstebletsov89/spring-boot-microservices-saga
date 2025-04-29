@@ -6,8 +6,6 @@ http://localhost:8024/ - axon server
 
 TODO:
 
-!добавить response dto для BookingQueryController (mappers)
-  !добавить mappers везде?
 !добавить в payment сервис отправку сообщения, или команды о том что booking оплачен
 !добавить swagger
 !проверить запросы из requests (eventual consistency for query service)
