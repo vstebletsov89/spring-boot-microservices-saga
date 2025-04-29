@@ -6,13 +6,13 @@ http://localhost:8024/ - axon server
 
 TODO:
 
-!добавить response для контроллеров во flight-query
-!добавить dto, mappers
+!добавить response dto для BookingQueryController (mappers)
+  !добавить mappers везде?
 !добавить в payment сервис отправку сообщения, или команды о том что booking оплачен
-!проверить запросы из requests (eventual consistency for query service)
 !добавить swagger
+!проверить запросы из requests (eventual consistency for query service)
 !добавить grafana + prometheus
-!добавить java agent для трейсов?s
+!добавить java agent для трейсов?
 !helm
 
 !добавить avro и schema registry (поместить avro в common?)
