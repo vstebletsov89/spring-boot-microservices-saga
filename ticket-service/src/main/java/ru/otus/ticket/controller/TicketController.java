@@ -31,7 +31,8 @@ public class TicketController {
         );
         ticketService.createBookingRequest(event);
         log.info("book ticket: {}", event);
-        return ResponseEntity.ok("Booking request accepted. Waiting confirmation.");
+        var response = bookingId + " booking created. Waiting for payment to confirm.";
+        return ResponseEntity.ok(response);
     }
 }
 
