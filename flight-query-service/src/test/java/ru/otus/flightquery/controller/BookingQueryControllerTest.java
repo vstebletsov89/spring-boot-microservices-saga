@@ -13,6 +13,7 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.otus.common.entity.BookingSeatMapping;
 import ru.otus.common.enums.BookingStatus;
+import ru.otus.common.response.BookingSeatMappingResponse;
 import ru.otus.flightquery.service.BookingQueryService;
 
 import java.time.OffsetDateTime;
@@ -52,9 +53,15 @@ class BookingQueryControllerTest {
     @Test
     void shouldReturnBookingsByFlightNumber() throws Exception {
         String flightNumber = "FL123";
-        List<BookingSeatMapping> bookings = Collections.singletonList(
-                new BookingSeatMapping(1L, "b123", "FL123",
-                        "1A", OffsetDateTime.now(), BookingStatus.PAID)
+
+        List<BookingSeatMappingResponse> bookings = Collections.singletonList(
+                new BookingSeatMappingResponse(
+                        "b123",
+                        "FL123",
+                        "1A",
+                        OffsetDateTime.now(),
+                        BookingStatus.PAID
+                )
         );
 
         when(bookingQueryService.findBookingsByFlightNumber(anyString()))
@@ -71,9 +78,14 @@ class BookingQueryControllerTest {
     @Test
     void shouldReturnBookingById() throws Exception {
         String bookingId = "b123";
-        BookingSeatMapping booking =
-                new BookingSeatMapping(1L, "b123", "FL123",
-                "1A", OffsetDateTime.now(), BookingStatus.PAID);
+
+        BookingSeatMappingResponse booking = new BookingSeatMappingResponse(
+                "b123",
+                "FL123",
+                "1A",
+                OffsetDateTime.now(),
+                BookingStatus.PAID
+        );
 
         when(bookingQueryService.findBookingById(anyString()))
                 .thenReturn(booking);

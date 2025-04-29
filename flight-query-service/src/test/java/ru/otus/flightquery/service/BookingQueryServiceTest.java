@@ -6,6 +6,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import ru.otus.common.entity.BookingSeatMapping;
 import ru.otus.common.enums.BookingStatus;
+import ru.otus.common.response.BookingSeatMappingResponse;
+import ru.otus.flightquery.mapper.BookingSeatMappingMapper;
+import ru.otus.flightquery.mapper.BookingSeatMappingMapperImpl;
 import ru.otus.flightquery.repository.BookingSeatMappingRepository;
 
 import java.time.OffsetDateTime;
@@ -16,7 +19,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.when;
 
-@SpringBootTest(classes = BookingQueryService.class)
+@SpringBootTest(classes = {BookingQueryService.class, BookingSeatMappingMapperImpl.class})
 class BookingQueryServiceTest {
 
     @MockitoBean
@@ -35,12 +38,17 @@ class BookingQueryServiceTest {
         when(bookingSeatMappingRepository.findAllByFlightNumber(flightNumber))
                 .thenReturn(List.of(booking));
 
-        List<BookingSeatMapping> result = bookingQueryService.findBookingsByFlightNumber(flightNumber);
+        List<BookingSeatMappingResponse> result = bookingQueryService.findBookingsByFlightNumber(flightNumber);
 
         assertThat(result)
                 .isNotEmpty()
-                .hasSize(1)
-                .contains(booking);
+                .hasSize(1);
+
+        BookingSeatMappingResponse response = result.get(0);
+        assertThat(response.bookingId()).isEqualTo(booking.getBookingId());
+        assertThat(response.flightNumber()).isEqualTo(booking.getFlightNumber());
+        assertThat(response.seatNumber()).isEqualTo(booking.getSeatNumber());
+        assertThat(response.status()).isEqualTo(booking.getStatus());
     }
 
     @Test
@@ -50,7 +58,7 @@ class BookingQueryServiceTest {
         when(bookingSeatMappingRepository.findAllByFlightNumber(flightNumber))
                 .thenReturn(List.of());
 
-        List<BookingSeatMapping> result = bookingQueryService.findBookingsByFlightNumber(flightNumber);
+        List<BookingSeatMappingResponse> result = bookingQueryService.findBookingsByFlightNumber(flightNumber);
 
         assertThat(result)
                 .isEmpty();
@@ -66,11 +74,13 @@ class BookingQueryServiceTest {
         when(bookingSeatMappingRepository.findByBookingId(bookingId))
                 .thenReturn(Optional.of(booking));
 
-        BookingSeatMapping result = bookingQueryService.findBookingById(bookingId);
+        BookingSeatMappingResponse result = bookingQueryService.findBookingById(bookingId);
 
-        assertThat(result)
-                .isNotNull()
-                .isEqualTo(booking);
+        assertThat(result).isNotNull();
+        assertThat(result.bookingId()).isEqualTo(booking.getBookingId());
+        assertThat(result.flightNumber()).isEqualTo(booking.getFlightNumber());
+        assertThat(result.seatNumber()).isEqualTo(booking.getSeatNumber());
+        assertThat(result.status()).isEqualTo(booking.getStatus());
     }
 
     @Test

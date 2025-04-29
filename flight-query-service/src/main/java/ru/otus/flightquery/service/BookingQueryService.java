@@ -5,6 +5,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.otus.common.entity.BookingSeatMapping;
+import ru.otus.common.response.BookingSeatMappingResponse;
+import ru.otus.flightquery.mapper.BookingSeatMappingMapper;
 import ru.otus.flightquery.repository.BookingSeatMappingRepository;
 
 import java.util.List;
@@ -15,17 +17,26 @@ import java.util.List;
 public class BookingQueryService {
 
     private final BookingSeatMappingRepository bookingSeatMappingRepository;
+    private final BookingSeatMappingMapper bookingSeatMappingMapper;
 
     @Transactional(readOnly = true)
-    public List<BookingSeatMapping> findBookingsByFlightNumber(String flightNumber) {
+    public List<BookingSeatMappingResponse> findBookingsByFlightNumber(String flightNumber) {
         log.info("Finding bookings for flight number: {}", flightNumber);
-        return bookingSeatMappingRepository.findAllByFlightNumber(flightNumber);
+
+        List<BookingSeatMapping> bookings = bookingSeatMappingRepository.findAllByFlightNumber(flightNumber);
+        return bookingSeatMappingMapper.toResponseList(bookings);
     }
 
     @Transactional(readOnly = true)
-    public BookingSeatMapping findBookingById(String bookingId) {
+    public BookingSeatMappingResponse findBookingById(String bookingId) {
         log.info("Finding booking by bookingId: {}", bookingId);
-        return bookingSeatMappingRepository.findByBookingId(bookingId)
-                .orElseThrow(() -> new RuntimeException("Booking not found for bookingId: " + bookingId));
+
+        BookingSeatMapping booking = bookingSeatMappingRepository.findByBookingId(bookingId)
+                .orElseThrow(() -> {
+                    log.warn("Booking not found for bookingId: {}", bookingId);
+                    return new RuntimeException("Booking not found for bookingId: " + bookingId);
+                });
+
+        return bookingSeatMappingMapper.toResponse(booking);
     }
 }
