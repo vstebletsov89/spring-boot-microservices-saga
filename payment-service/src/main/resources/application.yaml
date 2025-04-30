@@ -1,6 +1,11 @@
 server:
   port: 8084
 
+app:
+  kafka:
+    topic:
+      payments: payment-service.payments
+
 spring:
   application:
     name: payment-service

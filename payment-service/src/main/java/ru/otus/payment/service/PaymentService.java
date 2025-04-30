@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import ru.otus.common.command.ProcessPaymentCommand;
 import ru.otus.common.saga.PaymentFailedEvent;
 import ru.otus.common.saga.PaymentProcessedEvent;
+import ru.otus.payment.publisher.PaymentPublisher;
 
 import java.math.BigDecimal;
 
@@ -16,6 +17,8 @@ import java.math.BigDecimal;
 public class PaymentService {
 
     private final EventGateway eventGateway;
+
+    private final PaymentPublisher paymentPublisher;
 
     public void process(ProcessPaymentCommand cmd) {
         log.info("Processing payment: {}", cmd);
@@ -33,6 +36,8 @@ public class PaymentService {
                     cmd.bookingId(),
                     cmd.userId()
             ));
+
+            paymentPublisher.publish();
         }
     }
 }
