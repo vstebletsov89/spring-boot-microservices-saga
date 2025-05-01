@@ -14,6 +14,7 @@ TODO:
 !добавить java agent для трейсов?
 !jmeter
 
+!другие требования из чеклиста?
 !add linter (findbugs?)
 !discovery-service?
 !api-gateway?
