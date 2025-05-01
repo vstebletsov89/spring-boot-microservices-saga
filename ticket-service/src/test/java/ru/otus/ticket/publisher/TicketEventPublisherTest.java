@@ -60,8 +60,10 @@ class TicketEventPublisherTest {
     }
 
     @AfterAll
-    static void tearDown() {
-        consumer.close();
+    static void tearDown(@Autowired EmbeddedKafkaBroker broker) {
+        consumer.unsubscribe();
+        consumer.close(Duration.ofSeconds(5));
+        broker.destroy();
     }
 
     @DynamicPropertySource
