@@ -7,11 +7,10 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import ru.otus.common.entity.BookingSeatMapping;
 import ru.otus.common.enums.BookingStatus;
 import ru.otus.common.response.BookingSeatMappingResponse;
-import ru.otus.flightquery.mapper.BookingSeatMappingMapper;
 import ru.otus.flightquery.mapper.BookingSeatMappingMapperImpl;
 import ru.otus.flightquery.repository.BookingSeatMappingRepository;
 
-import java.time.OffsetDateTime;
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,7 +32,7 @@ class BookingQueryServiceTest {
         String flightNumber = "FL123";
         BookingSeatMapping booking =
                 new BookingSeatMapping(1L, "b123", "FL123",
-                        "1A", OffsetDateTime.now(), BookingStatus.PAID);
+                        "1A", Instant.now(), BookingStatus.PAID);
 
         when(bookingSeatMappingRepository.findAllByFlightNumber(flightNumber))
                 .thenReturn(List.of(booking));
@@ -69,7 +68,7 @@ class BookingQueryServiceTest {
         String bookingId = "b123";
         BookingSeatMapping booking =
                 new BookingSeatMapping(1L, "b123", "FL123",
-                        "1A", OffsetDateTime.now(), BookingStatus.PAID);
+                        "1A", Instant.now(), BookingStatus.PAID);
 
         when(bookingSeatMappingRepository.findByBookingId(bookingId))
                 .thenReturn(Optional.of(booking));

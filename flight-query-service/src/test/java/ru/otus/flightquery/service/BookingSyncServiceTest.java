@@ -10,7 +10,9 @@ import ru.otus.common.kafka.BookingSeatCreatedEvent;
 import ru.otus.common.kafka.BookingSeatUpdatedEvent;
 import ru.otus.flightquery.repository.BookingSeatMappingRepository;
 
-import java.time.OffsetDateTime;
+
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -28,7 +30,7 @@ class BookingSyncServiceTest {
     @Autowired
     private BookingSyncService bookingSyncService;
 
-    private final OffsetDateTime reservedAt = OffsetDateTime.now();
+    private final Instant reservedAt = Instant.now();
 
     @Test
     void shouldHandleBookingSeatCreatedEvent() {
@@ -55,7 +57,7 @@ class BookingSyncServiceTest {
     void shouldHandleBookingSeatUpdatedEvent() {
         BookingSeatMapping existingBooking =
                 new BookingSeatMapping(1L, "b123", "FL123",
-                        "1A", OffsetDateTime.now(), BookingStatus.RESERVED);
+                        "1A", Instant.now(), BookingStatus.RESERVED);
 
         when(bookingSeatMappingRepository.findByBookingId(anyString()))
                 .thenReturn(Optional.of(existingBooking));
@@ -64,7 +66,7 @@ class BookingSyncServiceTest {
                 "b123",
                 "FL123",
                 "14B",
-                reservedAt.plusDays(1),
+                reservedAt.plus(1, ChronoUnit.HOURS),
                 BookingStatus.PAID
         );
 

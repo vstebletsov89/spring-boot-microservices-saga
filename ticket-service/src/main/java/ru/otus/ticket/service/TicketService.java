@@ -8,7 +8,7 @@ import ru.otus.common.saga.BookingCreatedEvent;
 import ru.otus.ticket.entity.BookingOutboxEvent;
 import ru.otus.ticket.repository.BookingOutboxRepository;
 
-import java.time.OffsetDateTime;
+import java.time.Instant;
 import java.util.UUID;
 
 @Service
@@ -33,7 +33,7 @@ public class TicketService {
                 .aggregateType("Booking")
                 .aggregateId(bookingCreatedEvent.bookingId())
                 .payload(payload)
-                .createdAt(OffsetDateTime.now())
+                .createdAt(Instant.now())
                 .sent(false)
                 .build();
 

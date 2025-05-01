@@ -15,6 +15,17 @@ public class KafkaTopicsConfig {
     @Value("${app.kafka.topic.bookings}")
     private String bookingsTopic;
 
+    @Value("${app.kafka.topic.dlt}")
+    private String dltTopic;
+
+    @Bean
+    public NewTopic dltTopic() {
+        return TopicBuilder.name(dltTopic)
+                .partitions(1)
+                .replicas(1)
+                .build();
+    }
+
     @Bean
     public NewTopic flightsTopic() {
         return TopicBuilder.name(flightsTopic)

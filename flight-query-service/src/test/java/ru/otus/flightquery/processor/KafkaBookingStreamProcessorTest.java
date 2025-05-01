@@ -23,7 +23,7 @@ import ru.otus.flightquery.config.KafkaStreamsTestConfig;
 import ru.otus.flightquery.publisher.DltPublisher;
 import ru.otus.flightquery.service.BookingSyncService;
 
-import java.time.OffsetDateTime;
+import java.time.Instant;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -62,13 +62,12 @@ class KafkaBookingStreamProcessorTest {
 
     @Test
     void shouldProcessBookingSeatCreatedEvent() throws Exception {
-        OffsetDateTime reservedAt = OffsetDateTime.parse("2025-04-28T12:00:00Z");
 
         BookingSeatCreatedEvent event = new BookingSeatCreatedEvent(
                 "b123",
                 "SU100",
                 "15A",
-                reservedAt,
+                Instant.now(),
                 BookingStatus.RESERVED
         );
 
@@ -89,13 +88,11 @@ class KafkaBookingStreamProcessorTest {
 
     @Test
     void shouldProcessBookingSeatUpdatedEvent() throws Exception {
-        OffsetDateTime reservedAt = OffsetDateTime.parse("2025-05-01T15:30:00Z");
-
         BookingSeatUpdatedEvent event = new BookingSeatUpdatedEvent(
                 "b456",
                 "SU200",
                 "17B",
-                reservedAt,
+                Instant.now(),
                 BookingStatus.CANCELLED
         );
 

@@ -24,7 +24,7 @@ import ru.otus.flight.repository.FlightRepository;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.time.OffsetDateTime;
+import java.time.Instant;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -72,7 +72,7 @@ public class SeatService {
                 .bookingId(cmd.bookingId())
                 .flightNumber(cmd.flightNumber())
                 .seatNumber(generateSeatNumber(flight.getFlightNumber()))
-                .reservedAt(OffsetDateTime.now())
+                .reservedAt(Instant.now())
                 .status(BookingStatus.RESERVED)
                 .build();
 

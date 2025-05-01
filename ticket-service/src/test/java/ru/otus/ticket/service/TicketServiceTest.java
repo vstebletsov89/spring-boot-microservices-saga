@@ -10,7 +10,7 @@ import ru.otus.common.saga.BookingCreatedEvent;
 import ru.otus.ticket.config.JacksonConfig;
 import ru.otus.ticket.repository.BookingOutboxRepository;
 
-import java.time.OffsetDateTime;
+import java.time.Instant;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.argThat;
@@ -41,7 +41,7 @@ class TicketServiceTest {
                 saved.getAggregateId().equals("b1") &&
                 saved.getPayload().equals(objectMapper.writeValueAsString(event)) &&
                 !saved.isSent() &&
-                saved.getCreatedAt().isBefore(OffsetDateTime.now().plusSeconds(1));
+                saved.getCreatedAt().isBefore(Instant.now().plusSeconds(1));
             } catch (JsonProcessingException e) {
                 throw new RuntimeException(e);
             }

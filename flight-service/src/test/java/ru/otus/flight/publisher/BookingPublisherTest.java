@@ -23,7 +23,7 @@ import ru.otus.flight.config.JacksonConfig;
 import ru.otus.flight.config.KafkaTestConfig;
 
 import java.time.Duration;
-import java.time.OffsetDateTime;
+import java.time.Instant;
 import java.util.Collections;
 import java.util.Map;
 import java.util.UUID;
@@ -90,7 +90,7 @@ class BookingPublisherTest {
                   "B123",
                 "FL123",
                 "13A",
-                OffsetDateTime.now(),
+                Instant.now(),
                 BookingStatus.RESERVED
         );
     }

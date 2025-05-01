@@ -11,12 +11,11 @@ import org.springframework.kafka.annotation.KafkaStreamsDefaultConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
-import ru.otus.common.entity.BookingSeatMapping;
 import ru.otus.common.enums.BookingStatus;
 import ru.otus.common.response.BookingSeatMappingResponse;
 import ru.otus.flightquery.service.BookingQueryService;
 
-import java.time.OffsetDateTime;
+import java.time.Instant;
 import java.util.Collections;
 import java.util.List;
 
@@ -59,7 +58,7 @@ class BookingQueryControllerTest {
                         "b123",
                         "FL123",
                         "1A",
-                        OffsetDateTime.now(),
+                        Instant.now(),
                         BookingStatus.PAID
                 )
         );
@@ -83,7 +82,7 @@ class BookingQueryControllerTest {
                 "b123",
                 "FL123",
                 "1A",
-                OffsetDateTime.now(),
+                Instant.now(),
                 BookingStatus.PAID
         );
 

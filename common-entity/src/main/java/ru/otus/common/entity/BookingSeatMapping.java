@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import ru.otus.common.enums.BookingStatus;
 
-import java.time.OffsetDateTime;
+import java.time.Instant;
 
 
 @Entity
@@ -36,7 +36,7 @@ public class BookingSeatMapping {
 
     private String seatNumber;
 
-    private OffsetDateTime reservedAt;
+    private Instant reservedAt;
 
     @Enumerated(EnumType.STRING)
     private BookingStatus status;

@@ -10,7 +10,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.OffsetDateTime;
+import java.time.Instant;
 import java.util.UUID;
 
 @Entity
@@ -31,6 +31,6 @@ public class BookingOutboxEvent {
     @Lob
     private String payload;
 
-    private OffsetDateTime createdAt;
+    private Instant createdAt;
     private boolean sent;
 }
