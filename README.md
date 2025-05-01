@@ -6,8 +6,8 @@ http://localhost:8024/ - axon server
 
 TODO:
 
+!добавить дб к payment сервису и сохранять результат оплаты
 !добавить swagger для всех @RestController
-!добавить в payment сервис отправку сообщения, или команды о том что booking оплачен
 !проверить запросы из requests (eventual consistency for query service)
 !добавить grafana + prometheus
 !добавить java agent для трейсов?
