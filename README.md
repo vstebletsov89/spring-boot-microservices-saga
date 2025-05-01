@@ -6,17 +6,14 @@ http://localhost:8024/ - axon server
 
 TODO:
 
+!добавить swagger и controller advice? для всех @RestController
 !добавить дб к payment сервису и сохранять результат оплаты
-!добавить swagger для всех @RestController
-!проверить запросы из requests (eventual consistency for query service)
+
 !добавить grafana + prometheus
 !добавить java agent для трейсов?
 !helm
 
-!добавить avro и schema registry (поместить avro в common?)
 !добавить мапперы events->commands
-
-!нарисовать диаграмму
 
 !add linter (findbugs?)
 !discovery-service?
