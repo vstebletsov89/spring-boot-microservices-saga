@@ -16,6 +16,20 @@ spring:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.apache.kafka.common.serialization.StringSerializer
 
+  datasource:
+    url: jdbc:h2:mem:paymentdb
+    username: pguser
+    password: pgpass
+    driver-class-name: org.h2.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.yaml
+
 axon:
   axonserver:
     enabled: true

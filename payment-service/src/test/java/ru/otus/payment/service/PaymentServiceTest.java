@@ -12,6 +12,7 @@ import ru.otus.common.kafka.PaymentEvent;
 import ru.otus.common.saga.PaymentFailedEvent;
 import ru.otus.common.saga.PaymentProcessedEvent;
 import ru.otus.payment.publisher.PaymentPublisher;
+import ru.otus.payment.repository.PaymentRepository;
 
 import java.math.BigDecimal;
 
@@ -29,6 +30,9 @@ class PaymentServiceTest {
 
     @MockitoBean
     private PaymentPublisher paymentPublisher;
+
+    @MockitoBean
+    private PaymentRepository paymentRepository;
 
     @Test
     void shouldPublishPaymentProcessedEventAndKafka_whenAmountIsPositive() {
