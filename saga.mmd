@@ -4,26 +4,26 @@ sequenceDiagram
     participant PS as Payment Service
     participant TS as Ticket Service
 
-    FS->>Saga: FlightBookedEvent(bookingId, flightNumber, userId)
-    Saga->>FS: ReserveSeatCommand(bookingId, flightNumber, userId)
+    FS->>Saga: FlightBookedEvent
+    Saga->>FS: ReserveSeatCommand
 
     alt Seat reserved
-        FS->>Saga: SeatReservedEvent(bookingId, amount)
-        Saga->>PS: ProcessPaymentCommand(bookingId, userId, amount)
+        FS->>Saga: SeatReservedEvent
+        Saga->>PS: ProcessPaymentCommand
 
         alt Payment successful
-            PS->>Saga: PaymentProcessedEvent(bookingId)
-            Saga->>TS: ConfirmBookingCommand(bookingId)
+            PS->>Saga: PaymentProcessedEvent
+            Saga->>TS: ConfirmBookingCommand
             Note right of Saga: Saga ends successfully
         else Payment failed
-            PS->>Saga: PaymentFailedEvent(bookingId)
-            Saga->>TS: CancelBookingCommand(bookingId)
-            Saga->>FS: ReleaseSeatCommand(bookingId)
+            PS->>Saga: PaymentFailedEvent
+            Saga->>TS: CancelBookingCommand
+            Saga->>FS: ReleaseSeatCommand
             Note right of Saga: Saga ends with compensation
         end
 
     else Seat reservation failed
-        FS->>Saga: SeatReservationFailedEvent(bookingId)
-        Saga->>TS: CancelBookingCommand(bookingId)
+        FS->>Saga: SeatReservationFailedEvent
+        Saga->>TS: CancelBookingCommand
         Note right of Saga: Saga ends with compensation
     end
