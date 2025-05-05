@@ -6,8 +6,8 @@ http://localhost:8024/ - axon server
 
 TODO:
 
+!controller advice
 
-!добавить swagger и controller advice? для всех @RestController
 !helm
 
 !добавить grafana + prometheus
