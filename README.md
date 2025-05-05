@@ -6,17 +6,12 @@ http://localhost:8024/ - axon server
 
 TODO:
 
-!controller advice
-
 !helm
 
 !добавить grafana + prometheus
 !добавить java agent для трейсов?
 !jmeter
-
 !другие требования из чеклиста?
-!add linter (findbugs?)
-!discovery-service?
 !api-gateway?
 
 
