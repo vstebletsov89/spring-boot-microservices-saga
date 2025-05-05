@@ -1,6 +1,8 @@
 package ru.otus.flight.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -29,7 +31,13 @@ public class FlightWriteController {
     })
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void createFlight(@RequestBody @Valid CreateFlightRequest request) {
+    public void createFlight(
+            @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    description = "Flight creation data",
+                    required = true,
+                    content = @Content(schema = @Schema(implementation = CreateFlightRequest.class))
+            )
+            @RequestBody @Valid CreateFlightRequest request) {
         flightWriteService.createFlight(request);
     }
 }
