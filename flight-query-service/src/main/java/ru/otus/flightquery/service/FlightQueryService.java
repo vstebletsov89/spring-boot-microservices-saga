@@ -2,6 +2,7 @@ package ru.otus.flightquery.service;
 
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import ru.otus.common.request.FlightSearchRequest;
 import ru.otus.common.response.FlightResponse;
@@ -18,6 +19,7 @@ public class FlightQueryService {
     private final FlightRepository flightRepository;
     private final FlightMapper flightMapper;
 
+    @Cacheable(value = "roundTripFlights", key = "#request.hashCode()")
     public RoundTripFlightResponse searchRoundTripFlights(FlightSearchRequest request) {
         List<FlightResponse> outbound = flightRepository.findFlightsBetweenDates(
                         request.fromCode(),

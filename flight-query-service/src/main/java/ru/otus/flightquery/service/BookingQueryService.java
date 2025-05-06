@@ -2,6 +2,7 @@ package ru.otus.flightquery.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.otus.common.entity.BookingSeatMapping;
@@ -19,6 +20,7 @@ public class BookingQueryService {
     private final BookingSeatMappingRepository bookingSeatMappingRepository;
     private final BookingSeatMappingMapper bookingSeatMappingMapper;
 
+    @Cacheable(value = "bookingsByFlight", key = "#flightNumber")
     @Transactional(readOnly = true)
     public List<BookingSeatMappingResponse> findBookingsByFlightNumber(String flightNumber) {
         log.info("Finding bookings for flight number: {}", flightNumber);
@@ -27,6 +29,7 @@ public class BookingQueryService {
         return bookingSeatMappingMapper.toResponseList(bookings);
     }
 
+    @Cacheable(value = "bookingById", key = "#bookingId")
     @Transactional(readOnly = true)
     public BookingSeatMappingResponse findBookingById(String bookingId) {
         log.info("Finding booking by bookingId: {}", bookingId);

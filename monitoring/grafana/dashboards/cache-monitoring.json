@@ -1,0 +1,76 @@
+{
+  "id": null,
+  "uid": null,
+  "title": "Cache Monitoring",
+  "tags": [],
+  "timezone": "browser",
+  "schemaVersion": 41,
+  "version": 1,
+  "refresh": "5s",
+  "panels": [
+    {
+      "type": "graph",
+      "title": "Cache Size",
+      "targets": [
+        {
+          "expr": "cache.size.*",
+          "legendFormat": "{{instance}} - {{__name__}}",
+          "refId": "A"
+        }
+      ],
+      "id": 1,
+      "lines": true,
+      "linewidth": 2,
+      "points": false,
+      "gridPos": { "h": 9, "w": 8, "x": 0, "y": 0 }
+    },
+    {
+      "type": "graph",
+      "title": "Cache Hits",
+      "targets": [
+        {
+          "expr": "cache.requests.*.hit",
+          "legendFormat": "{{__name__}}",
+          "refId": "B"
+        }
+      ],
+      "id": 2,
+      "lines": true,
+      "linewidth": 2,
+      "points": false,
+      "gridPos": { "h": 9, "w": 8, "x": 8, "y": 0 }
+    },
+    {
+      "type": "graph",
+      "title": "Cache Misses",
+      "targets": [
+        {
+          "expr": "cache.requests.*.miss",
+          "legendFormat": "{{__name__}}",
+          "refId": "C"
+        }
+      ],
+      "id": 3,
+      "lines": true,
+      "linewidth": 2,
+      "points": false,
+      "gridPos": { "h": 9, "w": 8, "x": 16, "y": 0 }
+    },
+    {
+      "type": "graph",
+      "title": "Hit Ratio (%)",
+      "targets": [
+        {
+          "expr": "cache.requests.*.hit / (cache.requests.*.hit + cache.requests.*.miss) * 100",
+          "legendFormat": "{{__name__}}",
+          "refId": "D"
+        }
+      ],
+      "id": 4,
+      "lines": true,
+      "linewidth": 2,
+      "points": false,
+      "gridPos": { "h": 9, "w": 24, "x": 0, "y": 9 }
+    }
+  ]
+}

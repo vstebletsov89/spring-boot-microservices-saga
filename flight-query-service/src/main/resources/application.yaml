@@ -52,6 +52,23 @@ springdoc:
   swagger-ui:
     path: /api-docs-ui
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info, prometheus, metrics
+  endpoint:
+    health:
+      show-details: always
+  metrics:
+    tags:
+      application: flight-query-service
+
+logging:
+  level:
+    org.springframework.cache: DEBUG
+    com.github.benmanes.caffeine.cache: TRACE
+
 #logging:
 #  level:
 #    org.apache.kafka.streams: DEBUG

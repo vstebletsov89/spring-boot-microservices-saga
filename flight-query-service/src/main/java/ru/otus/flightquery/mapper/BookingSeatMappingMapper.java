@@ -15,5 +15,4 @@ public interface BookingSeatMappingMapper {
 
     List<BookingSeatMappingResponse> toResponseList(List<BookingSeatMapping> entities);
 
-    List<BookingSeatMapping> toEntityList(List<BookingSeatMappingResponse> responses);
 }
