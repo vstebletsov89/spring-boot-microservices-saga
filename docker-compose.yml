@@ -241,6 +241,8 @@ services:
       - '--config.file=/etc/prometheus/prometheus.yml'
     ports:
       - "9090:9090"
+    networks:
+      - app-network
 
   grafana:
     image: grafana/grafana:latest
@@ -254,6 +256,8 @@ services:
     environment:
       - GF_SECURITY_ADMIN_USER=admin
       - GF_SECURITY_ADMIN_PASSWORD=pass
+    networks:
+      - app-network
 
 volumes:
   pg_data_flightquery:

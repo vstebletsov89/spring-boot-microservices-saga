@@ -1,6 +1,7 @@
 package ru.otus.flightquery.config;
 
 import com.github.benmanes.caffeine.cache.Caffeine;
+import io.micrometer.core.instrument.Tags;
 import io.micrometer.core.instrument.binder.MeterBinder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.CacheManager;
@@ -53,9 +54,9 @@ public class CacheConfig {
                     CaffeineCache cache = (CaffeineCache) caffeineManager.getCache(name);
 
                     if (cache != null) {
-                        registry.gauge("cache.size." + name, cache, c -> c.getNativeCache().estimatedSize());
-                        registry.gauge("cache.requests." + name + ".hit", cache, c -> c.getNativeCache().stats().hitCount());
-                        registry.gauge("cache.requests." + name + ".miss", cache, c -> c.getNativeCache().stats().missCount());
+                        registry.gauge("cache_size", Tags.of("cache", name), cache, c -> c.getNativeCache().estimatedSize());
+                        registry.gauge("cache_requests_hit", Tags.of("cache", name), cache, c -> c.getNativeCache().stats().hitCount());
+                        registry.gauge("cache_requests_miss", Tags.of("cache", name), cache, c -> c.getNativeCache().stats().missCount());
                     }
                 }
                 log.info("Cache metrics registered for caches: {}", cacheNames);

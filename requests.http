@@ -34,5 +34,5 @@ GET http://localhost:8084/api/bookings/flight/EK4004
 Accept: application/json
 
 ### Получить детали конкретного бронирования
-GET http://localhost:8084/api/bookings/627f2329-589e-436b-bb36-4474b3a5cc8e
+GET http://localhost:8084/api/bookings/e9697b1f-5588-4433-988a-2cf8fb1e1a4c
 Accept: application/json
