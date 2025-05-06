@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="utf-8"?>
+<jmeterTestPlan jmeter="5.6.3" properties="5.0" version="1.2">
+<hashTree>
+<TestPlan guiclass="TestPlanGui" testclass="TestPlan" testname="Test Plan">
+<elementProp elementType="Arguments" guiclass="ArgumentsPanel" name="TestPlan.user_defined_variables" testclass="Arguments" testname="User Defined Variables">
+<collectionProp name="Arguments.arguments"/>
+</elementProp>
+<boolProp name="TestPlan.functional_mode">false</boolProp>
+<boolProp name="TestPlan.serialize_threadgroups">false</boolProp>
+</TestPlan>
+<hashTree>
+<ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Find bookings">
+<intProp name="ThreadGroup.num_threads">100</intProp>
+<intProp name="ThreadGroup.ramp_time">5</intProp>
+<boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
+<stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
+<elementProp elementType="LoopController" guiclass="LoopControlPanel" name="ThreadGroup.main_controller" testclass="LoopController" testname="Loop Controller">
+<stringProp name="LoopController.loops">10</stringProp>
+<boolProp name="LoopController.continue_forever">false</boolProp>
+</elementProp>
+</ThreadGroup>
+<hashTree>
+<HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Find bookings by flight">
+<stringProp name="HTTPSampler.domain">localhost</stringProp>
+<stringProp name="HTTPSampler.port">8084</stringProp>
+<stringProp name="HTTPSampler.path">/api/bookings/flight/EK4004</stringProp>
+<boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+<stringProp name="HTTPSampler.method">GET</stringProp>
+<boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+<boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
+<elementProp elementType="Arguments" guiclass="HTTPArgumentsPanel" name="HTTPsampler.Arguments" testclass="Arguments" testname="User Defined Variables">
+<collectionProp name="Arguments.arguments"/>
+</elementProp>
+</HTTPSamplerProxy>
+<hashTree>
+<HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager">
+<collectionProp name="HeaderManager.headers">
+<elementProp elementType="Header" name="">
+<stringProp name="Header.name">Content-Type</stringProp>
+<stringProp name="Header.value">application/json</stringProp>
+</elementProp>
+</collectionProp>
+</HeaderManager>
+<hashTree/>
+<ResultCollector guiclass="SummaryReport" testclass="ResultCollector" testname="Summary Report">
+<boolProp name="ResultCollector.error_logging">false</boolProp>
+<objProp>
+<name>saveConfig</name>
+<value class="SampleSaveConfiguration">
+<time>true</time>
+<latency>true</latency>
+<timestamp>true</timestamp>
+<success>true</success>
+<label>true</label>
+<code>true</code>
+<message>true</message>
+<threadName>true</threadName>
+<dataType>true</dataType>
+<encoding>false</encoding>
+<assertions>true</assertions>
+<subresults>true</subresults>
+<responseData>false</responseData>
+<samplerData>false</samplerData>
+<xml>false</xml>
+<fieldNames>true</fieldNames>
+<responseHeaders>false</responseHeaders>
+<requestHeaders>false</requestHeaders>
+<responseDataOnError>false</responseDataOnError>
+<saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
+<assertionsResultsToSave>0</assertionsResultsToSave>
+<bytes>true</bytes>
+<sentBytes>true</sentBytes>
+<url>true</url>
+<threadCounts>true</threadCounts>
+<idleTime>true</idleTime>
+<connectTime>true</connectTime>
+</value>
+</objProp>
+<stringProp name="filename"/>
+</ResultCollector>
+<hashTree/>
+<JSR223PreProcessor guiclass="TestBeanGUI" testclass="JSR223PreProcessor" testname="JSR223 PreProcessor">
+<stringProp name="cacheKey">true</stringProp>
+<stringProp name="filename"/>
+<stringProp name="parameters"/>
+<stringProp name="script">
+</stringProp>
+<stringProp name="scriptLanguage">groovy</stringProp>
+</JSR223PreProcessor>
+<hashTree/>
+<ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree">
+<boolProp name="ResultCollector.error_logging">false</boolProp>
+<objProp>
+<name>saveConfig</name>
+<value class="SampleSaveConfiguration">
+<time>true</time>
+<latency>true</latency>
+<timestamp>true</timestamp>
+<success>true</success>
+<label>true</label>
+<code>true</code>
+<message>true</message>
+<threadName>true</threadName>
+<dataType>true</dataType>
+<encoding>false</encoding>
+<assertions>true</assertions>
+<subresults>true</subresults>
+<responseData>false</responseData>
+<samplerData>false</samplerData>
+<xml>false</xml>
+<fieldNames>true</fieldNames>
+<responseHeaders>false</responseHeaders>
+<requestHeaders>false</requestHeaders>
+<responseDataOnError>false</responseDataOnError>
+<saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
+<assertionsResultsToSave>0</assertionsResultsToSave>
+<bytes>true</bytes>
+<sentBytes>true</sentBytes>
+<url>true</url>
+<threadCounts>true</threadCounts>
+<idleTime>true</idleTime>
+<connectTime>true</connectTime>
+</value>
+</objProp>
+<stringProp name="filename"/>
+</ResultCollector>
+<hashTree/>
+</hashTree>
+</hashTree>
+</hashTree>
+<ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Search flights">
+<intProp name="ThreadGroup.num_threads">100</intProp>
+<intProp name="ThreadGroup.ramp_time">5</intProp>
+<boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
+<stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
+<elementProp elementType="LoopController" guiclass="LoopControlPanel" name="ThreadGroup.main_controller" testclass="LoopController" testname="Loop Controller">
+<stringProp name="LoopController.loops">10</stringProp>
+<boolProp name="LoopController.continue_forever">false</boolProp>
+</elementProp>
+</ThreadGroup><hashTree>
+<HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Find available flights">
+<stringProp name="HTTPSampler.domain">localhost</stringProp>
+<stringProp name="HTTPSampler.port">8084</stringProp>
+<stringProp name="HTTPSampler.path">/api/flights/search</stringProp>
+<boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+<stringProp name="HTTPSampler.method">POST</stringProp>
+<boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+<boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+<elementProp elementType="Arguments" name="HTTPsampler.Arguments">
+<collectionProp name="Arguments.arguments">
+<elementProp elementType="HTTPArgument" name="">
+<boolProp name="HTTPArgument.always_encode">false</boolProp>
+<stringProp name="Argument.value">{
+  "fromCode": "DXB",
+  "toCode": "JFK",
+  "departureDate": "2025-06-04T11:30:00Z",
+  "returnDate": "2025-06-20T11:30:00Z",
+  "passengerCount": 2
+}</stringProp>
+<stringProp name="Argument.metadata">=</stringProp>
+</elementProp>
+</collectionProp>
+</elementProp>
+</HTTPSamplerProxy>
+<hashTree>
+<HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager">
+<collectionProp name="HeaderManager.headers">
+<elementProp elementType="Header" name="">
+<stringProp name="Header.name">Content-Type</stringProp>
+<stringProp name="Header.value">application/json</stringProp>
+</elementProp>
+</collectionProp>
+</HeaderManager>
+<hashTree/>
+<ResultCollector guiclass="SummaryReport" testclass="ResultCollector" testname="Summary Report">
+<boolProp name="ResultCollector.error_logging">false</boolProp>
+<objProp>
+<name>saveConfig</name>
+<value class="SampleSaveConfiguration">
+<time>true</time>
+<latency>true</latency>
+<timestamp>true</timestamp>
+<success>true</success>
+<label>true</label>
+<code>true</code>
+<message>true</message>
+<threadName>true</threadName>
+<dataType>true</dataType>
+<encoding>false</encoding>
+<assertions>true</assertions>
+<subresults>true</subresults>
+<responseData>false</responseData>
+<samplerData>false</samplerData>
+<xml>false</xml>
+<fieldNames>true</fieldNames>
+<responseHeaders>false</responseHeaders>
+<requestHeaders>false</requestHeaders>
+<responseDataOnError>false</responseDataOnError>
+<saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
+<assertionsResultsToSave>0</assertionsResultsToSave>
+<bytes>true</bytes>
+<sentBytes>true</sentBytes>
+<url>true</url>
+<threadCounts>true</threadCounts>
+<idleTime>true</idleTime>
+<connectTime>true</connectTime>
+</value>
+</objProp>
+<stringProp name="filename"/>
+</ResultCollector>
+<hashTree/>
+<JSR223PreProcessor guiclass="TestBeanGUI" testclass="JSR223PreProcessor" testname="JSR223 PreProcessor">
+<stringProp name="cacheKey">true</stringProp>
+<stringProp name="filename"/>
+<stringProp name="parameters"/>
+<stringProp name="script">
+</stringProp>
+<stringProp name="scriptLanguage">groovy</stringProp>
+</JSR223PreProcessor>
+<hashTree/>
+<ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree">
+<boolProp name="ResultCollector.error_logging">false</boolProp>
+<objProp>
+<name>saveConfig</name>
+<value class="SampleSaveConfiguration">
+<time>true</time>
+<latency>true</latency>
+<timestamp>true</timestamp>
+<success>true</success>
+<label>true</label>
+<code>true</code>
+<message>true</message>
+<threadName>true</threadName>
+<dataType>true</dataType>
+<encoding>false</encoding>
+<assertions>true</assertions>
+<subresults>true</subresults>
+<responseData>false</responseData>
+<samplerData>false</samplerData>
+<xml>false</xml>
+<fieldNames>true</fieldNames>
+<responseHeaders>false</responseHeaders>
+<requestHeaders>false</requestHeaders>
+<responseDataOnError>false</responseDataOnError>
+<saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
+<assertionsResultsToSave>0</assertionsResultsToSave>
+<bytes>true</bytes>
+<sentBytes>true</sentBytes>
+<url>true</url>
+<threadCounts>true</threadCounts>
+<idleTime>true</idleTime>
+<connectTime>true</connectTime>
+</value>
+</objProp>
+<stringProp name="filename"/>
+</ResultCollector>
+<hashTree/>
+</hashTree>
+</hashTree></hashTree>
+</jmeterTestPlan>
