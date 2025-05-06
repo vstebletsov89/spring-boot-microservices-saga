@@ -7,6 +7,8 @@ http://localhost:8084/actuator/prometheus - метрики
 
 TODO:
 
+не работает регистрации 1000 билетов???
+
 current: 7. Для всех эндпоинтов должны быть запросы с применением JMeter
 !join all request to the one file
 !add find booking by id
