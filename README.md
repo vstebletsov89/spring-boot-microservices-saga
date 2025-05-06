@@ -8,6 +8,11 @@ http://localhost:8084/actuator/prometheus - метрики
 TODO:
 
 current: 7. Для всех эндпоинтов должны быть запросы с применением JMeter
+!join all request to the one file
+!add find booking by id
+!add POST http://localhost:8082/api/tickets for bookings
+!check all RestControllers
+
 
 !!!5. В отдельной папке проекта размещаются helm скрипты для деплоя каждого приложения (в подпапках)
 
