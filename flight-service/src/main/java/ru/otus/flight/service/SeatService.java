@@ -51,16 +51,7 @@ public class SeatService {
                 .findById(cmd.flightNumber())
                 .orElseThrow(() -> new RuntimeException("Flight not found: " + cmd.flightNumber()));
 
-        // freeSeats = totalSeats * (1.0 + (overbookingPercentage / 100.0))
-        BigDecimal totalSeats = BigDecimal.valueOf(flight.getTotalSeats());
-        BigDecimal bookedSeats = BigDecimal.valueOf(flight.getReservedSeats());
-        BigDecimal overbookFactor = BigDecimal.ONE
-                .add(flight.getOverbookingPercentage()
-                        .divide(BigDecimal.valueOf(100), 4, RoundingMode.HALF_UP));
-
-        BigDecimal freeSeats = totalSeats.multiply(overbookFactor).subtract(bookedSeats);
-
-
+        var freeSeats = calculateFreeSeats(flight);
         if (BigDecimal.valueOf(flight.getReservedSeats()).compareTo(freeSeats) < 0) {
             reserveSeat(flight, cmd);
         } else {
@@ -78,6 +69,18 @@ public class SeatService {
 
             eventGateway.publish(new SeatReservationFailedEvent(cmd.bookingId()));
         }
+    }
+
+    public BigDecimal calculateFreeSeats(Flight flight) {
+        // freeSeats = totalSeats * (1.0 + (overbookingPercentage / 100.0))
+        BigDecimal totalSeats = BigDecimal.valueOf(flight.getTotalSeats());
+        BigDecimal bookedSeats = BigDecimal.valueOf(flight.getReservedSeats());
+        BigDecimal overbookFactor = BigDecimal.ONE
+                .add(flight.getOverbookingPercentage()
+                        .divide(BigDecimal.valueOf(100), 4, RoundingMode.HALF_UP));
+
+        return totalSeats.multiply(overbookFactor)
+                .subtract(bookedSeats);
     }
 
     private void reserveSeat(Flight flight, ReserveSeatCommand cmd) {

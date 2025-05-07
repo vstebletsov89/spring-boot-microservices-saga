@@ -33,6 +33,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -65,6 +66,33 @@ public class SeatServiceTest {
 
     @Autowired
     private SeatService seatService;
+
+
+    @Test
+    void shouldCorrectlyCalculateFreeSeats() {
+        Flight flight = new Flight();
+        flight.setTotalSeats(100);
+        flight.setReservedSeats(0);
+        flight.setOverbookingPercentage(BigDecimal.valueOf(5));
+
+        BigDecimal freeSeats = seatService.calculateFreeSeats(flight);
+
+        // 100 * 1.05 = 105
+        assertThat(freeSeats).isEqualByComparingTo(BigDecimal.valueOf(105));
+    }
+
+    @Test
+    void shouldCorrectlyCalculateFreeSeats2() {
+        Flight flight = new Flight();
+        flight.setTotalSeats(100);
+        flight.setReservedSeats(80);
+        flight.setOverbookingPercentage(BigDecimal.valueOf(5));
+
+        BigDecimal freeSeats = seatService.calculateFreeSeats(flight);
+
+        // 100 * 1.05 = 105 - 80 = 25
+        assertThat(freeSeats).isEqualByComparingTo(BigDecimal.valueOf(25));
+    }
 
     @Test
     void shouldReserveSeatSuccessfully() {
