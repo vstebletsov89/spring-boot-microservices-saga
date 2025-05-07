@@ -118,7 +118,8 @@ public class SeatServiceTest {
         when(flightRepository.findById(FLIGHT_NUMBER)).thenReturn(Optional.of(flight));
 
         List<String> expectedSeatNumbers = List.of(
-                "1A", "1B", "1C", "1D", "1E", "1F", "2A", "2B", "2C", "2D"
+                "1A", "1B", "1C", "1D", "1E", "1F", "1G", "1H", "1J", "1K",
+                "2A", "2B", "2C", "2D", "2E", "2F", "2G", "2H", "2J", "2K"
         );
         List<BookingSeatMapping> savedMappings = new ArrayList<>();
 
@@ -130,7 +131,7 @@ public class SeatServiceTest {
             return null;
         }).when(mappingRepository).save(any(BookingSeatMapping.class));
 
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 20; i++) {
             ReserveSeatCommand cmd = new ReserveSeatCommand(
                     BOOKING_ID + i,
                     FLIGHT_NUMBER,
@@ -139,19 +140,19 @@ public class SeatServiceTest {
             seatService.handle(cmd);
         }
 
-        assertEquals(10, savedMappings.size());
+        assertEquals(20, savedMappings.size());
 
         List<String> actualSeatNumbers = savedMappings.stream()
                 .map(BookingSeatMapping::getSeatNumber)
                 .collect(Collectors.toList());
 
-        assertEquals(expectedSeatNumbers, actualSeatNumbers, "Места должны быть в порядке возрастания");
+        assertEquals(expectedSeatNumbers, actualSeatNumbers );
 
-        verify(flightRepository, times(10)).save(flight);
-        verify(mappingRepository, times(10)).save(any(BookingSeatMapping.class));
-        verify(eventGateway, times(10)).publish(any(SeatReservedEvent.class));
-        verify(flightPublisher, times(10)).publish(eq(FLIGHT_NUMBER), any(FlightUpdatedEvent.class));
-        verify(bookingPublisher, times(10)).publish(anyString(), any(BookingSeatCreatedEvent.class));
+        verify(flightRepository, times(20)).save(flight);
+        verify(mappingRepository, times(20)).save(any(BookingSeatMapping.class));
+        verify(eventGateway, times(20)).publish(any(SeatReservedEvent.class));
+        verify(flightPublisher, times(20)).publish(eq(FLIGHT_NUMBER), any(FlightUpdatedEvent.class));
+        verify(bookingPublisher, times(20)).publish(anyString(), any(BookingSeatCreatedEvent.class));
         verifyNoInteractions(bookingFailureRepository);
     }
 
