@@ -6,7 +6,7 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.kafka.annotation.EnableKafkaStreams;
 
 @EnableKafkaStreams
-@EntityScan(basePackages = {"ru.otus.common.entity"})
+@EntityScan(basePackages = {"ru.otus.common.entity", "ru.otus.flight.entity"})
 @SpringBootApplication
 public class FlightServiceApplication {
 

@@ -7,3 +7,5 @@ databaseChangeLog:
       file: db/changelog/003-insert-dummy-airports.yaml
   - include:
       file: db/changelog/004-insert-dummy-flights.yaml
+  - include:
+      file: db/changelog/005-create-booking-failures.yaml

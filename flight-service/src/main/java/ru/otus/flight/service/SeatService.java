@@ -17,8 +17,10 @@ import ru.otus.common.kafka.BookingSeatUpdatedEvent;
 import ru.otus.common.kafka.FlightUpdatedEvent;
 import ru.otus.common.saga.SeatReservationFailedEvent;
 import ru.otus.common.saga.SeatReservedEvent;
+import ru.otus.flight.entity.BookingFailure;
 import ru.otus.flight.publisher.BookingPublisher;
 import ru.otus.flight.publisher.FlightPublisher;
+import ru.otus.flight.repository.BookingFailureRepository;
 import ru.otus.flight.repository.BookingSeatMappingRepository;
 import ru.otus.flight.repository.FlightRepository;
 
@@ -34,6 +36,7 @@ import java.util.stream.Collectors;
 public class SeatService {
 
     private final FlightRepository flightRepository;
+    private final BookingFailureRepository bookingFailureRepository;
     private final BookingSeatMappingRepository mappingRepository;
     private final EventGateway eventGateway;
     private final FlightPublisher flightPublisher;
@@ -49,16 +52,30 @@ public class SeatService {
                 .orElseThrow(() -> new RuntimeException("Flight not found: " + cmd.flightNumber()));
 
         // freeSeats = totalSeats * (1.0 + (overbookingPercentage / 100.0))
-        BigDecimal freeSeats = BigDecimal.valueOf(flight.getTotalSeats())
-                .multiply(BigDecimal.ONE
-                        .add(flight.getOverbookingPercentage()
-                                .divide(BigDecimal.valueOf(100), 4, RoundingMode.HALF_UP)));
+        BigDecimal totalSeats = BigDecimal.valueOf(flight.getTotalSeats());
+        BigDecimal bookedSeats = BigDecimal.valueOf(flight.getReservedSeats());
+        BigDecimal overbookFactor = BigDecimal.ONE
+                .add(flight.getOverbookingPercentage()
+                        .divide(BigDecimal.valueOf(100), 4, RoundingMode.HALF_UP));
+
+        BigDecimal freeSeats = totalSeats.multiply(overbookFactor).subtract(bookedSeats);
 
 
         if (BigDecimal.valueOf(flight.getReservedSeats()).compareTo(freeSeats) < 0) {
             reserveSeat(flight, cmd);
         } else {
             log.info("Reservation failed for: {}", cmd);
+
+            bookingFailureRepository.save(
+                    BookingFailure.builder()
+                    .bookingId(cmd.bookingId())
+                    .userId(cmd.userId())
+                    .flightNumber(cmd.flightNumber())
+                    .attemptTime(Instant.now())
+                    .reason("No seats available")
+                    .payload(cmd.toString())
+                    .build());
+
             eventGateway.publish(new SeatReservationFailedEvent(cmd.bookingId()));
         }
     }

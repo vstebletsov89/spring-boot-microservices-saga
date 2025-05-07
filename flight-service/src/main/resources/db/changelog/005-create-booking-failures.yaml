@@ -1,0 +1,32 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-booking-failures-table
+      author: vstebletsov
+      changes:
+        - createTable:
+            tableName: booking_failures
+            columns:
+              - column:
+                  name: id
+                  type: BIGSERIAL
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: user_id
+                  type: VARCHAR(255)
+              - column:
+                  name: booking_id
+                  type: VARCHAR(255)
+              - column:
+                  name: flight_number
+                  type: VARCHAR(255)
+              - column:
+                  name: reason
+                  type: VARCHAR(255)
+              - column:
+                  name: payload
+                  type: TEXT
+              - column:
+                  name: attempt_time
+                  type: TIMESTAMP WITH TIME ZONE
+                  defaultValueComputed: CURRENT_TIMESTAMP
