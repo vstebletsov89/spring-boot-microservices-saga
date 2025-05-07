@@ -12,7 +12,7 @@ databaseChangeLog:
               - column: { name: arrival_time, valueDate: "2025-06-01 12:00:00" }
               - column: { name: price, valueNumeric: 350.00 }
               - column: { name: total_seats, valueNumeric: 180 }
-              - column: { name: reserved_seats, valueNumeric: 20 }
+              - column: { name: reserved_seats, valueNumeric: 0 }
               - column: { name: overbooking_percentage, valueNumeric: 5.00 }
               - column: { name: departure_airport_code, value: "JFK" }
               - column: { name: arrival_airport_code, value: "LAX" }
@@ -25,7 +25,7 @@ databaseChangeLog:
               - column: { name: arrival_time, valueDate: "2025-06-02 13:30:00" }
               - column: { name: price, valueNumeric: 400.00 }
               - column: { name: total_seats, valueNumeric: 200 }
-              - column: { name: reserved_seats, valueNumeric: 40 }
+              - column: { name: reserved_seats, valueNumeric: 0 }
               - column: { name: overbooking_percentage, valueNumeric: 7.00 }
               - column: { name: departure_airport_code, value: "CDG" }
               - column: { name: arrival_airport_code, value: "JFK" }
@@ -38,7 +38,7 @@ databaseChangeLog:
               - column: { name: arrival_time, valueDate: "2025-06-03 14:45:00" }
               - column: { name: price, valueNumeric: 320.00 }
               - column: { name: total_seats, valueNumeric: 150 }
-              - column: { name: reserved_seats, valueNumeric: 30 }
+              - column: { name: reserved_seats, valueNumeric: 0 }
               - column: { name: overbooking_percentage, valueNumeric: 6.00 }
               - column: { name: departure_airport_code, value: "CDG" }
               - column: { name: arrival_airport_code, value: "HND" }
@@ -51,7 +51,7 @@ databaseChangeLog:
               - column: { name: arrival_time, valueDate: "2025-06-04 18:30:00" }
               - column: { name: price, valueNumeric: 500.00 }
               - column: { name: total_seats, valueNumeric: 220 }
-              - column: { name: reserved_seats, valueNumeric: 50 }
+              - column: { name: reserved_seats, valueNumeric: 0 }
               - column: { name: overbooking_percentage, valueNumeric: 4.50 }
               - column: { name: departure_airport_code, value: "DXB" }
               - column: { name: arrival_airport_code, value: "JFK" }
@@ -64,7 +64,7 @@ databaseChangeLog:
               - column: { name: arrival_time, valueDate: "2025-06-19 18:30:00" }
               - column: { name: price, valueNumeric: 500.00 }
               - column: { name: total_seats, valueNumeric: 220 }
-              - column: { name: reserved_seats, valueNumeric: 50 }
+              - column: { name: reserved_seats, valueNumeric: 0 }
               - column: { name: overbooking_percentage, valueNumeric: 4.50 }
               - column: { name: departure_airport_code, value: "JFK" }
               - column: { name: arrival_airport_code, value: "DXB" }
@@ -77,7 +77,7 @@ databaseChangeLog:
               - column: { name: arrival_time, valueDate: "2025-06-05 15:45:00" }
               - column: { name: price, valueNumeric: 470.00 }
               - column: { name: total_seats, valueNumeric: 190 }
-              - column: { name: reserved_seats, valueNumeric: 35 }
+              - column: { name: reserved_seats, valueNumeric: 0 }
               - column: { name: overbooking_percentage, valueNumeric: 6.50 }
               - column: { name: departure_airport_code, value: "HND" }
               - column: { name: arrival_airport_code, value: "LAX" }
