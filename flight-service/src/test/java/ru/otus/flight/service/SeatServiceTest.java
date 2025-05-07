@@ -203,7 +203,7 @@ public class SeatServiceTest {
 
         when(flightRepository.findById(FLIGHT_NUMBER)).thenReturn(Optional.of(flight));
         when(mappingRepository.findAllByFlightNumber(FLIGHT_NUMBER))
-                .thenReturn(generateAllReservedSeats(30, new char[]{'A', 'B', 'C', 'D', 'E', 'F'}));
+                .thenReturn(generateAllReservedSeats(50, new char[]{'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'J', 'K'}));
 
         RuntimeException exception = assertThrows(RuntimeException.class, () ->
                 seatService.handle(new ReserveSeatCommand(BOOKING_ID, FLIGHT_NUMBER, USER_ID))

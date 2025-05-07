@@ -121,8 +121,8 @@ public class SeatService {
                 .map(BookingSeatMapping::getSeatNumber)
                 .collect(Collectors.toSet());
 
-        int rows = 30;
-        char[] seatLetters = {'A', 'B', 'C', 'D', 'E', 'F'};
+        int rows = 50;
+        char[] seatLetters = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'J', 'K'};
 
         for (int row = 1; row <= rows; row++) {
             for (char seat : seatLetters) {
