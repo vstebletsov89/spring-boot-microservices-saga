@@ -16,17 +16,8 @@ POST http://localhost:8082/api/tickets
 Content-Type: application/json
 
 {
-  "userId": "1",
+  "userId": "aae973ef-9607-43d0-a500-826ca4484b8d",
   "flightNumber": "EK4004"
-}
-
-###
-POST http://localhost:8082/api/tickets
-Content-Type: application/json
-
-{
-    "userId": "2",
-    "flightNumber": "EK4004"
 }
 
 ### Получить все бронирования для рейса
