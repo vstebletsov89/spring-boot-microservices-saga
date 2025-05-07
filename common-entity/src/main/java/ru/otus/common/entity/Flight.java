@@ -45,4 +45,7 @@ public class Flight {
     @Column(precision = 5, scale = 2)
     private BigDecimal overbookingPercentage;
 
+    @Version
+    private Long version;
+
 }

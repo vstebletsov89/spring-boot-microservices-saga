@@ -12,6 +12,9 @@ import ru.otus.flight.publisher.FlightPublisher;
 import ru.otus.flight.repository.AirportRepository;
 import ru.otus.flight.repository.FlightRepository;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+
 @Service
 @RequiredArgsConstructor
 public class FlightWriteService {
@@ -28,17 +31,18 @@ public class FlightWriteService {
         Airport arrivalAirport = airportRepository.findById(request.arrivalAirportCode())
                 .orElseThrow(() -> new RuntimeException("Invalid arrival airport code"));
 
-        Flight flight = new Flight(
-                request.flightNumber(),
-                departureAirport,
-                arrivalAirport,
-                request.status(),
-                request.departureTime(),
-                request.arrivalTime(),
-                request.price(),
-                request.totalSeats(),
-                0,
-                request.overbookingPercentage());
+        var flight = Flight.builder()
+                .flightNumber(request.flightNumber())
+                .departureAirport(departureAirport)
+                .arrivalAirport(arrivalAirport)
+                .status(request.status())
+                .departureTime(request.departureTime())
+                .arrivalTime(request.arrivalTime())
+                .price(request.price())
+                .totalSeats(request.totalSeats())
+                .reservedSeats(0)
+                .overbookingPercentage(request.overbookingPercentage())
+                .build();
 
         flightRepository.save(flight);
         publishFlightCreatedEvent(flight);

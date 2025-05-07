@@ -39,6 +39,12 @@ databaseChangeLog:
               - column:
                   name: arrival_airport_code
                   type: VARCHAR(10)
+              - column:
+                  name: version
+                  type: BIGINT
+                  defaultValueNumeric: 0
+                  constraints:
+                    nullable: false
 
   - changeSet:
       id: 001-create-booking_seat_mapping-table

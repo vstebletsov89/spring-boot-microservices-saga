@@ -7,6 +7,9 @@ http://localhost:8084/actuator/prometheus - метрики
 
 TODO:
 
+Deduplication
+– Сохранять eventId каждого обработанного события в таблицу и фильтровать в Consumers
+
 check for 1000 bookings, that was booked correct number of seats, correct number not booked
 
 current: 7. Для всех эндпоинтов должны быть запросы с применением JMeter
