@@ -50,9 +50,9 @@ databaseChangeLog:
               - column: { name: departure_time, valueDate: "2025-06-04 11:30:00" }
               - column: { name: arrival_time, valueDate: "2025-06-04 18:30:00" }
               - column: { name: price, valueNumeric: 500.00 }
-              - column: { name: total_seats, valueNumeric: 220 }
+              - column: { name: total_seats, valueNumeric: 200 }
               - column: { name: reserved_seats, valueNumeric: 0 }
-              - column: { name: overbooking_percentage, valueNumeric: 4.50 }
+              - column: { name: overbooking_percentage, valueNumeric: 10.00 }
               - column: { name: departure_airport_code, value: "DXB" }
               - column: { name: arrival_airport_code, value: "JFK" }
         - insert:

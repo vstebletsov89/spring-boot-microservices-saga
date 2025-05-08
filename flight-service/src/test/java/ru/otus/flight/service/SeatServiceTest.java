@@ -16,7 +16,6 @@ import ru.otus.common.kafka.BookingSeatUpdatedEvent;
 import ru.otus.common.kafka.FlightUpdatedEvent;
 import ru.otus.common.saga.SeatReservationFailedEvent;
 import ru.otus.common.saga.SeatReservedEvent;
-import ru.otus.flight.entity.BookingFailure;
 import ru.otus.flight.publisher.BookingPublisher;
 import ru.otus.flight.publisher.FlightPublisher;
 import ru.otus.flight.repository.BookingFailureRepository;
@@ -24,7 +23,6 @@ import ru.otus.flight.repository.BookingSeatMappingRepository;
 import ru.otus.flight.repository.FlightRepository;
 
 import java.math.BigDecimal;
-import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -99,8 +97,8 @@ public class SeatServiceTest {
         Flight flight = createFlight(0);
         ReserveSeatCommand cmd = new ReserveSeatCommand(BOOKING_ID, FLIGHT_NUMBER, USER_ID);
 
-        when(flightRepository.findById(FLIGHT_NUMBER)).thenReturn(Optional.of(flight));
-        when(mappingRepository.findAllByFlightNumber(FLIGHT_NUMBER)).thenReturn(Collections.emptyList());
+        when(flightRepository.findByFlightNumberForUpdate(FLIGHT_NUMBER)).thenReturn(Optional.of(flight));
+        when(mappingRepository.findAllByFlightNumberForUpdate(FLIGHT_NUMBER)).thenReturn(Collections.emptyList());
 
         seatService.handle(cmd);
 
@@ -115,7 +113,7 @@ public class SeatServiceTest {
     @Test
     void shouldReserveMultipleSeatsInOrder() {
         Flight flight = createFlight(0);
-        when(flightRepository.findById(FLIGHT_NUMBER)).thenReturn(Optional.of(flight));
+        when(flightRepository.findByFlightNumberForUpdate(FLIGHT_NUMBER)).thenReturn(Optional.of(flight));
 
         List<String> expectedSeatNumbers = List.of(
                 "1A", "1B", "1C", "1D", "1E", "1F", "1G", "1H", "1J", "1K",
@@ -123,7 +121,7 @@ public class SeatServiceTest {
         );
         List<BookingSeatMapping> savedMappings = new ArrayList<>();
 
-        when(mappingRepository.findAllByFlightNumber(FLIGHT_NUMBER)).thenAnswer(invocation -> new ArrayList<>(savedMappings));
+        when(mappingRepository.findAllByFlightNumberForUpdate(FLIGHT_NUMBER)).thenAnswer(invocation -> new ArrayList<>(savedMappings));
 
         doAnswer(invocation -> {
             BookingSeatMapping mapping = invocation.getArgument(0);
@@ -160,7 +158,7 @@ public class SeatServiceTest {
     void shouldFailReservationWhenNoSeats() {
         Flight flight = createFlight(200);
         ReserveSeatCommand cmd = new ReserveSeatCommand(BOOKING_ID, FLIGHT_NUMBER, USER_ID);
-        when(flightRepository.findById(FLIGHT_NUMBER)).thenReturn(Optional.of(flight));
+        when(flightRepository.findByFlightNumberForUpdate(FLIGHT_NUMBER)).thenReturn(Optional.of(flight));
 
         seatService.handle(cmd);
 
@@ -187,7 +185,7 @@ public class SeatServiceTest {
         Flight flight = createFlight(50);
 
         when(mappingRepository.findByBookingId(BOOKING_ID)).thenReturn(Optional.of(mapping));
-        when(flightRepository.findById(FLIGHT_NUMBER)).thenReturn(Optional.of(flight));
+        when(flightRepository.findByFlightNumberForUpdate(FLIGHT_NUMBER)).thenReturn(Optional.of(flight));
 
         seatService.handle(new ReleaseSeatCommand(BOOKING_ID));
 
@@ -202,8 +200,8 @@ public class SeatServiceTest {
     void shouldThrowExceptionWhenNoAvailableSeatsToReserve() {
         Flight flight = createFlight(0);
 
-        when(flightRepository.findById(FLIGHT_NUMBER)).thenReturn(Optional.of(flight));
-        when(mappingRepository.findAllByFlightNumber(FLIGHT_NUMBER))
+        when(flightRepository.findByFlightNumberForUpdate(FLIGHT_NUMBER)).thenReturn(Optional.of(flight));
+        when(mappingRepository.findAllByFlightNumberForUpdate(FLIGHT_NUMBER))
                 .thenReturn(generateAllReservedSeats(50, new char[]{'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'J', 'K'}));
 
         RuntimeException exception = assertThrows(RuntimeException.class, () ->
