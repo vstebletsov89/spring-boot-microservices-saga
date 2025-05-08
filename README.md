@@ -10,8 +10,6 @@ TODO:
 Deduplication
 – Сохранять eventId каждого обработанного события в таблицу и фильтровать в Consumers
 
-check for 1000 bookings, that was booked correct number of seats, correct number not booked
-
 !!!5. В отдельной папке проекта размещаются helm скрипты для деплоя каждого приложения (в подпапках)
 
 !!!6. Должны быть тесты с применением JMH 

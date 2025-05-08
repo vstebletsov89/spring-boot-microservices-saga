@@ -1,10 +1,24 @@
 services:
 
+  jaeger:
+    image: jaegertracing/all-in-one:latest
+    container_name: jaeger
+    ports:
+      - "6831:6831/udp"    # jaeger.thrift over UDP
+      - "6832:6832/udp"    # jaeger.compact thrift
+      - "16686:16686"      # UI
+      - "4317:4317"        # OTLP/gRPC (traces)
+      - "4318:4318"        # OTLP/http (logs/metrics/traces)
+    networks:
+      - app-network
+
   ticket-service:
     build: ./ticket-service
     container_name: ticket-service
     ports:
       - "8082:8080"
+    volumes:
+      - ./agents:/agents:ro
     environment:
       SERVER_PORT: 8080
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-ticket:5432/ticketdb
@@ -13,6 +27,10 @@ services:
       SPRING_DATASOURCE_PASSWORD: pgpass
       SPRING_JPA_HIBERNATE_DDL_AUTO: none
       SPRING_JPA_SHOW_SQL: "true"
+      JAVA_TOOL_OPTIONS: "-javaagent:/agents/opentelemetry-javaagent.jar"
+      OTEL_SERVICE_NAME: "ticket-service"
+      OTEL_TRACES_EXPORTER: "otlp"
+      OTEL_EXPORTER_OTLP_ENDPOINT: "http://jaeger:4318"
     depends_on:
       kafka:
         condition: service_healthy
@@ -20,6 +38,8 @@ services:
         condition: service_healthy
       postgres-ticket:
         condition: service_healthy
+      jaeger:
+        condition: service_started
     networks:
       - app-network
 
@@ -28,6 +48,8 @@ services:
     container_name: flight-service
     ports:
       - "8083:8080"
+    volumes:
+      - ./agents:/agents:ro
     environment:
       SERVER_PORT: 8080
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-flight:5432/flightdb
@@ -36,6 +58,10 @@ services:
       SPRING_DATASOURCE_PASSWORD: pgpass
       SPRING_JPA_HIBERNATE_DDL_AUTO: none
       SPRING_JPA_SHOW_SQL: "true"
+      JAVA_TOOL_OPTIONS: "-javaagent:/agents/opentelemetry-javaagent.jar"
+      OTEL_SERVICE_NAME: "flight-service"
+      OTEL_TRACES_EXPORTER: "otlp"
+      OTEL_EXPORTER_OTLP_ENDPOINT: "http://jaeger:4318"
     depends_on:
       kafka:
         condition: service_healthy
@@ -43,6 +69,8 @@ services:
         condition: service_healthy
       postgres-flight:
         condition: service_healthy
+      jaeger:
+        condition: service_started
     networks:
       - app-network
 
@@ -51,6 +79,8 @@ services:
     container_name: flight-query-service
     ports:
       - "8084:8080"
+    volumes:
+      - ./agents:/agents:ro
     environment:
       SERVER_PORT: 8080
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-flightquery:5432/flightquerydb
@@ -59,6 +89,10 @@ services:
       SPRING_DATASOURCE_PASSWORD: pgpass
       SPRING_JPA_HIBERNATE_DDL_AUTO: none
       SPRING_JPA_SHOW_SQL: "true"
+      JAVA_TOOL_OPTIONS: "-javaagent:/agents/opentelemetry-javaagent.jar"
+      OTEL_SERVICE_NAME: "flight-query-service"
+      OTEL_TRACES_EXPORTER: "otlp"
+      OTEL_EXPORTER_OTLP_ENDPOINT: "http://jaeger:4318"
     depends_on:
       kafka:
         condition: service_healthy
@@ -66,6 +100,8 @@ services:
         condition: service_healthy
       postgres-flightquery:
         condition: service_healthy
+      jaeger:
+        condition: service_started
     networks:
       - app-network
 
@@ -74,6 +110,8 @@ services:
     container_name: payment-service
     ports:
       - "8085:8080"
+    volumes:
+      - ./agents:/agents:ro
     environment:
       SERVER_PORT: 8080
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-payment:5432/paymentdb
@@ -82,6 +120,10 @@ services:
       SPRING_DATASOURCE_PASSWORD: pgpass
       SPRING_JPA_HIBERNATE_DDL_AUTO: none
       SPRING_JPA_SHOW_SQL: "true"
+      JAVA_TOOL_OPTIONS: "-javaagent:/agents/opentelemetry-javaagent.jar"
+      OTEL_SERVICE_NAME: "payment-service"
+      OTEL_TRACES_EXPORTER: "otlp"
+      OTEL_EXPORTER_OTLP_ENDPOINT: "http://jaeger:4318"
     depends_on:
       kafka:
         condition: service_healthy
@@ -89,6 +131,8 @@ services:
         condition: service_healthy
       postgres-payment:
         condition: service_healthy
+      jaeger:
+        condition: service_started
     networks:
       - app-network
 
