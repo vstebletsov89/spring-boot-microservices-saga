@@ -26,6 +26,7 @@ import ru.otus.flight.repository.FlightRepository;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.Instant;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -46,16 +47,14 @@ public class SeatService {
     public void handle(ReserveSeatCommand cmd) {
         log.info("Attempting to reserve seat: {}", cmd);
 
-        // pessimistic lock for flight
-        Flight flight = flightRepository
+        var flight = flightRepository
                 .findByFlightNumberForUpdate(cmd.flightNumber())
                 .orElseThrow(() ->
                         new RuntimeException("Flight not found: " + cmd.flightNumber())
                 );
 
         BigDecimal freeSeats = calculateFreeSeats(flight);
-        if (BigDecimal.valueOf(flight.getReservedSeats()).compareTo(freeSeats) >= 0) {
-
+        if (freeSeats.compareTo(BigDecimal.ZERO) <= 0) {
             log.info("No seats available for bookingId={}", cmd.bookingId());
             bookingFailureRepository.save(
                     BookingFailure.builder()
@@ -71,7 +70,11 @@ public class SeatService {
             return;
         }
 
-        String seatNumber = generateSeatNumber(cmd.flightNumber());
+        var existing =
+                mappingRepository.findAllByFlightNumberForUpdate(cmd.flightNumber());
+
+        String seatNumber = generateSeatNumber(existing);
+
         flight.setReservedSeats(flight.getReservedSeats() + 1);
         flightRepository.save(flight);
         publishFlightUpdatedEvent(flight);
@@ -115,8 +118,8 @@ public class SeatService {
         return totalSeats.multiply(overbookFactor).subtract(bookedSeats);
     }
 
-    private String generateSeatNumber(String flightNumber) {
-        Set<String> reserved = mappingRepository.findAllByFlightNumberForUpdate(flightNumber).stream()
+    private String generateSeatNumber(List<BookingSeatMapping> existingMappings) {
+        Set<String> reserved = existingMappings.stream()
                 .map(BookingSeatMapping::getSeatNumber)
                 .collect(Collectors.toSet());
 

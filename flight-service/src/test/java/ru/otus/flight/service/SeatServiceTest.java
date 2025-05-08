@@ -67,6 +67,51 @@ public class SeatServiceTest {
 
 
     @Test
+    void shouldReserveAllOverbookedSeats() {
+        // 220 seats must be reserved
+        final String flightNumber = "FL200";
+        Flight flight = Flight.builder()
+                .flightNumber(flightNumber)
+                .status(FlightStatus.SCHEDULED)
+                .departureTime(LocalDateTime.now())
+                .arrivalTime(LocalDateTime.now().plusHours(2))
+                .price(BigDecimal.valueOf(100))
+                .totalSeats(200)
+                .reservedSeats(0)
+                .overbookingPercentage(BigDecimal.valueOf(10))
+                .build();
+
+
+        when(flightRepository.findByFlightNumberForUpdate(flightNumber))
+                .thenReturn(Optional.of(flight));
+
+        List<BookingSeatMapping> saved = new ArrayList<>();
+        when(mappingRepository.findAllByFlightNumberForUpdate(flightNumber))
+                .thenAnswer(invocation -> new ArrayList<>(saved));
+
+        doAnswer(inv -> {
+            BookingSeatMapping m = inv.getArgument(0);
+            saved.add(m);
+            return m;
+        }).when(mappingRepository).save(any(BookingSeatMapping.class));
+
+        for (int i = 0; i < 220; i++) {
+            String bookingId = "B" + i;
+            String userId    = "U" + i;
+            seatService.handle(new ReserveSeatCommand(bookingId, flightNumber, userId));
+        }
+
+        assertEquals(220, saved.size());
+        verifyNoInteractions(bookingFailureRepository);
+        verify(mappingRepository, times(220)).save(any(BookingSeatMapping.class));
+        verify(flightRepository, times(220)).save(flight);
+        verify(eventGateway,    times(220)).publish(any(SeatReservedEvent.class));
+        verify(flightPublisher, times(220)).publish(eq(flightNumber), any(FlightUpdatedEvent.class));
+        verify(bookingPublisher, times(220)).publish(anyString(), any(BookingSeatCreatedEvent.class));
+    }
+
+
+    @Test
     void shouldCorrectlyCalculateFreeSeats() {
         Flight flight = new Flight();
         flight.setTotalSeats(100);
