@@ -52,15 +52,7 @@ class PaymentMockControllerTest {
                 .andExpect(jsonPath("$.status").value(PaymentStatus.FAILED.name()))
                 .andExpect(jsonPath("$.failureReason").value("Insufficient funds"));
 
-        // second call should fail
-        mockMvc.perform(post("/mock-payments")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(toJson(bookingId, userId, amount)))
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.status").value(PaymentStatus.FAILED.name()))
-                .andExpect(jsonPath("$.failureReason").value("Insufficient funds"));
-
-        // third call should be OK
+        // second call should be OK
         mockMvc.perform(post("/mock-payments")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(toJson(bookingId, userId, amount)))

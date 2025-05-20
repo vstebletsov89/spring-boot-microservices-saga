@@ -7,9 +7,8 @@ http://localhost:8084/actuator/prometheus - метрики
 
 TODO:
 
-обновить сервис платежей
-добавить resilence4j
-добавить unit тесты
+добавить resilence4j в сервис платежей
+добавить unit тесты для resilence4j
 добавить helm скрипты
 идемпотентые consumer в kafka
 

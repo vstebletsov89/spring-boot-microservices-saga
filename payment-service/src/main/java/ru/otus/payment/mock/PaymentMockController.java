@@ -26,8 +26,8 @@ public class PaymentMockController {
         PaymentStatus status;
         String failureReason = null;
 
-        // 2/3 requests failed
-        if (call % 3 != 0) {
+        // 50% requests failed
+        if (call % 2 != 0) {
             status = PaymentStatus.FAILED;
             failureReason = "Insufficient funds";
         } else {
