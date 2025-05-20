@@ -5,21 +5,28 @@ import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import ru.otus.common.command.ProcessPaymentCommand;
 import ru.otus.common.enums.PaymentStatus;
 import ru.otus.common.kafka.PaymentEvent;
+import ru.otus.common.response.PaymentResponse;
 import ru.otus.common.saga.PaymentFailedEvent;
 import ru.otus.common.saga.PaymentProcessedEvent;
+import ru.otus.payment.client.PaymentClient;
 import ru.otus.payment.publisher.PaymentPublisher;
 import ru.otus.payment.repository.PaymentRepository;
 
 import java.math.BigDecimal;
+import java.time.Instant;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
-@SpringBootTest(classes = PaymentService.class)
+@SpringBootTest(classes = {PaymentService.class})
 class PaymentServiceTest {
 
     @Autowired
@@ -34,9 +41,20 @@ class PaymentServiceTest {
     @MockitoBean
     private PaymentRepository paymentRepository;
 
+    @MockitoBean
+    private PaymentClient paymentClient;
+
     @Test
     void shouldPublishPaymentProcessedEventAndKafka_whenAmountIsPositive() {
         var cmd = new ProcessPaymentCommand("b1", "10", new BigDecimal("100.00"));
+        when(paymentClient
+                .doPayment(any()))
+                .thenReturn(ResponseEntity.status(HttpStatus.OK)
+                        .body(new PaymentResponse(
+                                "10",
+                                        PaymentStatus.SUCCESS,
+                                        null,
+                                        Instant.now())));
 
         paymentService.process(cmd);
 
@@ -64,6 +82,14 @@ class PaymentServiceTest {
     @Test
     void shouldPublishPaymentFailedEventAndKafka_whenAmountIsZero() {
         var cmd = new ProcessPaymentCommand("b2", "20", BigDecimal.ZERO);
+        when(paymentClient
+                .doPayment(any()))
+                .thenReturn(ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body(new PaymentResponse(
+                                "20",
+                                PaymentStatus.FAILED,
+                                "Invalid payment amount",
+                                Instant.now())));
 
         paymentService.process(cmd);
 
@@ -91,6 +117,14 @@ class PaymentServiceTest {
     @Test
     void shouldPublishPaymentFailedEventAndKafka_whenAmountIsNegative() {
         var cmd = new ProcessPaymentCommand("b3", "30", new BigDecimal("-50.00"));
+        when(paymentClient
+                .doPayment(any()))
+                .thenReturn(ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body(new PaymentResponse(
+                                "30",
+                                PaymentStatus.FAILED,
+                                "Invalid payment amount",
+                                Instant.now())));
 
         paymentService.process(cmd);
 

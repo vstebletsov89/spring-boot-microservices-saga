@@ -7,6 +7,12 @@ http://localhost:8084/actuator/prometheus - метрики
 
 TODO:
 
+обновить сервис платежей
+добавить resilence4j
+добавить unit тесты
+добавить helm скрипты
+идемпотентые consumer в kafka
+
 !!!5. В отдельной папке проекта размещаются helm скрипты для деплоя каждого приложения (в подпапках)
 
 https://github.com/moryakovdv/otus-project - check helm scripts

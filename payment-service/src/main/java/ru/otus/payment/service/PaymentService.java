@@ -6,16 +6,16 @@ import org.axonframework.eventhandling.gateway.EventGateway;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.otus.common.command.ProcessPaymentCommand;
-import ru.otus.common.enums.PaymentStatus;
 import ru.otus.common.kafka.PaymentEvent;
+import ru.otus.common.request.PaymentRequest;
+import ru.otus.common.response.PaymentResponse;
 import ru.otus.common.saga.PaymentFailedEvent;
 import ru.otus.common.saga.PaymentProcessedEvent;
+import ru.otus.payment.client.PaymentClient;
 import ru.otus.payment.entity.Payment;
 import ru.otus.payment.publisher.PaymentPublisher;
 import ru.otus.payment.repository.PaymentRepository;
 
-import java.math.BigDecimal;
-import java.time.Instant;
 import java.util.UUID;
 
 @Service
@@ -29,57 +29,61 @@ public class PaymentService {
 
     private final PaymentRepository paymentRepository;
 
+    private final PaymentClient paymentClient;
+
     @Transactional
     public void process(ProcessPaymentCommand cmd) {
         log.info("Processing payment: {}", cmd);
 
-        String failureReason = "";
-        PaymentStatus status;
+        // call for payment provider
+        // dummy payment processed
+        var response = paymentClient.doPayment(
+                new PaymentRequest(
+                        cmd.bookingId(),
+                        cmd.userId(),
+                        cmd.amount()));
 
-        if (cmd.amount().compareTo(BigDecimal.ZERO) <= 0) {
-            status = PaymentStatus.FAILED;
-            failureReason = "Invalid payment amount";
-            eventGateway.publish(new PaymentFailedEvent(
-                    cmd.bookingId(),
-                    cmd.userId(),
-                    "Invalid payment amount"
-            ));
-        } else {
-            // call for payment provider
-            // dummy payment processed
-            status = PaymentStatus.SUCCESS;
+        PaymentResponse paymentResponse = response.getBody() != null ? response.getBody() : null;
+        if (paymentResponse == null) {
+            throw new RuntimeException("Payment service failed");
+        }
+        log.info("Payment response status: {}",  paymentResponse.status());
+
+        if (response.getStatusCode().is2xxSuccessful()) {
             eventGateway.publish(new PaymentProcessedEvent(
                     cmd.bookingId(),
                     cmd.userId()
             ));
+        } else {
+            eventGateway.publish(new PaymentFailedEvent(
+                    cmd.bookingId(),
+                    cmd.userId(),
+                    paymentResponse.failureReason()
+            ));
         }
 
         String eventId = UUID.randomUUID().toString();
-        Instant occurredAt = Instant.now();
-
-        PaymentEvent kafkaEvent = new PaymentEvent(
-                UUID.randomUUID().toString(),
-                cmd.bookingId(),
-                cmd.userId(),
-                cmd.amount(),
-                status,
-                failureReason,
-                occurredAt
-        );
-
         Payment payment = Payment.builder()
                 .eventId(eventId)
                 .bookingId(cmd.bookingId())
                 .userId(cmd.userId())
                 .amount(cmd.amount())
-                .status(status)
-                .failureReason(failureReason)
-                .occurredAt(occurredAt)
+                .status(paymentResponse.status())
+                .failureReason(paymentResponse.failureReason())
+                .occurredAt(paymentResponse.occurredAt())
                 .build();
-
         paymentRepository.save(payment);
         log.info("Saved Payment to DB: {}", payment);
 
+        PaymentEvent kafkaEvent = new PaymentEvent(
+                eventId,
+                cmd.bookingId(),
+                cmd.userId(),
+                cmd.amount(),
+                paymentResponse.status(),
+                paymentResponse.failureReason(),
+                paymentResponse.occurredAt()
+        );
         paymentPublisher.publish(kafkaEvent.eventId(), kafkaEvent);
         log.info("Published Kafka PaymentEvent: {}", kafkaEvent);
     }
