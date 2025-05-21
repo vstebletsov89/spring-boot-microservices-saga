@@ -8,7 +8,10 @@ http://localhost:8084/actuator/prometheus - метрики
 TODO:
 
 добавить helm скрипты
-идемпотентые consumer в kafka
+jmh
+offheap storage
+concurrent collections (???)
+идемпотентые consumer в kafka?
 добавить в readme какие темы покрыты с ссылками на код (сервис:класс:метод или docker compose?)
 
 !!!5. В отдельной папке проекта размещаются helm скрипты для деплоя каждого приложения (в подпапках)
