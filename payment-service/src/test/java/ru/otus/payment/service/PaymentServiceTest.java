@@ -15,6 +15,7 @@ import ru.otus.common.response.PaymentResponse;
 import ru.otus.common.saga.PaymentFailedEvent;
 import ru.otus.common.saga.PaymentProcessedEvent;
 import ru.otus.payment.client.PaymentClient;
+import ru.otus.payment.client.PaymentClientAdapter;
 import ru.otus.payment.publisher.PaymentPublisher;
 import ru.otus.payment.repository.PaymentRepository;
 
@@ -44,11 +45,14 @@ class PaymentServiceTest {
     @MockitoBean
     private PaymentClient paymentClient;
 
+    @MockitoBean
+    private PaymentClientAdapter paymentClientAdapter;
+
     @Test
     void shouldPublishPaymentProcessedEventAndKafka_whenAmountIsPositive() {
         var cmd = new ProcessPaymentCommand("b1", "10", new BigDecimal("100.00"));
-        when(paymentClient
-                .doPayment(any()))
+        when(paymentClientAdapter
+                .doResilientPayment(any()))
                 .thenReturn(ResponseEntity.status(HttpStatus.OK)
                         .body(new PaymentResponse(
                                 "10",
@@ -82,8 +86,8 @@ class PaymentServiceTest {
     @Test
     void shouldPublishPaymentFailedEventAndKafka_whenAmountIsZero() {
         var cmd = new ProcessPaymentCommand("b2", "20", BigDecimal.ZERO);
-        when(paymentClient
-                .doPayment(any()))
+        when(paymentClientAdapter
+                .doResilientPayment(any()))
                 .thenReturn(ResponseEntity.status(HttpStatus.BAD_REQUEST)
                         .body(new PaymentResponse(
                                 "20",
@@ -117,8 +121,8 @@ class PaymentServiceTest {
     @Test
     void shouldPublishPaymentFailedEventAndKafka_whenAmountIsNegative() {
         var cmd = new ProcessPaymentCommand("b3", "30", new BigDecimal("-50.00"));
-        when(paymentClient
-                .doPayment(any()))
+        when(paymentClientAdapter
+                .doResilientPayment(any()))
                 .thenReturn(ResponseEntity.status(HttpStatus.BAD_REQUEST)
                         .body(new PaymentResponse(
                                 "30",

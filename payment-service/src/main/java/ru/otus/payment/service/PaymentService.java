@@ -1,21 +1,18 @@
 package ru.otus.payment.service;
 
-import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
-import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
-import io.github.resilience4j.retry.annotation.Retry;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.axonframework.eventhandling.gateway.EventGateway;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.otus.common.command.ProcessPaymentCommand;
-import ru.otus.common.enums.PaymentStatus;
 import ru.otus.common.kafka.PaymentEvent;
 import ru.otus.common.request.PaymentRequest;
 import ru.otus.common.response.PaymentResponse;
 import ru.otus.common.saga.PaymentFailedEvent;
 import ru.otus.common.saga.PaymentProcessedEvent;
 import ru.otus.payment.client.PaymentClient;
+import ru.otus.payment.client.PaymentClientAdapter;
 import ru.otus.payment.entity.Payment;
 import ru.otus.payment.publisher.PaymentPublisher;
 import ru.otus.payment.repository.PaymentRepository;
@@ -35,22 +32,19 @@ public class PaymentService {
 
     private final PaymentClient paymentClient;
 
+    private final PaymentClientAdapter paymentClientAdapter;
+
     @Transactional
-    @Retry(name = "paymentRetry", fallbackMethod = "handlePaymentFailure")
-    @CircuitBreaker(name = "defaultCircuitBreaker", fallbackMethod = "handlePaymentFailure")
-    @RateLimiter(name = "RPMRateLimiter", fallbackMethod = "handlePaymentFailure")
     public void process(ProcessPaymentCommand cmd) {
         log.info("Processing payment: {}", cmd);
 
         // call for payment provider
         // dummy payment processed
-        var response = paymentClient.doPayment(
-                new PaymentRequest(
-                        cmd.bookingId(),
-                        cmd.userId(),
-                        cmd.amount()));
+        var response = paymentClientAdapter.doResilientPayment(
+                new PaymentRequest(cmd.bookingId(), cmd.userId(), cmd.amount())
+        );
 
-        PaymentResponse paymentResponse = response.getBody() != null ? response.getBody() : null;
+        PaymentResponse paymentResponse = response.getBody();
         if (paymentResponse == null) {
             throw new RuntimeException("Payment service failed");
         }
@@ -93,28 +87,5 @@ public class PaymentService {
         );
         paymentPublisher.publish(kafkaEvent.eventId(), kafkaEvent);
         log.info("Published Kafka PaymentEvent: {}", kafkaEvent);
-    }
-
-    public void handlePaymentFailure(ProcessPaymentCommand cmd, Throwable ex) {
-        log.error("Payment processing failed: {}", cmd.bookingId(), ex);
-
-        eventGateway.publish(new PaymentFailedEvent(
-                cmd.bookingId(),
-                cmd.userId(),
-                "Payment failure: " + ex.getMessage()
-        ));
-
-        Payment payment = Payment.builder()
-                .eventId(UUID.randomUUID().toString())
-                .bookingId(cmd.bookingId())
-                .userId(cmd.userId())
-                .amount(cmd.amount())
-                .status(PaymentStatus.FAILED)
-                .failureReason("Resilience fallback: " + ex.getMessage())
-                .occurredAt(java.time.Instant.now())
-                .build();
-
-        paymentRepository.save(payment);
-        log.warn("Saved failed payment after fallback: {}", payment);
     }
 }
