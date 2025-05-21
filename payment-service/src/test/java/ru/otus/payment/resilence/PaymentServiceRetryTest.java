@@ -33,7 +33,12 @@ import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@SpringBootTest
+@SpringBootTest(properties = {
+        "spring.autoconfigure.exclude=" +
+                "io.github.resilience4j.springboot3.ratelimiter.autoconfigure.RateLimiterAutoConfiguration," +
+                "io.github.resilience4j.springboot3.ratelimiter.autoconfigure.RateLimiterMetricsAutoConfiguration," +
+                "io.github.resilience4j.springboot3.ratelimiter.autoconfigure.RateLimitersHealthIndicatorAutoConfiguration"
+})
 @Import(CircuitBreakerTestConfig.class)
 @ImportAutoConfiguration(exclude = {
         KafkaAutoConfiguration.class,
