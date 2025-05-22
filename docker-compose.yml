@@ -11,9 +11,9 @@ services:
     networks:
       - app-network
 
-  ticket-service:
-    build: ./ticket-service
-    container_name: ticket-service
+  booking-orchestrator-service:
+    build: ./booking-orchestrator-service
+    container_name: booking-orchestrator-service
     ports:
       - "8082:8080"
     volumes:
@@ -27,7 +27,7 @@ services:
       SPRING_JPA_HIBERNATE_DDL_AUTO: none
       SPRING_JPA_SHOW_SQL: "true"
       JAVA_TOOL_OPTIONS: "-javaagent:/agents/opentelemetry-javaagent.jar"
-      OTEL_SERVICE_NAME: "ticket-service"
+      OTEL_SERVICE_NAME: "booking-orchestrator-service"
       OTEL_TRACES_EXPORTER: "otlp"
       OTEL_EXPORTER_OTLP_ENDPOINT: "http://jaeger:4317"
       OTEL_EXPORTER_OTLP_PROTOCOL: "grpc"

@@ -4,12 +4,12 @@ server:
 app:
   kafka:
     topic:
-      outbound: ticket-service.outbound
-      dlt: ticket-service.dlt
+      outbound: booking-orchestrator-service.outbound
+      dlt: booking-orchestrator-service.dlt
 
 spring:
   application:
-    name: ticket-service
+    name: booking-orchestrator-service
 
   kafka:
     bootstrap-servers: kafka:29092
@@ -17,7 +17,7 @@ spring:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.apache.kafka.common.serialization.StringSerializer
     streams:
-      application-id: ticket-service
+      application-id: booking-orchestrator-service
       default-key-serde: org.apache.kafka.common.serialization.Serdes$StringSerde
       default-value-serde: org.apache.kafka.common.serialization.Serdes$StringSerde
     consumer:
