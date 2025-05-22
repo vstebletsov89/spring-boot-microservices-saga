@@ -8,13 +8,30 @@ http://localhost:8084/actuator/prometheus - метрики
 TODO:
 
 !!!исправить сервисы под новое описание
-!!!идемпотентые consumer в kafka?
+
+booking-orchestrator-service
+reservation-service
+flight-service
+payment-service
+flight-query-service
+
+Booking Orchestrator Service выступает как управляющий сервис саги.
+
+Reservation Service хранит и управляет информацией о бронированиях.
+
+Flight Command Service отвечает за резервирование и освобождение мест на рейсах.
+
+Payment Service проводит оплату.
+
+Flight Query Service не участвует в оркестровке (только для чтения).
+
+
 !!!добавить процесс саги - отмена бронирования, снять резервацию, сменить статус брони и вернуть деньги
 !!!добавить дашборд с метриками от оркестратора (успешные/неуспешные резервирования мест/оплаты и бронирования)
 !!!добавить helm скрипты
 !!!jmh
 !!!offheap storage
-!!!concurrent collections (???)
+!!!concurrent collections (???) ->!!!идемпотентые consumer в kafka?
 добавить в readme какие темы покрыты с ссылками на код (сервис:класс:метод или docker compose?)
 
 !!!5. В отдельной папке проекта размещаются helm скрипты для деплоя каждого приложения (в подпапках)
