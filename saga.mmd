@@ -1,29 +1,32 @@
 sequenceDiagram
-    participant FS as Flight Service
-    participant Saga as BookingSaga
+    participant BOS as Booking Orchestrator Service
+    participant RS as Reservation Service
     participant PS as Payment Service
-    participant TS as Ticket Service
+    participant FCS as Flight Command Service
+    participant FQS as Flight Query Service
 
-    FS->>Saga: FlightBookedEvent
-    Saga->>FS: ReserveSeatCommand
+    BOS->>RS: CreateReservationCommand
+    RS->>BOS: ReservationCreatedEvent
 
+    BOS->>FCS: ReserveSeatCommand
     alt Seat reserved
-        FS->>Saga: SeatReservedEvent
-        Saga->>PS: ProcessPaymentCommand
+        FCS->>BOS: SeatReservedEvent
+        BOS->>PS: ProcessPaymentCommand
 
         alt Payment successful
-            PS->>Saga: PaymentProcessedEvent
-            Saga->>TS: ConfirmBookingCommand
-            Note right of Saga: Saga ends successfully
+            PS->>BOS: PaymentProcessedEvent
+            BOS->>RS: ConfirmReservationCommand
+            Note right of BOS: Saga ends successfully
         else Payment failed
-            PS->>Saga: PaymentFailedEvent
-            Saga->>TS: CancelBookingCommand
-            Saga->>FS: ReleaseSeatCommand
-            Note right of Saga: Saga ends with compensation
+            PS->>BOS: PaymentFailedEvent
+            BOS->>RS: CancelReservationCommand
+            BOS->>FCS: ReleaseSeatCommand
+            Note right of BOS: Saga ends with compensation
         end
 
     else Seat reservation failed
-        FS->>Saga: SeatReservationFailedEvent
-        Saga->>TS: CancelBookingCommand
-        Note right of Saga: Saga ends with compensation
+        FCS->>BOS: SeatReservationFailedEvent
+        BOS->>RS: CancelReservationCommand
+        Note right of BOS: Saga ends with compensation
     end
+

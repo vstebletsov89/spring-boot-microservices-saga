@@ -27,6 +27,29 @@ public class KafkaTicketStreamProcessor {
     @Value("${app.kafka.topic.dlt}")
     private String dltTopic;
 
+    //TODO: fix all kafka consumers, add required table:
+//    stream.foreach((key, value) -> {
+//        try {
+//            BookingCreatedEvent event = objectMapper.readValue(value, BookingCreatedEvent.class);
+//            String eventId = event.getEventId(); // Предполагается, что есть уникальный идентификатор
+//
+//            // Проверка: если событие уже обработано — пропускаем
+//            if (processedEventStore.exists(eventId)) {
+//                log.info("Skipping duplicate event: {}", eventId);
+//                return;
+//            }
+//
+//            bookingProcessor.process(event);
+//            processedEventStore.save(eventId); // Отмечаем, что событие обработано
+//            log.info("Processed booking event: {}", event);
+//
+//        } catch (Exception e) {
+//            log.error("Error processing message, sending to DLT: {}", value, e);
+//            dltPublisher.publish(dltTopic, key, value);
+//        }
+//    });
+
+
     @Bean
     public KStream<String, String> kStream(StreamsBuilder builder)  {
         KStream<String, String> stream = builder.stream(topic);
