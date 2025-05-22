@@ -8,10 +8,10 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableScheduling
 @EnableKafkaStreams
 @SpringBootApplication
-public class TicketServiceApplication {
+public class BookingOrchestratorServiceApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(TicketServiceApplication.class, args);
+		SpringApplication.run(BookingOrchestratorServiceApplication.class, args);
 	}
 
 }
