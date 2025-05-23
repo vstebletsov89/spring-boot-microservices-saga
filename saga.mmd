@@ -1,10 +1,13 @@
 sequenceDiagram
-    participant BOS as Booking Orchestrator Service
+    participant UI as Client/User
     participant RS as Reservation Service
+    participant BOS as Booking Orchestrator Service
+    participant FCS as Flight Service
     participant PS as Payment Service
-    participant FCS as Flight Command Service
-    participant FQS as Flight Query Service
 
+%% Main booking flow
+    UI->>RS: Booking request (API)
+    RS->>BOS: CreateBookingCommand
     BOS->>RS: CreateReservationCommand
     RS->>BOS: ReservationCreatedEvent
 
@@ -19,14 +22,25 @@ sequenceDiagram
             Note right of BOS: Saga ends successfully
         else Payment failed
             PS->>BOS: PaymentFailedEvent
-            BOS->>RS: CancelReservationCommand
             BOS->>FCS: ReleaseSeatCommand
-            Note right of BOS: Saga ends with compensation
+            BOS->>RS: SetStatusCancelledCommand
+            RS->>BOS: StatusCancelledEvent
+            Note right of BOS: Saga ends with compensation (payment failed)
         end
 
     else Seat reservation failed
         FCS->>BOS: SeatReservationFailedEvent
-        BOS->>RS: CancelReservationCommand
-        Note right of BOS: Saga ends with compensation
+        BOS->>RS: SetStatusCancelledCommand
+        RS->>BOS: StatusCancelledEvent
+        Note right of BOS: Saga ends with compensation (seat not reserved)
     end
 
+%% Booking cancellation by user
+    UI->>RS: Cancel booking request (API)
+    RS->>BOS: CancelBookingCommand
+    BOS->>FCS: ReleaseSeatCommand
+    BOS->>PS: RefundPaymentCommand
+    PS->>BOS: PaymentRefundedEvent
+    BOS->>RS: SetStatusCancelledCommand
+    RS->>BOS: StatusCancelledEvent
+    Note right of BOS: Booking cancelled, seat released, payment refunded, status updated
