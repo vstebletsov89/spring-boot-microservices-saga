@@ -1,0 +1,34 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-outbox-events-table
+      author: vstebletsov
+      changes:
+        - createTable:
+            tableName: outbox_events
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: aggregate_id
+                  type: VARCHAR(255)
+              - column:
+                  name: aggregate_type
+                  type: VARCHAR(255)
+              - column:
+                  name: event_type
+                  type: VARCHAR(255)
+              - column:
+                  name: payload
+                  type: TEXT
+              - column:
+                  name: sent
+                  type: BOOLEAN
+                  defaultValueBoolean: false
+              - column:
+                  name: created_at
+                  type: TIMESTAMP WITH TIME ZONE
+                  defaultValueComputed: CURRENT_TIMESTAMP

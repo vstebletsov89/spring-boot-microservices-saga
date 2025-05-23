@@ -11,16 +11,16 @@ services:
     networks:
       - app-network
 
-  booking-orchestrator-service:
-    build: ./booking-orchestrator-service
-    container_name: booking-orchestrator-service
+  reservation-service:
+    build: ./reservation-service
+    container_name: reservation-service
     ports:
-      - "8082:8080"
+      - "8081:8080"
     volumes:
       - ./agents:/agents:ro
     environment:
       SERVER_PORT: 8080
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-ticket:5432/ticketdb
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-reservation:5432/bookingdb
       SPRING_DATASOURCE_DRIVER_CLASS_NAME: org.postgresql.Driver
       SPRING_DATASOURCE_USERNAME: pguser
       SPRING_DATASOURCE_PASSWORD: pgpass
@@ -38,7 +38,31 @@ services:
         condition: service_healthy
       axon-server:
         condition: service_healthy
-      postgres-ticket:
+      postgres-reservation:
+        condition: service_healthy
+      jaeger:
+        condition: service_started
+    networks:
+      - app-network
+
+  booking-orchestrator-service:
+    build: ./booking-orchestrator-service
+    container_name: booking-orchestrator-service
+    ports:
+      - "8082:8080"
+    volumes:
+      - ./agents:/agents:ro
+    environment:
+      SERVER_PORT: 8080
+      JAVA_TOOL_OPTIONS: "-javaagent:/agents/opentelemetry-javaagent.jar"
+      OTEL_SERVICE_NAME: "booking-orchestrator-service"
+      OTEL_TRACES_EXPORTER: "otlp"
+      OTEL_EXPORTER_OTLP_ENDPOINT: "http://jaeger:4317"
+      OTEL_EXPORTER_OTLP_PROTOCOL: "grpc"
+      OTEL_METRICS_EXPORTER: "none"
+      OTEL_LOGS_EXPORTER: "none"
+    depends_on:
+      axon-server:
         condition: service_healthy
       jaeger:
         condition: service_started
@@ -226,12 +250,12 @@ services:
     networks:
       - app-network
 
-  postgres-ticket:
+  postgres-reservation:
     image: postgres:17-alpine
-    container_name: postgres-ticket
+    container_name: postgres-reservation
     restart: always
     environment:
-      POSTGRES_DB: ticketdb
+      POSTGRES_DB: bookingdb
       POSTGRES_USER: pguser
       POSTGRES_PASSWORD: pgpass
     ports:
@@ -239,7 +263,7 @@ services:
     volumes:
       - pg_data_ticket:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U pguser -d ticketdb"]
+      test: ["CMD-SHELL", "pg_isready -U pguser -d bookingdb"]
       interval: 10s
       timeout: 5s
       retries: 5

@@ -1,43 +1,9 @@
 server:
   port: 8085
 
-app:
-  kafka:
-    topic:
-      outbound: booking-orchestrator-service.outbound
-      dlt: booking-orchestrator-service.dlt
-
 spring:
   application:
     name: booking-orchestrator-service
-
-  kafka:
-    bootstrap-servers: kafka:29092
-    producer:
-      key-serializer: org.apache.kafka.common.serialization.StringSerializer
-      value-serializer: org.apache.kafka.common.serialization.StringSerializer
-    streams:
-      application-id: booking-orchestrator-service
-      default-key-serde: org.apache.kafka.common.serialization.Serdes$StringSerde
-      default-value-serde: org.apache.kafka.common.serialization.Serdes$StringSerde
-    consumer:
-      properties:
-        spring.json.trusted.packages: ru.otus.common.events
-
-
-  datasource:
-    url: jdbc:h2:mem:ticketdb
-    username: pguser
-    password: pgpass
-    driver-class-name: org.h2.Driver
-
-  jpa:
-    hibernate:
-      ddl-auto: none
-    show-sql: true
-
-  liquibase:
-    change-log: classpath:db/changelog/db.changelog-master.yaml
 
 axon:
   axonserver:
@@ -47,16 +13,3 @@ axon:
     general: jackson
     events: jackson
     messages: jackson
-
-springdoc:
-  api-docs:
-    path: /api-docs
-  swagger-ui:
-    path: /api-docs-ui
-
-#logging:
-#  level:
-#    org.apache.kafka.streams: DEBUG
-#    org.apache.kafka.clients: DEBUG
-#    org.apache.kafka.common: DEBUG
-#    org.apache.kafka.streams.processor.internals.StreamThread: TRACE

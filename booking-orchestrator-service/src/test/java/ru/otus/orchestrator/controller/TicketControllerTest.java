@@ -1,0 +1,65 @@
+package ru.otus.orchestrator.controller;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.kafka.streams.StreamsBuilder;
+import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
+import org.springframework.boot.autoconfigure.kafka.KafkaAutoConfiguration;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.http.MediaType;
+import org.springframework.kafka.annotation.KafkaStreamsDefaultConfiguration;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.springframework.test.web.servlet.MockMvc;
+import ru.otus.common.saga.BookingCreatedEvent;
+import ru.otus.common.request.BookingRequest;
+import ru.otus.orchestrator.service.TicketService;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.containsString;
+import static org.mockito.Mockito.verify;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+
+@WebMvcTest(controllers = TicketController.class)
+@ImportAutoConfiguration(exclude = {
+        KafkaAutoConfiguration.class,
+        KafkaStreamsDefaultConfiguration.class
+})
+class TicketControllerTest {
+
+    @Autowired
+    private MockMvc mockMvc;
+
+    @Autowired
+    private ObjectMapper objectMapper;
+
+    @MockitoBean
+    private TicketService ticketService;
+
+    @MockitoBean
+    private StreamsBuilder streamsBuilder;
+
+    @Test
+    void shouldAcceptBookingRequest() throws Exception {
+        BookingRequest request = new BookingRequest("1", "FL123");
+        String json = objectMapper.writeValueAsString(request);
+
+        mockMvc.perform(post("/api/tickets")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("booking created. Waiting for payment to confirm.")));
+
+        ArgumentCaptor<BookingCreatedEvent> captor = ArgumentCaptor.forClass(BookingCreatedEvent.class);
+        verify(ticketService).createBookingRequest(captor.capture());
+
+        BookingCreatedEvent event = captor.getValue();
+        assertThat(event.userId()).isEqualTo("1");
+        assertThat(event.flightNumber()).isEqualTo("FL123");
+        assertThat(event.bookingId()).isNotBlank();
+    }
+}
