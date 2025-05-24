@@ -9,11 +9,11 @@ TODO:
 
 !!!исправить сервисы под новое описание
 
-booking-orchestrator-service
-reservation-service
-flight-service
-payment-service
-flight-query-service
++booking-orchestrator-service
++reservation-service !add checking and cancel reservation
++flight-service
++payment-service
++flight-query-service
 
 Booking Orchestrator Service выступает как управляющий сервис саги.
 
