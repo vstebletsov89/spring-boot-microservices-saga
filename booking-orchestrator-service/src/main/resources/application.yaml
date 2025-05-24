@@ -5,6 +5,18 @@ spring:
   application:
     name: booking-orchestrator-service
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info, prometheus, metrics
+  endpoint:
+    health:
+      show-details: always
+  metrics:
+    tags:
+      application: booking-orchestrator-service
+
 axon:
   axonserver:
     enabled: true

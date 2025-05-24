@@ -1,5 +1,7 @@
 package ru.otus.orchestrator.saga;
 
+import io.micrometer.core.instrument.Counter;
+import io.micrometer.core.instrument.MeterRegistry;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.axonframework.commandhandling.CommandHandler;
@@ -17,6 +19,7 @@ import ru.otus.common.saga.ReservationCreatedEvent;
 
 import static org.axonframework.modelling.command.AggregateLifecycle.apply;
 
+
 @Aggregate
 @Slf4j
 @Getter
@@ -26,17 +29,33 @@ public class BookingAggregate {
     private String bookingId;
     private boolean confirmed;
     private boolean cancelled;
-    //TODO: add metrics for dashboard
+
+    private static Counter totalBookings;
+    private static Counter confirmedBookings;
+    private static Counter cancelledBookings;
+
+    public static void registerMetrics(MeterRegistry registry) {
+        totalBookings = Counter.builder("booking_total")
+                .description("Total number of bookings created")
+                .register(registry);
+
+        confirmedBookings = Counter.builder("booking_confirmed_total")
+                .description("Total number of bookings confirmed")
+                .register(registry);
+
+        cancelledBookings = Counter.builder("booking_cancelled_total")
+                .description("Total number of bookings cancelled")
+                .register(registry);
+
+        log.info("Booking metrics registered");
+    }
 
     public BookingAggregate() {}
 
     @CommandHandler
     public BookingAggregate(BookFlightCommand cmd) {
         log.info("Handling booking command: {}", cmd);
-        apply(new ReservationCreatedEvent(
-                cmd.bookingId(),
-                cmd.userId(),
-                cmd.flightNumber()));
+        apply(new ReservationCreatedEvent(cmd.bookingId(), cmd.userId(), cmd.flightNumber()));
     }
 
     @EventSourcingHandler
@@ -45,6 +64,7 @@ public class BookingAggregate {
         this.bookingId = event.bookingId();
         this.confirmed = false;
         this.cancelled = false;
+        if (totalBookings != null) totalBookings.increment();
     }
 
     @CommandHandler
@@ -57,29 +77,19 @@ public class BookingAggregate {
     public void on(BookingConfirmedEvent event) {
         log.info("Handling booking confirmed event: {}", event);
         this.confirmed = true;
-    }
-
-    @CommandHandler
-    public void handle(CancelBookingCommand cmd) {
-        log.info("Handling cancel booking command: {}", cmd);
-        apply(new BookingCancellationRequestedEvent(cmd.bookingId()));
-    }
-
-    @EventSourcingHandler
-    public void on(BookingCancellationRequestedEvent event) {
-        log.info("Handling booking cancellation requested event: {}", event);
-        //TODO:???
+        if (confirmedBookings != null) confirmedBookings.increment();
     }
 
     @CommandHandler
     public void handle(ReservationCancelledCommand cmd) {
-        log.info("Handling set status cancelled command: {}", cmd);
+        log.info("Handling reservation cancelled command: {}", cmd);
         apply(new BookingCancelledEvent(cmd.bookingId()));
     }
 
     @EventSourcingHandler
     public void on(BookingCancelledEvent event) {
-        log.info("Handling status cancelled event: {}", event);
+        log.info("Handling booking cancelled event: {}", event);
         this.cancelled = true;
+        if (cancelledBookings != null) cancelledBookings.increment();
     }
 }

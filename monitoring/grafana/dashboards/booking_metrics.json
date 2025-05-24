@@ -1,0 +1,76 @@
+{
+  "id": null,
+  "uid": null,
+  "title": "Booking Metrics Dashboard",
+  "tags": [],
+  "timezone": "browser",
+  "schemaVersion": 41,
+  "version": 1,
+  "refresh": "5s",
+  "panels": [
+    {
+      "type": "graph",
+      "title": "Total Bookings",
+      "targets": [
+        {
+          "expr": "booking_total",
+          "legendFormat": "Total",
+          "refId": "A"
+        }
+      ],
+      "id": 1,
+      "gridPos": { "h": 9, "w": 8, "x": 0, "y": 0 },
+      "lines": true,
+      "points": false,
+      "linewidth": 2
+    },
+    {
+      "type": "graph",
+      "title": "Confirmed Bookings",
+      "targets": [
+        {
+          "expr": "booking_confirmed_total",
+          "legendFormat": "Confirmed",
+          "refId": "B"
+        }
+      ],
+      "id": 2,
+      "gridPos": { "h": 9, "w": 8, "x": 8, "y": 0 },
+      "lines": true,
+      "points": false,
+      "linewidth": 2
+    },
+    {
+      "type": "graph",
+      "title": "Cancelled Bookings",
+      "targets": [
+        {
+          "expr": "booking_cancelled_total",
+          "legendFormat": "Cancelled",
+          "refId": "C"
+        }
+      ],
+      "id": 3,
+      "gridPos": { "h": 9, "w": 8, "x": 16, "y": 0 },
+      "lines": true,
+      "points": false,
+      "linewidth": 2
+    },
+    {
+      "type": "graph",
+      "title": "Booking Confirmation Ratio (%)",
+      "targets": [
+        {
+          "expr": "booking_confirmed_total / booking_total * 100",
+          "legendFormat": "Confirmation %",
+          "refId": "D"
+        }
+      ],
+      "id": 4,
+      "gridPos": { "h": 9, "w": 24, "x": 0, "y": 9 },
+      "lines": true,
+      "points": false,
+      "linewidth": 2
+    }
+  ]
+}

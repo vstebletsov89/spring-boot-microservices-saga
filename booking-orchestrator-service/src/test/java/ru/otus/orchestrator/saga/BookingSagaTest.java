@@ -28,7 +28,7 @@ class BookingSagaTest {
     }
 
     @Test
-    void shouldHandleFlightBookedEvent() {
+    void shouldHandleReservationCreatedEvent() {
         String bookingId = UUID.randomUUID().toString();
         ReservationCreatedEvent event = new ReservationCreatedEvent(bookingId, "1", "FL123");
 
@@ -70,13 +70,13 @@ class BookingSagaTest {
     @Test
     void shouldHandlePaymentFailedEventAndEndSaga() {
         String bookingId = UUID.randomUUID().toString();
-        PaymentFailedEvent event = new PaymentFailedEvent(bookingId, "1", "payment_failed");
+        PaymentFailedEvent event = new PaymentFailedEvent(bookingId, "1", "Declined");
 
         try (MockedStatic<SagaLifecycle> sagaLifecycle = Mockito.mockStatic(SagaLifecycle.class)) {
             saga.on(event);
 
-            verify(commandGateway).send(new CancelBookingCommand(bookingId));
             verify(commandGateway).send(new ReleaseSeatCommand(bookingId));
+            verify(commandGateway).send(new ReservationCancelledCommand(bookingId));
             sagaLifecycle.verify(SagaLifecycle::end);
         }
     }
@@ -89,7 +89,22 @@ class BookingSagaTest {
         try (MockedStatic<SagaLifecycle> sagaLifecycle = Mockito.mockStatic(SagaLifecycle.class)) {
             saga.on(event);
 
-            verify(commandGateway).send(new CancelBookingCommand(bookingId));
+            verify(commandGateway).send(new ReservationCancelledCommand(bookingId));
+            sagaLifecycle.verify(SagaLifecycle::end);
+        }
+    }
+
+    @Test
+    void shouldHandleBookingCancellationRequestedEventAndEndSaga() {
+        String bookingId = UUID.randomUUID().toString();
+        BookingCancellationRequestedEvent event = new BookingCancellationRequestedEvent(bookingId);
+
+        try (MockedStatic<SagaLifecycle> sagaLifecycle = Mockito.mockStatic(SagaLifecycle.class)) {
+            saga.on(event);
+
+            verify(commandGateway).send(new ReleaseSeatCommand(bookingId));
+            verify(commandGateway).send(new RefundPaymentCommand(bookingId));
+            verify(commandGateway).send(new ReservationCancelledCommand(bookingId));
             sagaLifecycle.verify(SagaLifecycle::end);
         }
     }

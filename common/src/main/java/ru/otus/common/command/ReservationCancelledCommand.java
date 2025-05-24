@@ -1,4 +1,6 @@
 package ru.otus.common.command;
 
+import org.axonframework.modelling.command.TargetAggregateIdentifier;
+
 public record ReservationCancelledCommand(
-        String bookingId) {}
+        @TargetAggregateIdentifier String bookingId) {}

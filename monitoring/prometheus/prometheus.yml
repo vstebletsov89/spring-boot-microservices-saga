@@ -6,3 +6,8 @@ scrape_configs:
     metrics_path: '/actuator/prometheus'
     static_configs:
       - targets: ['flight-query-service:8080']
+
+  - job_name: 'booking-orchestrator-service'
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      - targets: ['booking-orchestrator-service:8080']
