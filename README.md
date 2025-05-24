@@ -7,7 +7,10 @@ http://localhost:8084/actuator/prometheus - метрики
 
 TODO:
 
-!!!исправить сервисы под новое описание
+!!!перенсти проверку брониврования в reservation-service,
+!!!добавить отмену бронирования
+!!!выключить circuitbreaker
+
 
 
 +reservation-service !add checking and cancel reservation
