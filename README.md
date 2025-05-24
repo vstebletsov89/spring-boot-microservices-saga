@@ -9,7 +9,7 @@ TODO:
 
 !!!исправить сервисы под новое описание
 
-+booking-orchestrator-service
+
 +reservation-service !add checking and cancel reservation
 +flight-service
 +payment-service
