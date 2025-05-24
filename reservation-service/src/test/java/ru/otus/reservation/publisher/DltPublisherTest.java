@@ -15,7 +15,8 @@ import org.springframework.kafka.test.utils.KafkaTestUtils;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.context.TestPropertySource;
-import ru.otus.orchestrator.config.KafkaTestConfig;
+import ru.otus.reservation.config.KafkaTestConfig;
+
 
 import java.time.Duration;
 import java.util.Collections;

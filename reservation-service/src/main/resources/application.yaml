@@ -4,7 +4,7 @@ server:
 app:
   kafka:
     topic:
-      outbound: booking-orchestrator-service.outbound
+      reservations: booking-orchestrator-service.reservations
       dlt: booking-orchestrator-service.dlt
 
 spring:

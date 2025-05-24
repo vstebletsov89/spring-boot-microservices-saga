@@ -7,20 +7,20 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-import ru.otus.orchestrator.entity.BookingOutboxEvent;
-import ru.otus.orchestrator.repository.BookingOutboxRepository;
+import ru.otus.reservation.entity.BookingOutboxEvent;
+import ru.otus.reservation.repository.BookingOutboxRepository;
 
 import java.util.List;
 
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class TicketEventPublisher {
+public class ReservationEventPublisher {
 
     private final BookingOutboxRepository repository;
     private final KafkaTemplate<String, String> kafkaTemplate;
 
-    @Value("${app.kafka.topic.outbound}")
+    @Value("${app.kafka.topic.reservations}")
     private String topic;
 
     @Scheduled(fixedDelay = 5000)

@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.otus.common.request.BookingRequest;
 import ru.otus.common.saga.BookingCreatedEvent;
-import ru.otus.orchestrator.service.TicketService;
+import ru.otus.reservation.service.ReservationService;
 
 import java.util.UUID;
 
@@ -25,9 +25,9 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @Slf4j
 @Tag(name = "Flight Ticket Booking", description = "Endpoints for booking flight tickets")
-public class TicketController {
+public class ReservationController {
 
-    private final TicketService ticketService;
+    private final ReservationService reservationService;
 
     @Operation(
             summary = "Book a flight ticket",
@@ -46,13 +46,15 @@ public class TicketController {
                     content = @Content(schema = @Schema(implementation = BookingRequest.class))
             )
             @RequestBody @Valid BookingRequest request) {
+
         UUID bookingId = UUID.randomUUID();
         BookingCreatedEvent event = new BookingCreatedEvent(
                 request.userId(),
                 request.flightNumber(),
                 bookingId.toString()
         );
-        ticketService.createBookingRequest(event);
+
+        reservationService.createBookingRequest(event);
         log.info("book ticket: {}", event);
         var response = bookingId + " booking created. Waiting for payment to confirm.";
         return ResponseEntity.ok(response);

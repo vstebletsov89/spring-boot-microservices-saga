@@ -1,7 +1,7 @@
 package ru.otus.reservation.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import ru.otus.orchestrator.entity.BookingOutboxEvent;
+import ru.otus.reservation.entity.BookingOutboxEvent;
 
 import java.util.List;
 import java.util.UUID;

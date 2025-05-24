@@ -5,15 +5,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.otus.common.saga.BookingCreatedEvent;
-import ru.otus.orchestrator.entity.BookingOutboxEvent;
-import ru.otus.orchestrator.repository.BookingOutboxRepository;
+import ru.otus.reservation.entity.BookingOutboxEvent;
+import ru.otus.reservation.repository.BookingOutboxRepository;
 
 import java.time.Instant;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-public class TicketService {
+public class ReservationService {
 
     private final BookingOutboxRepository outboxRepository;
     private final ObjectMapper objectMapper;
@@ -29,8 +28,6 @@ public class TicketService {
         }
 
         BookingOutboxEvent event = BookingOutboxEvent.builder()
-                .id(UUID.randomUUID())
-                .aggregateType("Booking")
                 .aggregateId(bookingCreatedEvent.bookingId())
                 .payload(payload)
                 .createdAt(Instant.now())

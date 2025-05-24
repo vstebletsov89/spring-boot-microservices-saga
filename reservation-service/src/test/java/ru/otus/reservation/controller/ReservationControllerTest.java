@@ -14,7 +14,7 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.otus.common.request.BookingRequest;
 import ru.otus.common.saga.BookingCreatedEvent;
-import ru.otus.orchestrator.service.TicketService;
+import ru.otus.reservation.service.ReservationService;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.containsString;
@@ -24,12 +24,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
-@WebMvcTest(controllers = TicketController.class)
+@WebMvcTest(controllers = ReservationController.class)
 @ImportAutoConfiguration(exclude = {
         KafkaAutoConfiguration.class,
         KafkaStreamsDefaultConfiguration.class
 })
-class TicketControllerTest {
+class ReservationControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -38,7 +38,7 @@ class TicketControllerTest {
     private ObjectMapper objectMapper;
 
     @MockitoBean
-    private TicketService ticketService;
+    private ReservationService reservationService;
 
     @MockitoBean
     private StreamsBuilder streamsBuilder;
@@ -55,7 +55,7 @@ class TicketControllerTest {
                 .andExpect(content().string(containsString("booking created. Waiting for payment to confirm.")));
 
         ArgumentCaptor<BookingCreatedEvent> captor = ArgumentCaptor.forClass(BookingCreatedEvent.class);
-        verify(ticketService).createBookingRequest(captor.capture());
+        verify(reservationService).createBookingRequest(captor.capture());
 
         BookingCreatedEvent event = captor.getValue();
         assertThat(event.userId()).isEqualTo("1");

@@ -15,10 +15,11 @@ import org.springframework.kafka.test.utils.KafkaTestUtils;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import ru.otus.common.saga.BookingCreatedEvent;
-import ru.otus.orchestrator.config.JacksonConfig;
-import ru.otus.orchestrator.config.KafkaStreamsTestConfig;
-import ru.otus.orchestrator.publisher.DltPublisher;
-import ru.otus.orchestrator.service.BookingProcessor;
+import ru.otus.reservation.config.JacksonConfig;
+import ru.otus.reservation.config.KafkaStreamsTestConfig;
+import ru.otus.reservation.publisher.DltPublisher;
+import ru.otus.reservation.service.BookingProcessor;
+
 
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -31,7 +32,7 @@ import static org.mockito.Mockito.verifyNoInteractions;
 @SpringBootTest(classes = {KafkaTicketStreamProcessor.class, JacksonConfig.class, KafkaStreamsTestConfig.class})
 @EmbeddedKafka(partitions = 1, topics = {"test-topic", "test-dlt"})
 @TestPropertySource(properties = {
-        "app.kafka.topic.outbound=test-topic",
+        "app.kafka.topic.reservations=test-topic",
         "app.kafka.topic.dlt=test-dlt",
         "spring.kafka.bootstrap-servers=${spring.embedded.kafka.brokers}"
 })

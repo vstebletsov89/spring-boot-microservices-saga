@@ -7,8 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import ru.otus.common.saga.BookingCreatedEvent;
-import ru.otus.orchestrator.config.JacksonConfig;
-import ru.otus.orchestrator.repository.BookingOutboxRepository;
+import ru.otus.reservation.config.JacksonConfig;
+import ru.otus.reservation.repository.BookingOutboxRepository;
 
 import java.time.Instant;
 
@@ -16,8 +16,8 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.*;
 
-@SpringBootTest(classes = {TicketService.class, JacksonConfig.class})
-class TicketServiceTest {
+@SpringBootTest(classes = {ReservationService.class, JacksonConfig.class})
+class ReservationServiceTest {
 
     @MockitoBean
     private BookingOutboxRepository outboxRepository;
@@ -26,7 +26,7 @@ class TicketServiceTest {
     private ObjectMapper objectMapper;
 
     @Autowired
-    private TicketService ticketService;
+    private ReservationService ticketService;
 
     @Test
     void shouldCreateBookingRequestAndSaveToOutbox() {
@@ -37,8 +37,7 @@ class TicketServiceTest {
         verify(outboxRepository).save(argThat(saved ->
         {
             try {
-                return saved.getAggregateType().equals("Booking") &&
-                saved.getAggregateId().equals("b1") &&
+                return saved.getAggregateId().equals("b1") &&
                 saved.getPayload().equals(objectMapper.writeValueAsString(event)) &&
                 !saved.isSent() &&
                 saved.getCreatedAt().isBefore(Instant.now().plusSeconds(1));
@@ -56,7 +55,7 @@ class TicketServiceTest {
         BookingCreatedEvent event = new BookingCreatedEvent("b1", "FL123", "1");
         when(failingMapper.writeValueAsString(event))
                 .thenThrow(new JsonProcessingException("FailedParsing") {});
-        TicketService service = new TicketService(repository, failingMapper);
+        ReservationService service = new ReservationService(repository, failingMapper);
 
         assertThatThrownBy(() -> service.createBookingRequest(event))
                 .isInstanceOf(RuntimeException.class)

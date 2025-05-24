@@ -9,15 +9,15 @@ import org.springframework.kafka.config.TopicBuilder;
 @Configuration
 public class KafkaTopicsConfig {
 
-    @Value("${app.kafka.topic.outbound}")
-    private String outboundTopic;
+    @Value("${app.kafka.topic.reservations}")
+    private String reservationsTopic;
 
     @Value("${app.kafka.topic.dlt}")
     private String dltTopic;
 
     @Bean
-    public NewTopic outboundTopic() {
-        return TopicBuilder.name(outboundTopic)
+    public NewTopic reservationTopic() {
+        return TopicBuilder.name(reservationsTopic)
                 .partitions(1)
                 .replicas(1)
                 .build();

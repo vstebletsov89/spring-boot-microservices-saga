@@ -9,8 +9,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 import ru.otus.common.saga.BookingCreatedEvent;
-import ru.otus.orchestrator.publisher.DltPublisher;
-import ru.otus.orchestrator.service.BookingProcessor;
+import ru.otus.reservation.publisher.DltPublisher;
+import ru.otus.reservation.service.BookingProcessor;
 
 @Component
 @RequiredArgsConstructor
@@ -21,34 +21,11 @@ public class KafkaTicketStreamProcessor {
     private final BookingProcessor bookingProcessor;
     private final DltPublisher dltPublisher;
 
-    @Value("${app.kafka.topic.outbound}")
+    @Value("${app.kafka.topic.reservations}")
     private String topic;
 
     @Value("${app.kafka.topic.dlt}")
     private String dltTopic;
-
-    //TODO: fix all kafka consumers, add required table:
-//    stream.foreach((key, value) -> {
-//        try {
-//            BookingCreatedEvent event = objectMapper.readValue(value, BookingCreatedEvent.class);
-//            String eventId = event.getEventId(); // Предполагается, что есть уникальный идентификатор
-//
-//            // Проверка: если событие уже обработано — пропускаем
-//            if (processedEventStore.exists(eventId)) {
-//                log.info("Skipping duplicate event: {}", eventId);
-//                return;
-//            }
-//
-//            bookingProcessor.process(event);
-//            processedEventStore.save(eventId); // Отмечаем, что событие обработано
-//            log.info("Processed booking event: {}", event);
-//
-//        } catch (Exception e) {
-//            log.error("Error processing message, sending to DLT: {}", value, e);
-//            dltPublisher.publish(dltTopic, key, value);
-//        }
-//    });
-
 
     @Bean
     public KStream<String, String> kStream(StreamsBuilder builder)  {

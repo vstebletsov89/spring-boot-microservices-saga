@@ -8,15 +8,12 @@ databaseChangeLog:
             columns:
               - column:
                   name: id
-                  type: UUID
+                  type: BIGSERIAL
                   constraints:
                     primaryKey: true
                     nullable: false
               - column:
                   name: aggregate_id
-                  type: VARCHAR(255)
-              - column:
-                  name: aggregate_type
                   type: VARCHAR(255)
               - column:
                   name: event_type

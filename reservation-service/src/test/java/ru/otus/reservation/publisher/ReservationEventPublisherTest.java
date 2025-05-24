@@ -16,9 +16,9 @@ import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
-import ru.otus.orchestrator.config.KafkaTestConfig;
-import ru.otus.orchestrator.entity.BookingOutboxEvent;
-import ru.otus.orchestrator.repository.BookingOutboxRepository;
+import ru.otus.reservation.config.KafkaTestConfig;
+import ru.otus.reservation.entity.BookingOutboxEvent;
+import ru.otus.reservation.repository.BookingOutboxRepository;
 
 import java.time.Duration;
 import java.time.Instant;
@@ -31,13 +31,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@SpringBootTest(classes = {TicketEventPublisher.class, KafkaTestConfig.class})
+@SpringBootTest(classes = {ReservationEventPublisher.class, KafkaTestConfig.class})
 @EmbeddedKafka(partitions = 1, topics = {"outbound-topic"})
 @TestPropertySource(properties = {
-        "app.kafka.topic.outbound=outbound-topic",
+        "app.kafka.topic.reservations=reservation-topic",
         "spring.kafka.bootstrap-servers=${spring.embedded.kafka.brokers}"
 })
-class TicketEventPublisherTest {
+class ReservationEventPublisherTest {
 
     @Autowired
     private EmbeddedKafkaBroker embeddedKafkaBroker;
@@ -46,7 +46,7 @@ class TicketEventPublisherTest {
     private KafkaTemplate<String, String> kafkaTemplate;
 
     @Autowired
-    private TicketEventPublisher ticketEventPublisher;
+    private ReservationEventPublisher ticketEventPublisher;
 
     @MockitoBean
     private BookingOutboxRepository bookingOutboxRepository;
@@ -57,7 +57,7 @@ class TicketEventPublisherTest {
     static void setUp(@Autowired EmbeddedKafkaBroker broker) {
         Map<String, Object> consumerProps = KafkaTestUtils.consumerProps("testGroup", "true", broker);
         consumer = new KafkaConsumer<>(consumerProps, new StringDeserializer(), new StringDeserializer());
-        consumer.subscribe(Collections.singleton("outbound-topic"));
+        consumer.subscribe(Collections.singleton("reservation-topic"));
     }
 
     @AfterAll
@@ -78,8 +78,6 @@ class TicketEventPublisherTest {
         String payload = "{\"bookingId\":\"" + bookingId + "\",\"flightNumber\":\"FL123\"}";
 
         BookingOutboxEvent event = BookingOutboxEvent.builder()
-                .id(UUID.randomUUID())
-                .aggregateType("Booking")
                 .aggregateId(bookingId)
                 .payload(payload)
                 .createdAt(Instant.now())
@@ -93,7 +91,7 @@ class TicketEventPublisherTest {
         ticketEventPublisher.publishPendingEvents();
 
         ConsumerRecord<String, String> record =
-                KafkaTestUtils.getSingleRecord(consumer, "outbound-topic", Duration.ofSeconds(10));
+                KafkaTestUtils.getSingleRecord(consumer, "reservation-topic", Duration.ofSeconds(2));
         assertThat(record).isNotNull();
         assertThat(record.key()).isEqualTo(bookingId);
         assertThat(record.value()).isEqualTo(payload);
