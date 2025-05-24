@@ -23,16 +23,14 @@ public class PaymentMockController {
     public ResponseEntity<PaymentResponse> processPayment(@Valid @RequestBody PaymentRequest request) {
         int call = counter.incrementAndGet();
 
-        PaymentStatus status;
+        PaymentStatus status = PaymentStatus.SUCCESS;
         String failureReason = null;
 
-        // 50% requests failed
-        if (call % 2 != 0) {
-            status = PaymentStatus.FAILED;
-            failureReason = "Insufficient funds";
-        } else {
-            status = PaymentStatus.SUCCESS;
-        }
+//        // 50% requests failed
+//        if (call % 2 != 0) {
+//            status = PaymentStatus.FAILED;
+//            failureReason = "Insufficient funds";
+//        }
 
         PaymentResponse response = new PaymentResponse(
                 request.userId(),
