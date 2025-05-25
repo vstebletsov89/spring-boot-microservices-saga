@@ -7,16 +7,11 @@ http://localhost:8084/actuator/prometheus - метрики
 
 TODO:
 
-!!!перенсти проверку брониврования в reservation-service,
-!!!добавить отмену бронирования
+!покрыть и проверить юнит тесты всех сервисов
+!проверить работу системы в целом отдельными запросами из requests
+!проверить работу на jmeter
+!проверить дашборды
 !!!выключить circuitbreaker
-
-
-
-+reservation-service !add checking and cancel reservation
-+flight-service
-+payment-service
-+flight-query-service
 
 Booking Orchestrator Service выступает как управляющий сервис саги.
 
@@ -29,8 +24,6 @@ Payment Service проводит оплату.
 Flight Query Service не участвует в оркестровке (только для чтения).
 
 
-!!!добавить процесс саги - отмена бронирования, снять резервацию, сменить статус брони и вернуть деньги
-!!!добавить дашборд с метриками от оркестратора (успешные/неуспешные резервирования мест/оплаты и бронирования)
 !!!добавить helm скрипты
 !!!jmh
 !!!offheap storage
