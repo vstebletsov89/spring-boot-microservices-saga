@@ -6,7 +6,7 @@ import ru.otus.common.enums.BookingStatus;
 import java.time.Instant;
 
 @Schema(description = "Booking response including seat assignment and booking status")
-public record BookingSeatMappingResponse(
+public record BookingDetailsResponse(
 
         @Schema(description = "Unique identifier of the booking", example = "627f2329-589e-436b-bb36-4474b3a5cc8e")
         String bookingId,

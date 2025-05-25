@@ -2,10 +2,8 @@ databaseChangeLog:
   - include:
       file: db/changelog/001-create-airports-table.yaml
   - include:
-      file: db/changelog/002-create-flight-booking-tables.yaml
+      file: db/changelog/002-create-flight-table.yaml
   - include:
       file: db/changelog/003-insert-dummy-airports.yaml
   - include:
       file: db/changelog/004-insert-dummy-flights.yaml
-  - include:
-      file: db/changelog/005-create-booking-failures.yaml

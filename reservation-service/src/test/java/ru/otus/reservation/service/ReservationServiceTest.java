@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
-import ru.otus.common.saga.BookingCreatedEvent;
+import ru.otus.common.kafka.ReservationCreatedEvent;
 import ru.otus.reservation.config.JacksonConfig;
 import ru.otus.reservation.repository.BookingOutboxRepository;
 
@@ -30,7 +30,7 @@ class ReservationServiceTest {
 
     @Test
     void shouldCreateBookingRequestAndSaveToOutbox() {
-        BookingCreatedEvent event = new BookingCreatedEvent("1", "FL123", "b1");
+        ReservationCreatedEvent event = new ReservationCreatedEvent("1", "FL123", "b1", "6B");
 
         ticketService.createBookingRequest(event);
 
@@ -52,7 +52,7 @@ class ReservationServiceTest {
         BookingOutboxRepository repository = mock(BookingOutboxRepository.class);
         ObjectMapper failingMapper = mock(ObjectMapper.class);
 
-        BookingCreatedEvent event = new BookingCreatedEvent("b1", "FL123", "1");
+        ReservationCreatedEvent event = new ReservationCreatedEvent("b1", "FL123", "1", "6B");
         when(failingMapper.writeValueAsString(event))
                 .thenThrow(new JsonProcessingException("FailedParsing") {});
         ReservationService service = new ReservationService(repository, failingMapper);

@@ -12,8 +12,7 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.otus.common.enums.BookingStatus;
-import ru.otus.common.response.BookingSeatMappingResponse;
-import ru.otus.flightquery.service.BookingQueryService;
+import ru.otus.common.response.BookingDetailsResponse;
 
 import java.time.Instant;
 import java.util.Collections;
@@ -53,8 +52,8 @@ class BookingQueryControllerTest {
     void shouldReturnBookingsByFlightNumber() throws Exception {
         String flightNumber = "FL123";
 
-        List<BookingSeatMappingResponse> bookings = Collections.singletonList(
-                new BookingSeatMappingResponse(
+        List<BookingDetailsResponse> bookings = Collections.singletonList(
+                new BookingDetailsResponse(
                         "b123",
                         "FL123",
                         "1A",
@@ -78,7 +77,7 @@ class BookingQueryControllerTest {
     void shouldReturnBookingById() throws Exception {
         String bookingId = "b123";
 
-        BookingSeatMappingResponse booking = new BookingSeatMappingResponse(
+        BookingDetailsResponse booking = new BookingDetailsResponse(
                 "b123",
                 "FL123",
                 "1A",

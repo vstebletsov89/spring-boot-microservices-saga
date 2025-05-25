@@ -4,9 +4,7 @@ server:
 app:
   kafka:
     topic:
-      flights: flight-service.flights
-      bookings: flight-service.bookings
-      payments: payment-service.payments
+      flights: flight-service.events
       dlt: flight-service.dlt
 
 spring:

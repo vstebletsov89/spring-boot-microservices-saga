@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import ru.otus.common.command.*;
+import ru.otus.common.saga.BookingCancellationRequestedEvent;
 import ru.otus.common.saga.*;
 
 import java.math.BigDecimal;

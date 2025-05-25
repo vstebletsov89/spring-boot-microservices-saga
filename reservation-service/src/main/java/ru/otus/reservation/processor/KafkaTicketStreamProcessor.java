@@ -1,5 +1,6 @@
 package ru.otus.reservation.processor;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -8,7 +9,8 @@ import org.apache.kafka.streams.kstream.KStream;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
-import ru.otus.common.saga.BookingCreatedEvent;
+import ru.otus.common.kafka.ReservationCancelledEvent;
+import ru.otus.common.kafka.ReservationCreatedEvent;
 import ru.otus.reservation.publisher.DltPublisher;
 import ru.otus.reservation.service.BookingProcessor;
 
@@ -28,15 +30,30 @@ public class KafkaTicketStreamProcessor {
     private String dltTopic;
 
     @Bean
-    public KStream<String, String> kStream(StreamsBuilder builder)  {
+    public KStream<String, String> processReservations(StreamsBuilder builder)  {
         KStream<String, String> stream = builder.stream(topic);
         log.info("Kafka Streams is starting to listen to topic: {}", topic);
 
         stream.foreach((key, value) -> {
+
             try {
-                BookingCreatedEvent event = objectMapper.readValue(value, BookingCreatedEvent.class);
-                bookingProcessor.process(event);
-                log.info("Processed booking event: {}", event);
+                JsonNode root = objectMapper.readTree(value);
+                String type = root.get("type").asText();
+
+                switch (type) {
+                    case "ReservationCreatedEvent" -> {
+                        ReservationCreatedEvent event = objectMapper.readValue(value, ReservationCreatedEvent.class);
+                        bookingProcessor.sendCreatedCommand(event);
+                        log.info("Processed ReservationCreatedEvent: {}", event);
+                    }
+                    case "ReservationCancelledEvent" -> {
+                        ReservationCancelledEvent event = objectMapper.readValue(value, ReservationCancelledEvent.class);
+                        bookingProcessor.sendCancelledCommand(event);
+                        log.info("Processed ReservationCancelledEvent: {}", event);
+                    }
+                    default -> log.warn("Unknown event type: {}", type);
+                }
+
             } catch (Exception e) {
                 log.error("Error processing message, sending to DLT: {}", value, e);
                 dltPublisher.publish(dltTopic, key, value);

@@ -14,7 +14,8 @@ import org.springframework.kafka.test.context.EmbeddedKafka;
 import org.springframework.kafka.test.utils.KafkaTestUtils;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
-import ru.otus.common.saga.BookingCreatedEvent;
+import ru.otus.common.kafka.ReservationCancelledEvent;
+import ru.otus.common.kafka.ReservationCreatedEvent;
 import ru.otus.reservation.config.JacksonConfig;
 import ru.otus.reservation.config.KafkaStreamsTestConfig;
 import ru.otus.reservation.publisher.DltPublisher;
@@ -60,13 +61,13 @@ class KafkaTicketStreamProcessorTest {
 
     @Test
     void shouldProcessValidBookingEvent() throws Exception {
-        var event = new BookingCreatedEvent("1", "FL123", "b1");
+        var event = new ReservationCreatedEvent("1", "FL123", "b1", "6B");
         String payload = objectMapper.writeValueAsString(event);
 
         kafkaTemplate.send(new ProducerRecord<>("test-topic", "b1", payload));
 
         await().atMost(5, TimeUnit.SECONDS).untilAsserted(() -> {
-            verify(bookingProcessor).process(eq(event));
+            verify(bookingProcessor).sendCreatedCommand(eq(event));
             verifyNoInteractions(dltPublisher);
         });
     }
@@ -86,4 +87,18 @@ class KafkaTicketStreamProcessorTest {
             verifyNoInteractions(bookingProcessor);
         });
     }
+
+    @Test
+    void shouldProcessValidCancellationEvent() throws Exception {
+        var event = new ReservationCancelledEvent("b2", "FL123", "1");
+        String payload = objectMapper.writeValueAsString(event);
+
+        kafkaTemplate.send(new ProducerRecord<>("test-topic", "b2", payload));
+
+        await().atMost(5, TimeUnit.SECONDS).untilAsserted(() -> {
+            verify(bookingProcessor).sendCancelledCommand(eq(event));
+            verifyNoInteractions(dltPublisher);
+        });
+    }
+
 }

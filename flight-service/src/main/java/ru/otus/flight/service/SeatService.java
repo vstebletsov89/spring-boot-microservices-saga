@@ -11,15 +11,10 @@ import ru.otus.common.command.ReserveSeatCommand;
 import ru.otus.common.entity.BookingSeatMapping;
 import ru.otus.common.entity.Flight;
 import ru.otus.common.enums.BookingStatus;
-import ru.otus.common.kafka.BookingSeatCreatedEvent;
-import ru.otus.common.kafka.BookingSeatUpdatedEvent;
 import ru.otus.common.kafka.FlightUpdatedEvent;
 import ru.otus.common.saga.SeatReservationFailedEvent;
 import ru.otus.common.saga.SeatReservedEvent;
-import ru.otus.flight.entity.BookingFailure;
-import ru.otus.flight.publisher.BookingPublisher;
 import ru.otus.flight.publisher.FlightPublisher;
-import ru.otus.flight.repository.BookingFailureRepository;
 import ru.otus.flight.repository.BookingSeatMappingRepository;
 import ru.otus.flight.repository.FlightRepository;
 
@@ -36,11 +31,9 @@ import java.util.stream.Collectors;
 public class SeatService {
 
     private final FlightRepository flightRepository;
-    private final BookingFailureRepository bookingFailureRepository;
     private final BookingSeatMappingRepository mappingRepository;
     private final EventGateway eventGateway;
     private final FlightPublisher flightPublisher;
-    private final BookingPublisher bookingPublisher;
 
     @Transactional
     @CommandHandler
@@ -56,16 +49,6 @@ public class SeatService {
         BigDecimal freeSeats = calculateFreeSeats(flight);
         if (freeSeats.compareTo(BigDecimal.ZERO) <= 0) {
             log.info("No seats available for bookingId={}", cmd.bookingId());
-            bookingFailureRepository.save(
-                    BookingFailure.builder()
-                            .bookingId(cmd.bookingId())
-                            .userId(cmd.userId())
-                            .flightNumber(cmd.flightNumber())
-                            .attemptTime(Instant.now())
-                            .reason("No seats available")
-                            .payload(cmd.toString())
-                            .build()
-            );
             eventGateway.publish(new SeatReservationFailedEvent(cmd.bookingId()));
             return;
         }
@@ -88,16 +71,6 @@ public class SeatService {
                 .build();
         mappingRepository.save(seatMapping);
 
-        bookingPublisher.publish(
-                seatMapping.getBookingId(),
-                new BookingSeatCreatedEvent(
-                        seatMapping.getBookingId(),
-                        seatMapping.getFlightNumber(),
-                        seatMapping.getSeatNumber(),
-                        seatMapping.getReservedAt(),
-                        seatMapping.getStatus()
-                )
-        );
         eventGateway.publish(new SeatReservedEvent(
                 cmd.bookingId(),
                 cmd.flightNumber(),
@@ -152,16 +125,6 @@ public class SeatService {
 
             mapping.setStatus(BookingStatus.CANCELLED);
             mappingRepository.save(mapping);
-            bookingPublisher.publish(
-                    mapping.getBookingId(),
-                    new BookingSeatUpdatedEvent(
-                            mapping.getBookingId(),
-                            mapping.getFlightNumber(),
-                            mapping.getSeatNumber(),
-                            mapping.getReservedAt(),
-                            mapping.getStatus()
-                    )
-            );
         });
     }
 

@@ -11,14 +11,10 @@ import ru.otus.common.enums.BookingStatus;
 import ru.otus.common.enums.FlightStatus;
 import ru.otus.common.entity.BookingSeatMapping;
 import ru.otus.common.entity.Flight;
-import ru.otus.common.kafka.BookingSeatCreatedEvent;
-import ru.otus.common.kafka.BookingSeatUpdatedEvent;
 import ru.otus.common.kafka.FlightUpdatedEvent;
 import ru.otus.common.saga.SeatReservationFailedEvent;
 import ru.otus.common.saga.SeatReservedEvent;
-import ru.otus.flight.publisher.BookingPublisher;
 import ru.otus.flight.publisher.FlightPublisher;
-import ru.otus.flight.repository.BookingFailureRepository;
 import ru.otus.flight.repository.BookingSeatMappingRepository;
 import ru.otus.flight.repository.FlightRepository;
 
@@ -56,15 +52,8 @@ public class SeatServiceTest {
     @MockitoBean
     private FlightPublisher flightPublisher;
 
-    @MockitoBean
-    private BookingPublisher bookingPublisher;
-
-    @MockitoBean
-    private BookingFailureRepository bookingFailureRepository;
-
     @Autowired
     private SeatService seatService;
-
 
     @Test
     void shouldReserveAllOverbookedSeats() {
@@ -102,12 +91,10 @@ public class SeatServiceTest {
         }
 
         assertEquals(220, saved.size());
-        verifyNoInteractions(bookingFailureRepository);
         verify(mappingRepository, times(220)).save(any(BookingSeatMapping.class));
         verify(flightRepository, times(220)).save(flight);
         verify(eventGateway,    times(220)).publish(any(SeatReservedEvent.class));
         verify(flightPublisher, times(220)).publish(eq(flightNumber), any(FlightUpdatedEvent.class));
-        verify(bookingPublisher, times(220)).publish(anyString(), any(BookingSeatCreatedEvent.class));
     }
 
 
@@ -151,8 +138,6 @@ public class SeatServiceTest {
         verify(flightRepository).save(flight);
         verify(eventGateway).publish(any(SeatReservedEvent.class));
         verify(flightPublisher).publish(eq(FLIGHT_NUMBER), any(FlightUpdatedEvent.class));
-        verify(bookingPublisher).publish(eq(BOOKING_ID), any(BookingSeatCreatedEvent.class));
-        verifyNoInteractions(bookingFailureRepository);
     }
 
     @Test
@@ -195,8 +180,6 @@ public class SeatServiceTest {
         verify(mappingRepository, times(20)).save(any(BookingSeatMapping.class));
         verify(eventGateway, times(20)).publish(any(SeatReservedEvent.class));
         verify(flightPublisher, times(20)).publish(eq(FLIGHT_NUMBER), any(FlightUpdatedEvent.class));
-        verify(bookingPublisher, times(20)).publish(anyString(), any(BookingSeatCreatedEvent.class));
-        verifyNoInteractions(bookingFailureRepository);
     }
 
     @Test
@@ -207,14 +190,6 @@ public class SeatServiceTest {
 
         seatService.handle(cmd);
 
-
-        verify(bookingFailureRepository).save(argThat(b ->
-                b.getBookingId().equals(BOOKING_ID) &&
-                        b.getFlightNumber().equals(FLIGHT_NUMBER) &&
-                        b.getUserId().equals(USER_ID) &&
-                        b.getReason().equals("No seats available") &&
-                        b.getPayload().equals(cmd.toString())
-        ));
         verify(eventGateway).publish(any(SeatReservationFailedEvent.class));
     }
 
@@ -237,8 +212,6 @@ public class SeatServiceTest {
         verify(flightRepository).save(any());
         verify(mappingRepository).save(any());
         verify(flightPublisher).publish(eq(FLIGHT_NUMBER), any(FlightUpdatedEvent.class));
-        verify(bookingPublisher).publish(eq(BOOKING_ID), any(BookingSeatUpdatedEvent.class));
-        verifyNoInteractions(bookingFailureRepository);
     }
 
     @Test

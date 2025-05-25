@@ -64,5 +64,3 @@ https://github.com/moryakovdv/otus-project - check helm scripts
 б) При обработке запросов обеспечить защиту от перегрузки
 
 !!!api-gateway?
-
-

@@ -40,6 +40,4 @@ public class BookingSeatMapping {
 
     @Enumerated(EnumType.STRING)
     private BookingStatus status;
-
-
 }

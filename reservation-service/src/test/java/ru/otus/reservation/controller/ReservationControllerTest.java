@@ -12,8 +12,10 @@ import org.springframework.http.MediaType;
 import org.springframework.kafka.annotation.KafkaStreamsDefaultConfiguration;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
-import ru.otus.common.request.BookingRequest;
-import ru.otus.common.saga.BookingCreatedEvent;
+import ru.otus.common.kafka.ReservationCancelledEvent;
+import ru.otus.common.request.CancelReservationRequest;
+import ru.otus.common.request.CreateReservationRequest;
+import ru.otus.common.kafka.ReservationCreatedEvent;
 import ru.otus.reservation.service.ReservationService;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -45,7 +47,7 @@ class ReservationControllerTest {
 
     @Test
     void shouldAcceptBookingRequest() throws Exception {
-        BookingRequest request = new BookingRequest("1", "FL123");
+        CreateReservationRequest request = new CreateReservationRequest("1", "FL123", "6B");
         String json = objectMapper.writeValueAsString(request);
 
         mockMvc.perform(post("/api/tickets")
@@ -54,12 +56,32 @@ class ReservationControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("booking created. Waiting for payment to confirm.")));
 
-        ArgumentCaptor<BookingCreatedEvent> captor = ArgumentCaptor.forClass(BookingCreatedEvent.class);
+        ArgumentCaptor<ReservationCreatedEvent> captor = ArgumentCaptor.forClass(ReservationCreatedEvent.class);
         verify(reservationService).createBookingRequest(captor.capture());
 
-        BookingCreatedEvent event = captor.getValue();
+        ReservationCreatedEvent event = captor.getValue();
         assertThat(event.userId()).isEqualTo("1");
         assertThat(event.flightNumber()).isEqualTo("FL123");
         assertThat(event.bookingId()).isNotBlank();
+    }
+
+    @Test
+    void shouldAcceptCancellationRequest() throws Exception {
+        CancelReservationRequest request = new CancelReservationRequest("b123", "1", "FL123");
+        String json = objectMapper.writeValueAsString(request);
+
+        mockMvc.perform(post("/api/tickets/cancel")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("b123 cancellation requested.")));
+
+        ArgumentCaptor<ReservationCancelledEvent> captor = ArgumentCaptor.forClass(ReservationCancelledEvent.class);
+        verify(reservationService).cancelBookingRequest(captor.capture());
+
+        ReservationCancelledEvent event = captor.getValue();
+        assertThat(event.userId()).isEqualTo("1");
+        assertThat(event.flightNumber()).isEqualTo("FL123");
+        assertThat(event.bookingId()).isEqualTo("b123");
     }
 }

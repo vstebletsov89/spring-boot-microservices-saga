@@ -11,7 +11,7 @@ import org.springframework.boot.test.system.OutputCaptureExtension;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import ru.otus.common.command.BookFlightCommand;
-import ru.otus.common.saga.BookingCreatedEvent;
+import ru.otus.common.kafka.ReservationCreatedEvent;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -35,12 +35,12 @@ class BookingProcessorTest {
 
     @Test
     void shouldSendBookFlightCommand() {
-        BookingCreatedEvent event = new BookingCreatedEvent("1", "FL123", "b1");
+        ReservationCreatedEvent event = new ReservationCreatedEvent("1", "FL123", "b1", "6B");
 
         CompletableFuture<Object> future = CompletableFuture.completedFuture("success");
         when(commandGateway.send(any())).thenReturn(future);
 
-        bookingProcessor.process(event);
+        bookingProcessor.sendCreatedCommand(event);
 
         var captor = ArgumentCaptor.forClass(BookFlightCommand.class);
         verify(commandGateway).send(captor.capture());
@@ -49,20 +49,21 @@ class BookingProcessorTest {
         assertThat(sentCommand.bookingId()).isEqualTo("b1");
         assertThat(sentCommand.userId()).isEqualTo("1");
         assertThat(sentCommand.flightNumber()).isEqualTo("FL123");
+        assertThat(sentCommand.seatNumber()).isEqualTo("6B");
     }
 
     @Test
     void shouldLogErrorIfCommandFails(CapturedOutput output) {
-        BookingCreatedEvent event = new BookingCreatedEvent("2", "FL456", "b2");
+        ReservationCreatedEvent event = new ReservationCreatedEvent("2", "FL456", "b2", "6B");
 
         CompletableFuture<Object> failedFuture = new CompletableFuture<>();
         failedFuture.completeExceptionally(new RuntimeException("Command failed"));
         when(commandGateway.send(any())).thenReturn(failedFuture);
 
-        bookingProcessor.process(event);
+        bookingProcessor.sendCreatedCommand(event);
 
         verify(commandGateway).send(any(BookFlightCommand.class));
         assertThat(output.getAll())
-                .contains("Failed to send command: BookFlightCommand[bookingId=b2, userId=2, flightNumber=FL456]");
+                .contains("Failed to send command: BookFlightCommand[bookingId=b2, userId=2, flightNumber=FL456, seatNumber=6B]");
     }
 }

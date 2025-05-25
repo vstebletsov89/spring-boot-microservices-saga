@@ -8,8 +8,11 @@ public enum BookingStatus {
     @Schema(description = "Booking has been reserved but not yet paid")
     RESERVED,
 
-    @Schema(description = "Booking has been paid and confirmed")
+    @Schema(description = "Booking has been paid")
     PAID,
+
+    @Schema(description = "Booking was confirmed")
+    CONFIRMED,
 
     @Schema(description = "Booking was cancelled")
     CANCELLED

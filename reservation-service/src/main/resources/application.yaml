@@ -4,7 +4,7 @@ server:
 app:
   kafka:
     topic:
-      reservations: reservation-service.reservations
+      reservations: reservation-service.bookings
       dlt: reservation-service.dlt
 
 spring:
