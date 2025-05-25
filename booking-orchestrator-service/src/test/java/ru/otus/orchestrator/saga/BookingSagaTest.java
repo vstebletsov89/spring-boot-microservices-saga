@@ -31,7 +31,7 @@ class BookingSagaTest {
     @Test
     void shouldHandleReservationCreatedEvent() {
         String bookingId = UUID.randomUUID().toString();
-        ReservationCreatedEvent event = new ReservationCreatedEvent(bookingId, "1", "FL123");
+        ReservationCreatedEvent event = new ReservationCreatedEvent(bookingId, "1", "FL123", "6B");
 
         try (MockedStatic<SagaLifecycle> sagaLifecycle = Mockito.mockStatic(SagaLifecycle.class)) {
             saga.on(event);
