@@ -16,13 +16,7 @@ spring:
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.apache.kafka.common.serialization.StringSerializer
-    streams:
-      application-id: flight-service
-      default-key-serde: org.apache.kafka.common.serialization.Serdes$StringSerde
-      default-value-serde: org.apache.kafka.common.serialization.Serdes$StringSerde
-    consumer:
-      properties:
-        spring.json.trusted.packages: ru.otus.common.events
+
   datasource:
     url: jdbc:h2:mem:flightdb
     username: pguser

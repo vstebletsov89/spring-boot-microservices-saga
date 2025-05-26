@@ -2,7 +2,6 @@ package ru.otus.reservation.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.otus.common.entity.BookingSeatMapping;
 import ru.otus.common.response.BookingDetailsResponse;
 import ru.otus.reservation.mapper.BookingSeatMappingMapper;
 import ru.otus.reservation.repository.BookingRepository;
