@@ -7,6 +7,7 @@ http://localhost:8084/actuator/prometheus - метрики
 
 TODO:
 
+!remove BookingSeatMapping from reservation-service, make BookingInfo table
 !проверить работу системы в целом отдельными запросами из requests
 !проверить работу на jmeter
 !проверить дашборды

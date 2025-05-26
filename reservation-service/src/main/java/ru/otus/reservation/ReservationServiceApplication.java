@@ -8,10 +8,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 @EnableKafkaStreams
 @EnableScheduling
-@EntityScan(basePackages =
-        {"ru.otus.common.entity",
-        "ru.otus.reservation.entity",
-        "org.axonframework.eventhandling.tokenstore.jpa"})
 @SpringBootApplication
 public class ReservationServiceApplication {
 
