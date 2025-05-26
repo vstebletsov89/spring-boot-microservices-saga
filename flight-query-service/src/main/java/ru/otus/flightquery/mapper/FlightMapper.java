@@ -14,5 +14,5 @@ public interface FlightMapper {
     @Mapping(source = "arrivalAirport.code", target = "arrivalAirportCode")
     FlightResponse toResponse(Flight flight);
 
-    List<FlightResponse> toResponseList(List<Flight> flights);
+    //List<FlightResponse> toResponseList(List<Flight> flights);
 }

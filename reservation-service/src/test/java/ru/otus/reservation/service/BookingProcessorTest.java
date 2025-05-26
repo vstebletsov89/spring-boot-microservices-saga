@@ -11,6 +11,8 @@ import org.springframework.boot.test.system.OutputCaptureExtension;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import ru.otus.common.command.BookFlightCommand;
+import ru.otus.common.command.CancelFlightCommand;
+import ru.otus.common.kafka.ReservationCancelledEvent;
 import ru.otus.common.kafka.ReservationCreatedEvent;
 
 import java.util.concurrent.CompletableFuture;
@@ -50,6 +52,24 @@ class BookingProcessorTest {
         assertThat(sentCommand.userId()).isEqualTo("1");
         assertThat(sentCommand.flightNumber()).isEqualTo("FL123");
         assertThat(sentCommand.seatNumber()).isEqualTo("6B");
+    }
+
+    @Test
+    void shouldSendCancelFlightCommand() {
+        ReservationCancelledEvent  event = new ReservationCancelledEvent("1", "FL123", "b1");
+
+        CompletableFuture<Object> future = CompletableFuture.completedFuture("success");
+        when(commandGateway.send(any())).thenReturn(future);
+
+        bookingProcessor.sendCancelledCommand(event);
+
+        var captor = ArgumentCaptor.forClass(CancelFlightCommand.class);
+        verify(commandGateway).send(captor.capture());
+
+        CancelFlightCommand sentCommand = captor.getValue();
+        assertThat(sentCommand.bookingId()).isEqualTo("b1");
+        assertThat(sentCommand.userId()).isEqualTo("1");
+        assertThat(sentCommand.flightNumber()).isEqualTo("FL123");
     }
 
     @Test

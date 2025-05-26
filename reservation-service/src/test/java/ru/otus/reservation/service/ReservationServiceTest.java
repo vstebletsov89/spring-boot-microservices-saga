@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import ru.otus.common.kafka.ReservationCancelledEvent;
 import ru.otus.common.kafka.ReservationCreatedEvent;
 import ru.otus.reservation.config.JacksonConfig;
 import ru.otus.reservation.repository.BookingOutboxRepository;
@@ -41,6 +42,25 @@ class ReservationServiceTest {
                 saved.getPayload().equals(objectMapper.writeValueAsString(event)) &&
                 !saved.isSent() &&
                 saved.getCreatedAt().isBefore(Instant.now().plusSeconds(1));
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException(e);
+            }
+        }));
+    }
+
+    @Test
+    void shouldCancelBookingRequestAndSaveToOutbox() {
+        ReservationCancelledEvent event = new ReservationCancelledEvent("1", "FL123", "b1");
+
+        ticketService.cancelBookingRequest(event);
+
+        verify(outboxRepository).save(argThat(saved ->
+        {
+            try {
+                return saved.getAggregateId().equals("b1") &&
+                        saved.getPayload().equals(objectMapper.writeValueAsString(event)) &&
+                        !saved.isSent() &&
+                        saved.getCreatedAt().isBefore(Instant.now().plusSeconds(1));
             } catch (JsonProcessingException e) {
                 throw new RuntimeException(e);
             }
