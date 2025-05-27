@@ -54,6 +54,12 @@ services:
       - ./agents:/agents:ro
     environment:
       SERVER_PORT: 8080
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-reservation:5432/bookingdb
+      SPRING_DATASOURCE_DRIVER_CLASS_NAME: org.postgresql.Driver
+      SPRING_DATASOURCE_USERNAME: pguser
+      SPRING_DATASOURCE_PASSWORD: pgpass
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      SPRING_JPA_SHOW_SQL: "true"
       JAVA_TOOL_OPTIONS: "-javaagent:/agents/opentelemetry-javaagent.jar"
       OTEL_SERVICE_NAME: "booking-orchestrator-service"
       OTEL_TRACES_EXPORTER: "otlp"
@@ -63,6 +69,8 @@ services:
       OTEL_LOGS_EXPORTER: "none"
     depends_on:
       axon-server:
+        condition: service_healthy
+      postgres-reservation:
         condition: service_healthy
       jaeger:
         condition: service_started
