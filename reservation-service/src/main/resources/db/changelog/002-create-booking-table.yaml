@@ -1,10 +1,10 @@
 databaseChangeLog:
   - changeSet:
-      id: create-booking-seat-mapping-table
+      id: create-booking-info-table
       author: vstebletsov
       changes:
         - createTable:
-            tableName: booking_seat_mapping
+            tableName: booking_info
             columns:
               - column:
                   name: id

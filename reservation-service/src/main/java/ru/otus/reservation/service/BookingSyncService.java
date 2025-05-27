@@ -4,9 +4,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.otus.common.entity.BookingSeatMapping;
 import ru.otus.common.enums.BookingStatus;
 import ru.otus.common.saga.*;
+import ru.otus.reservation.entity.BookingInfo;
 import ru.otus.reservation.repository.BookingRepository;
 
 import java.time.Instant;
@@ -21,7 +21,7 @@ public class BookingSyncService {
     @Transactional
     public void handleReservationCreated(ReservationCreatedEvent event) {
 
-        bookingRepository.save(BookingSeatMapping.builder()
+        bookingRepository.save(BookingInfo.builder()
                 .bookingId(event.bookingId())
                 .flightNumber(event.flightNumber())
                 .seatNumber(event.seatNumber())

@@ -4,9 +4,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
-import ru.otus.common.entity.BookingSeatMapping;
 import ru.otus.common.enums.BookingStatus;
 import ru.otus.common.saga.*;
+import ru.otus.reservation.entity.BookingInfo;
 import ru.otus.reservation.repository.BookingRepository;
 
 import java.util.Optional;
@@ -42,7 +42,7 @@ class BookingSyncServiceTest {
 
     @Test
     void handleBookingConfirmed_shouldUpdateStatusToConfirmed_whenMappingExists() {
-        BookingSeatMapping mapping = new BookingSeatMapping();
+        BookingInfo mapping = new BookingInfo();
         mapping.setStatus(BookingStatus.RESERVED);
         when(bookingRepository.findByBookingId("b2")).thenReturn(Optional.of(mapping));
         BookingConfirmedEvent event = new BookingConfirmedEvent("b2");
@@ -55,7 +55,7 @@ class BookingSyncServiceTest {
 
     @Test
     void handleBookingCancelled_shouldUpdateStatusToCancelled_whenMappingExists() {
-        BookingSeatMapping mapping = new BookingSeatMapping();
+        BookingInfo mapping = new BookingInfo();
         mapping.setStatus(BookingStatus.CONFIRMED);
         BookingCancelledEvent event = new BookingCancelledEvent("b4");
 
@@ -69,7 +69,7 @@ class BookingSyncServiceTest {
 
     @Test
     void handleBookingCancellationRequested_shouldUpdateStatusToCancelled_whenMappingExists() {
-        BookingSeatMapping mapping = new BookingSeatMapping();
+        BookingInfo mapping = new BookingInfo();
         mapping.setStatus(BookingStatus.CONFIRMED);
         when(bookingRepository.findByBookingId("b6")).thenReturn(Optional.of(mapping));
         BookingCancellationRequestedEvent event = new BookingCancellationRequestedEvent("b6");
@@ -82,7 +82,7 @@ class BookingSyncServiceTest {
 
     @Test
     void handlePaymentProcessed_shouldUpdateStatusToPaid_whenMappingExists() {
-        BookingSeatMapping mapping = new BookingSeatMapping();
+        BookingInfo mapping = new BookingInfo();
         mapping.setStatus(BookingStatus.RESERVED);
         when(bookingRepository.findByBookingId("b8")).thenReturn(Optional.of(mapping));
         PaymentProcessedEvent event = new PaymentProcessedEvent("b8", "1");
