@@ -47,7 +47,7 @@ databaseChangeLog:
                     nullable: false
 
   - changeSet:
-      id: 001-create-booking_seat_mapping-table
+      id: 002-create-booking_seat_mapping-table
       author: vstebletsov
       changes:
         - createTable:
