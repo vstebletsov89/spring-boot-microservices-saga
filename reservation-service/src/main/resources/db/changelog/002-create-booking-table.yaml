@@ -28,19 +28,19 @@ databaseChangeLog:
                   type: VARCHAR(50)
 
         - addUniqueConstraint:
-            tableName: booking_seat_mapping
+            tableName: booking_info
             columnNames: flight_number, seat_number
             constraintName: uc_flight_seat
 
         - createIndex:
-            tableName: booking_seat_mapping
+            tableName: booking_info
             indexName: idx_booking_id
             columns:
               - column:
                   name: booking_id
 
         - createIndex:
-            tableName: booking_seat_mapping
+            tableName: booking_info
             indexName: idx_flight_number
             columns:
               - column:
