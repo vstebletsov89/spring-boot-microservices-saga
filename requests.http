@@ -20,12 +20,8 @@ Content-Type: application/json
   "flightNumber": "EK4004"
 }
 
-### Получить все бронирования для пользователя
-GET http://localhost:8081/api/tickets/user/aae973ef-9607-43d0-a500-826ca4484b8d
-Accept: application/json
-
 ### Получить детали конкретного бронирования
-GET http://localhost:8081/api/tickets/e9697b1f-5588-4433-988a-2cf8fb1e1a4c
+GET http://localhost:8081/api/tickets/booking/51ed187a-4240-4d35-9fd2-f106ccf138e3
 Accept: application/json
 
 ### Отмена бронирования
@@ -33,7 +29,7 @@ POST http://localhost:8081/api/tickets/cancel
 Content-Type: application/json
 
 {
-  "bookingId": "aae973ef-9607-43d0-a500-826ca4484b8d",
+  "bookingId": "51ed187a-4240-4d35-9fd2-f106ccf138e3",
   "userId": "aae973ef-9607-43d0-a500-826ca4484b8d",
   "flightNumber": "EK4004"
 }
