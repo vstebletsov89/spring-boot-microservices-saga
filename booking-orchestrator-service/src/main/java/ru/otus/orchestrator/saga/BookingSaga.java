@@ -26,6 +26,7 @@ public class BookingSaga {
     public void on(ReservationCreatedEvent event) {
         log.info("Try to reserve seat for: {}", event);
         if (bookingMetrics != null) bookingMetrics.incrementCreated();
+
         SagaLifecycle.associateWith("bookingId", event.bookingId());
         commandGateway.send(new ReserveSeatCommand(
                 event.bookingId(),
@@ -47,6 +48,7 @@ public class BookingSaga {
     public void on(PaymentProcessedEvent event) {
         log.info("Payment successful: {}", event);
         if (bookingMetrics != null) bookingMetrics.incrementConfirmed();
+
         commandGateway.send(new ConfirmBookingCommand(event.bookingId()));
         SagaLifecycle.end();
     }
@@ -55,6 +57,7 @@ public class BookingSaga {
     public void on(PaymentFailedEvent event) {
         log.warn("Payment failed: {}", event);
         if (bookingMetrics != null) bookingMetrics.incrementCancelled();
+
         commandGateway.send(new ReleaseSeatCommand(event.bookingId()));
         commandGateway.send(new ReservationCancelledCommand(event.bookingId()));
         SagaLifecycle.end();
@@ -64,6 +67,7 @@ public class BookingSaga {
     public void on(SeatReservationFailedEvent event) {
         log.info("Seat reservation failed for: {}", event);
         if (bookingMetrics != null) bookingMetrics.incrementCancelled();
+
         commandGateway.send(new ReservationCancelledCommand(event.bookingId()));
         SagaLifecycle.end();
     }
