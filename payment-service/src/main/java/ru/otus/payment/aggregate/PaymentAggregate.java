@@ -30,7 +30,6 @@ public class PaymentAggregate {
         paymentService.process(cmd);
     }
 
-    @CreationPolicy(ALWAYS)
     @CommandHandler
     public void handle(RefundPaymentCommand cmd, PaymentService paymentService) {
         paymentService.refund(cmd);
