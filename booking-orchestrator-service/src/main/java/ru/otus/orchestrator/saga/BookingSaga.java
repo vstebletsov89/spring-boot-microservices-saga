@@ -8,7 +8,6 @@ import org.axonframework.modelling.saga.StartSaga;
 import org.axonframework.spring.stereotype.Saga;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.otus.common.command.*;
-import ru.otus.common.saga.BookingCancellationRequestedEvent;
 import ru.otus.common.saga.*;
 import ru.otus.orchestrator.metrics.BookingMetrics;
 
@@ -65,18 +64,6 @@ public class BookingSaga {
     public void on(SeatReservationFailedEvent event) {
         log.info("Seat reservation failed for: {}", event);
         if (bookingMetrics != null) bookingMetrics.incrementCancelled();
-        commandGateway.send(new ReservationCancelledCommand(event.bookingId()));
-        SagaLifecycle.end();
-    }
-
-    @StartSaga
-    @SagaEventHandler(associationProperty = "bookingId")
-    public void on(BookingCancellationRequestedEvent event) {
-        log.info("User requested booking cancellation: {}", event);
-        if (bookingMetrics != null) bookingMetrics.incrementCancelled();
-        SagaLifecycle.associateWith("bookingId", event.bookingId());
-        commandGateway.send(new ReleaseSeatCommand(event.bookingId()));
-        commandGateway.send(new RefundPaymentCommand(event.bookingId()));
         commandGateway.send(new ReservationCancelledCommand(event.bookingId()));
         SagaLifecycle.end();
     }

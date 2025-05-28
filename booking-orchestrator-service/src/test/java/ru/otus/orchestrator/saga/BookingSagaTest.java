@@ -7,7 +7,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import ru.otus.common.command.*;
-import ru.otus.common.saga.BookingCancellationRequestedEvent;
 import ru.otus.common.saga.*;
 
 import java.math.BigDecimal;
@@ -90,21 +89,6 @@ class BookingSagaTest {
         try (MockedStatic<SagaLifecycle> sagaLifecycle = Mockito.mockStatic(SagaLifecycle.class)) {
             saga.on(event);
 
-            verify(commandGateway).send(new ReservationCancelledCommand(bookingId));
-            sagaLifecycle.verify(SagaLifecycle::end);
-        }
-    }
-
-    @Test
-    void shouldHandleBookingCancellationRequestedEventAndEndSaga() {
-        String bookingId = UUID.randomUUID().toString();
-        BookingCancellationRequestedEvent event = new BookingCancellationRequestedEvent(bookingId);
-
-        try (MockedStatic<SagaLifecycle> sagaLifecycle = Mockito.mockStatic(SagaLifecycle.class)) {
-            saga.on(event);
-
-            verify(commandGateway).send(new ReleaseSeatCommand(bookingId));
-            verify(commandGateway).send(new RefundPaymentCommand(bookingId));
             verify(commandGateway).send(new ReservationCancelledCommand(bookingId));
             sagaLifecycle.verify(SagaLifecycle::end);
         }
