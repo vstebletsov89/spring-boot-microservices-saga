@@ -28,6 +28,7 @@ public class BookingCancellationSaga {
     public void on(BookingCancellationRequestedEvent event) {
         log.info("User requested booking cancellation: {}", event);
         if (bookingMetrics != null) bookingMetrics.incrementCancelled();
+
         SagaLifecycle.associateWith("bookingId", event.bookingId());
         commandGateway.send(new ReleaseSeatCommand(event.bookingId()));
         commandGateway.send(new RefundPaymentCommand(event.bookingId()));
