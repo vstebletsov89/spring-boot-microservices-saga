@@ -97,8 +97,6 @@ public class PaymentService {
                 "",
                 Instant.now());
 
-        eventGateway.publish(new PaymentRefundedEvent(cmd.bookingId()));
-
         previousPayment.setStatus(refundResponse.status());
         previousPayment.setFailureReason(refundResponse.failureReason());
         previousPayment.setOccurredAt(refundResponse.occurredAt());
