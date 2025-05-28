@@ -6,8 +6,10 @@ import org.axonframework.eventsourcing.EventSourcingHandler;
 import org.axonframework.modelling.command.AggregateIdentifier;
 import org.axonframework.spring.stereotype.Aggregate;
 import ru.otus.common.command.ProcessPaymentCommand;
+import ru.otus.common.command.RefundPaymentCommand;
 import ru.otus.common.saga.PaymentFailedEvent;
 import ru.otus.common.saga.PaymentProcessedEvent;
+import ru.otus.common.saga.PaymentRefundedEvent;
 import ru.otus.payment.service.PaymentService;
 
 @Aggregate
@@ -24,6 +26,11 @@ public class PaymentAggregate {
         paymentService.process(cmd);
     }
 
+    @CommandHandler
+    public void handle(RefundPaymentCommand cmd, PaymentService paymentService) {
+        paymentService.refund(cmd);
+    }
+
     @EventSourcingHandler
     public void onProcessed(PaymentProcessedEvent event) {
         this.bookingId = event.bookingId();
@@ -32,5 +39,11 @@ public class PaymentAggregate {
     @EventSourcingHandler
     public void onFailed(PaymentFailedEvent event) {
         this.bookingId = event.bookingId();
+    }
+
+    @EventSourcingHandler
+    public void on(PaymentRefundedEvent event) {
+        this.bookingId = event.bookingId();
+        log.info("Refunded payment for bookingId: {}", event.bookingId());
     }
 }

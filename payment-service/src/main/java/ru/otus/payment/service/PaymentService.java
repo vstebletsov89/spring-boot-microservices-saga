@@ -6,17 +6,21 @@ import org.axonframework.eventhandling.gateway.EventGateway;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.otus.common.command.ProcessPaymentCommand;
+import ru.otus.common.command.RefundPaymentCommand;
+import ru.otus.common.enums.PaymentStatus;
 import ru.otus.common.kafka.PaymentEvent;
 import ru.otus.common.request.PaymentRequest;
 import ru.otus.common.response.PaymentResponse;
 import ru.otus.common.saga.PaymentFailedEvent;
 import ru.otus.common.saga.PaymentProcessedEvent;
+import ru.otus.common.saga.PaymentRefundedEvent;
 import ru.otus.payment.client.PaymentClient;
 import ru.otus.payment.client.PaymentClientAdapter;
 import ru.otus.payment.entity.Payment;
 import ru.otus.payment.publisher.PaymentPublisher;
 import ru.otus.payment.repository.PaymentRepository;
 
+import java.time.Instant;
 import java.util.UUID;
 
 @Service
@@ -76,14 +80,43 @@ public class PaymentService {
         paymentRepository.save(payment);
         log.info("Saved Payment to DB: {}", payment);
 
+        sendPaymentToKafka(payment);
+    }
+
+    @Transactional
+    public void refund(RefundPaymentCommand cmd) {
+        log.info("Processing payment refund: {}", cmd);
+
+        Payment previousPayment = paymentRepository.findByBookingId(cmd.bookingId())
+                .orElseThrow(() -> new RuntimeException("No payment found for bookingId: " + cmd.bookingId()));
+
+        // dummy refund processed
+        var refundResponse = new PaymentResponse(
+                previousPayment.getUserId(),
+                PaymentStatus.REFUNDED,
+                "",
+                Instant.now());
+
+        eventGateway.publish(new PaymentRefundedEvent(cmd.bookingId()));
+
+        previousPayment.setStatus(refundResponse.status());
+        previousPayment.setFailureReason(refundResponse.failureReason());
+        previousPayment.setOccurredAt(refundResponse.occurredAt());
+        paymentRepository.save(previousPayment);
+        log.info("Updated Payment (refunded) in DB: {}", previousPayment);
+
+        sendPaymentToKafka(previousPayment);
+    }
+
+    private void sendPaymentToKafka(Payment payment) {
         PaymentEvent kafkaEvent = new PaymentEvent(
-                eventId,
-                cmd.bookingId(),
-                cmd.userId(),
-                cmd.amount(),
-                paymentResponse.status(),
-                paymentResponse.failureReason(),
-                paymentResponse.occurredAt()
+                payment.getEventId(),
+                payment.getBookingId(),
+                payment.getUserId(),
+                payment.getAmount(),
+                payment.getStatus(),
+                payment.getFailureReason(),
+                payment.getOccurredAt()
         );
         paymentPublisher.publish(kafkaEvent.eventId(), kafkaEvent);
         log.info("Published Kafka PaymentEvent: {}", kafkaEvent);
