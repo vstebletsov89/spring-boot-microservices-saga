@@ -20,7 +20,7 @@ services:
       - ./agents:/agents:ro
     environment:
       SERVER_PORT: 8080
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-reservation:5432/bookingdb
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-reservation:5432/reservationdb
       SPRING_DATASOURCE_DRIVER_CLASS_NAME: org.postgresql.Driver
       SPRING_DATASOURCE_USERNAME: pguser
       SPRING_DATASOURCE_PASSWORD: pgpass
@@ -54,7 +54,7 @@ services:
       - ./agents:/agents:ro
     environment:
       SERVER_PORT: 8080
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-reservation:5432/bookingdb
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-booking:5432/bookingdb
       SPRING_DATASOURCE_DRIVER_CLASS_NAME: org.postgresql.Driver
       SPRING_DATASOURCE_USERNAME: pguser
       SPRING_DATASOURCE_PASSWORD: pgpass
@@ -70,7 +70,7 @@ services:
     depends_on:
       axon-server:
         condition: service_healthy
-      postgres-reservation:
+      postgres-booking:
         condition: service_healthy
       jaeger:
         condition: service_started
@@ -263,13 +263,33 @@ services:
     container_name: postgres-reservation
     restart: always
     environment:
-      POSTGRES_DB: bookingdb
+      POSTGRES_DB: reservationdb
       POSTGRES_USER: pguser
       POSTGRES_PASSWORD: pgpass
     ports:
       - "5435:5432"
     volumes:
-      - pg_data_ticket:/var/lib/postgresql/data
+      - pg_data_reservation:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U pguser -d reservationdb"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - app-network
+
+  postgres-booking:
+    image: postgres:17-alpine
+    container_name: postgres-booking
+    restart: always
+    environment:
+      POSTGRES_DB: bookingdb
+      POSTGRES_USER: pguser
+      POSTGRES_PASSWORD: pgpass
+    ports:
+      - "5437:5432"
+    volumes:
+      - pg_data_booking:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U pguser -d bookingdb"]
       interval: 10s
@@ -349,7 +369,8 @@ services:
 volumes:
   pg_data_flightquery:
   pg_data_flight:
-  pg_data_ticket:
+  pg_data_reservation:
+  pg_data_booking:
   pg_data_payment:
   axon-data:
   axon-events:

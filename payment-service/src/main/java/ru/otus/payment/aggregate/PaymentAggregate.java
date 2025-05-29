@@ -33,7 +33,6 @@ public class PaymentAggregate {
     @CommandHandler
     public void handle(RefundPaymentCommand cmd, PaymentService paymentService) {
         paymentService.refund(cmd);
-        apply(new PaymentRefundedEvent(cmd.bookingId()));
     }
 
     @EventSourcingHandler

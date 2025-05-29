@@ -18,11 +18,14 @@ Content-Type: application/json
 {
   "userId": "aae973ef-9607-43d0-a500-826ca4484b8d",
   "flightNumber": "EK4004",
-  "seatNumber": "7B"
+  "seatNumber": "23B"
 }
 
+### Variables
+@bookingId = 1bfe04fa-332b-4eba-8405-cc0eb1ea744b
+
 ### Получить детали конкретного бронирования
-GET http://localhost:8081/api/tickets/booking/579e1894-4567-4049-9281-3871ffaf1543
+GET http://localhost:8081/api/tickets/booking/{{bookingId}}
 Accept: application/json
 
 ### Отмена бронирования
@@ -30,11 +33,11 @@ POST http://localhost:8081/api/tickets/cancel
 Content-Type: application/json
 
 {
-  "bookingId": "579e1894-4567-4049-9281-3871ffaf1543",
+  "bookingId": "{{bookingId}}",
   "userId": "aae973ef-9607-43d0-a500-826ca4484b8d",
   "flightNumber": "EK4004"
 }
 
 ### Получить детали конкретного бронирования
-GET http://localhost:8081/api/tickets/booking/579e1894-4567-4049-9281-3871ffaf1543
+GET http://localhost:8081/api/tickets/booking/{{bookingId}}
 Accept: application/json
