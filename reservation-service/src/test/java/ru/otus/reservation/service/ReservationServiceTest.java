@@ -10,6 +10,7 @@ import ru.otus.common.kafka.ReservationCancelledEvent;
 import ru.otus.common.kafka.ReservationCreatedEvent;
 import ru.otus.reservation.config.JacksonConfig;
 import ru.otus.reservation.repository.BookingOutboxRepository;
+import ru.otus.reservation.util.PayloadUtil;
 
 import java.time.Instant;
 
@@ -23,8 +24,8 @@ class ReservationServiceTest {
     @MockitoBean
     private BookingOutboxRepository outboxRepository;
 
-    @Autowired
-    private ObjectMapper objectMapper;
+    @MockitoBean
+    private PayloadUtil payloadUtil;
 
     @Autowired
     private ReservationService ticketService;
@@ -32,50 +33,41 @@ class ReservationServiceTest {
     @Test
     void shouldCreateBookingRequestAndSaveToOutbox() {
         ReservationCreatedEvent event = new ReservationCreatedEvent("1", "FL123", "b1", "6B");
+        String expectedPayload = "{\"mocked\":\"payload\"}";
+        when(payloadUtil.extractPayload(event)).thenReturn(expectedPayload);
 
         ticketService.createBookingRequest(event);
 
         verify(outboxRepository).save(argThat(saved ->
-        {
-            try {
-                return saved.getAggregateId().equals("b1") &&
-                saved.getPayload().equals(objectMapper.writeValueAsString(event)) &&
+                saved.getAggregateId().equals("b1") &&
+                saved.getPayload().equals(expectedPayload) &&
                 !saved.isSent() &&
-                saved.getCreatedAt().isBefore(Instant.now().plusSeconds(1));
-            } catch (JsonProcessingException e) {
-                throw new RuntimeException(e);
-            }
-        }));
+                saved.getCreatedAt().isBefore(Instant.now().plusSeconds(1))));
     }
 
     @Test
     void shouldCancelBookingRequestAndSaveToOutbox() {
         ReservationCancelledEvent event = new ReservationCancelledEvent("1", "FL123", "b1");
+        String expectedPayload = "{\"mocked\":\"cancelPayload\"}";
+        when(payloadUtil.extractPayload(event)).thenReturn(expectedPayload);
 
         ticketService.cancelBookingRequest(event);
 
         verify(outboxRepository).save(argThat(saved ->
-        {
-            try {
-                return saved.getAggregateId().equals("b1") &&
-                        saved.getPayload().equals(objectMapper.writeValueAsString(event)) &&
+                saved.getAggregateId().equals("b1") &&
+                        saved.getPayload().equals(expectedPayload) &&
                         !saved.isSent() &&
-                        saved.getCreatedAt().isBefore(Instant.now().plusSeconds(1));
-            } catch (JsonProcessingException e) {
-                throw new RuntimeException(e);
-            }
-        }));
+                        saved.getCreatedAt().isBefore(Instant.now().plusSeconds(1))));
     }
 
     @Test
     void shouldThrowExceptionWhenSerializationFails() throws Exception {
         BookingOutboxRepository repository = mock(BookingOutboxRepository.class);
-        ObjectMapper failingMapper = mock(ObjectMapper.class);
-
         ReservationCreatedEvent event = new ReservationCreatedEvent("b1", "FL123", "1", "6B");
-        when(failingMapper.writeValueAsString(event))
-                .thenThrow(new JsonProcessingException("FailedParsing") {});
-        ReservationService service = new ReservationService(repository, failingMapper);
+        when(payloadUtil.extractPayload(event))
+                .thenThrow(new RuntimeException("Failed to serialize booking request"));
+
+        ReservationService service = new ReservationService(repository, payloadUtil);
 
         assertThatThrownBy(() -> service.createBookingRequest(event))
                 .isInstanceOf(RuntimeException.class)
