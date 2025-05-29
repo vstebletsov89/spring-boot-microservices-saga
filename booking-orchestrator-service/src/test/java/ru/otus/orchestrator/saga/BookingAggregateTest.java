@@ -3,14 +3,8 @@ package ru.otus.orchestrator.saga;
 import org.axonframework.test.aggregate.AggregateTestFixture;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import ru.otus.common.command.BookFlightCommand;
-import ru.otus.common.command.CancelFlightCommand;
-import ru.otus.common.command.ConfirmBookingCommand;
-import ru.otus.common.command.ReservationCancelledCommand;
-import ru.otus.common.saga.BookingCancellationRequestedEvent;
-import ru.otus.common.saga.BookingCancelledEvent;
-import ru.otus.common.saga.BookingConfirmedEvent;
-import ru.otus.common.saga.ReservationCreatedEvent;
+import ru.otus.common.command.*;
+import ru.otus.common.saga.*;
 
 import java.util.UUID;
 
@@ -53,12 +47,23 @@ class BookingAggregateTest {
     }
 
     @Test
-    void eventSourcingHandler_setsBookingIdAndConfirmedFalse() {
+    void shouldRequestBookingCancellationOnCancelFlightCommand() {
+        String bookingId = UUID.randomUUID().toString();
+        fixture.given(new ReservationCreatedEvent(bookingId, "1", "FL123", "6B"))
+                .when(new CancelFlightCommand(bookingId, "1", "FL123"))
+                .expectSuccessfulHandlerExecution()
+                .expectEvents(new BookingCancellationRequestedEvent(bookingId));
+    }
+
+    @Test
+    void eventSourcingHandler_setsInitialStateOnReservationCreated() {
         BookingAggregate aggregate = new BookingAggregate();
         aggregate.on(new ReservationCreatedEvent("b123", "u1", "FL001", "6B"));
 
         assertEquals("b123", aggregate.getBookingId());
         assertFalse(aggregate.isConfirmed());
+        assertFalse(aggregate.isCancelled());
+        assertFalse(aggregate.isUserCancelled());
     }
 
     @Test
@@ -71,30 +76,55 @@ class BookingAggregateTest {
     }
 
     @Test
-    void eventSourcingHandler_setsCancelledTrue() {
+    void eventSourcingHandler_setsCancelledTrue_systemCancelled() {
         BookingAggregate aggregate = new BookingAggregate();
         aggregate.on(new ReservationCreatedEvent("b123", "u1", "FL001", "6B"));
         aggregate.on(new BookingCancelledEvent("b123"));
 
         assertTrue(aggregate.isCancelled());
+        assertFalse(aggregate.isUserCancelled());
     }
 
     @Test
-    void shouldRequestBookingCancellationOnCancelFlightCommand() {
-        String bookingId = UUID.randomUUID().toString();
-
-        fixture.given(new ReservationCreatedEvent(bookingId, "1", "FL123", "6B"))
-                .when(new CancelFlightCommand(bookingId, "1", "FL123"))
-                .expectSuccessfulHandlerExecution()
-                .expectEvents(new BookingCancellationRequestedEvent(bookingId));
-    }
-
-    @Test
-    void eventSourcingHandler_setsCancelledTrue_onBookingCancellationRequestedEvent() {
+    void eventSourcingHandler_setsCancelledAndUserCancelledTrue_userInitiated() {
         BookingAggregate aggregate = new BookingAggregate();
         aggregate.on(new ReservationCreatedEvent("b123", "u1", "FL001", "6B"));
         aggregate.on(new BookingCancellationRequestedEvent("b123"));
 
         assertTrue(aggregate.isCancelled());
+        assertTrue(aggregate.isUserCancelled());
+    }
+
+    @Test
+    void shouldNotEmitEventIfAlreadyCancelledByUser() {
+        String bookingId = UUID.randomUUID().toString();
+        fixture.given(
+                        new ReservationCreatedEvent(bookingId, "1", "FL123", "6B"),
+                        new BookingCancellationRequestedEvent(bookingId)
+                )
+                .when(new CancelFlightCommand(bookingId, "1", "FL123"))
+                .expectNoEvents();
+    }
+
+    @Test
+    void shouldNotEmitEventIfAlreadyCancelledBySystem() {
+        String bookingId = UUID.randomUUID().toString();
+        fixture.given(
+                        new ReservationCreatedEvent(bookingId, "1", "FL123", "6B"),
+                        new BookingCancelledEvent(bookingId)
+                )
+                .when(new CancelFlightCommand(bookingId, "1", "FL123"))
+                .expectNoEvents();
+    }
+
+    @Test
+    void shouldNotEmitEventIfAlreadyConfirmed() {
+        String bookingId = UUID.randomUUID().toString();
+        fixture.given(
+                        new ReservationCreatedEvent(bookingId, "1", "FL123", "6B"),
+                        new BookingConfirmedEvent(bookingId)
+                )
+                .when(new ConfirmBookingCommand(bookingId))
+                .expectNoEvents();
     }
 }

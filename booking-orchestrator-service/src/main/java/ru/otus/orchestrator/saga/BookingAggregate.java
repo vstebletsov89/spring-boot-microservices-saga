@@ -24,6 +24,7 @@ public class BookingAggregate {
     private String bookingId;
     private boolean confirmed;
     private boolean cancelled;
+    private boolean userCancelled;
 
     public BookingAggregate() {}
 
@@ -39,11 +40,16 @@ public class BookingAggregate {
         this.bookingId = event.bookingId();
         this.confirmed = false;
         this.cancelled = false;
+        this.userCancelled = false;
     }
 
     @CommandHandler
     public void handle(ConfirmBookingCommand cmd) {
         log.info("Handling confirm booking command: {}", cmd);
+        if (this.confirmed) {
+            log.warn("Booking {} already confirmed. Skipping.", cmd.bookingId());
+            return;
+        }
         apply(new BookingConfirmedEvent(cmd.bookingId()));
     }
 
@@ -56,6 +62,10 @@ public class BookingAggregate {
     @CommandHandler
     public void handle(ReservationCancelledCommand cmd) {
         log.info("Handling reservation cancelled command: {}", cmd);
+        if (this.cancelled) {
+            log.warn("Booking {} already cancelled. Skipping.", cmd.bookingId());
+            return;
+        }
         apply(new BookingCancelledEvent(cmd.bookingId()));
     }
 
@@ -63,11 +73,16 @@ public class BookingAggregate {
     public void on(BookingCancelledEvent event) {
         log.info("Handling booking cancelled event: {}", event);
         this.cancelled = true;
+        this.userCancelled = false;
     }
 
     @CommandHandler
     public void handle(CancelFlightCommand cmd) {
         log.info("Handling user cancelled command: {}", cmd);
+        if (this.cancelled) {
+            log.warn("Booking {} already cancelled. Skipping.", cmd.bookingId());
+            return;
+        }
         apply(new BookingCancellationRequestedEvent(cmd.bookingId()));
     }
 
@@ -75,5 +90,6 @@ public class BookingAggregate {
     public void on(BookingCancellationRequestedEvent event) {
         log.info("Handling booking cancelled by user event: {}", event);
         this.cancelled = true;
+        this.userCancelled = true;
     }
 }
