@@ -31,7 +31,6 @@ public class BookingAggregate {
     public BookingAggregate(BookFlightCommand cmd) {
         log.info("Handling booking command: {}", cmd);
         apply(new ReservationCreatedEvent(cmd.bookingId(), cmd.userId(), cmd.flightNumber(), cmd.seatNumber()));
-
     }
 
     @EventSourcingHandler
