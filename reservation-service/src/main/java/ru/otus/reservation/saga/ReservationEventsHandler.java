@@ -10,7 +10,7 @@ import ru.otus.reservation.service.BookingSyncService;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class BookingEventsHandler {
+public class ReservationEventsHandler {
 
     private final BookingSyncService bookingSyncService;
 

@@ -1,4 +1,4 @@
-package ru.otus.reservation.saga;
+package ru.otus.orchestrator.saga;
 
 import org.axonframework.test.aggregate.AggregateTestFixture;
 import org.junit.jupiter.api.BeforeEach;
