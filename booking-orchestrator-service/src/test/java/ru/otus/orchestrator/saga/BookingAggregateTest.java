@@ -4,6 +4,7 @@ import org.axonframework.test.aggregate.AggregateTestFixture;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.otus.common.command.*;
+import ru.otus.common.enums.CancellationStatus;
 import ru.otus.common.saga.*;
 
 import java.util.UUID;
@@ -62,8 +63,7 @@ class BookingAggregateTest {
 
         assertEquals("b123", aggregate.getBookingId());
         assertFalse(aggregate.isConfirmed());
-        assertFalse(aggregate.isCancelled());
-        assertFalse(aggregate.isUserCancelled());
+        assertEquals(CancellationStatus.NONE, aggregate.getCancellationStatus());
     }
 
     @Test
@@ -76,23 +76,21 @@ class BookingAggregateTest {
     }
 
     @Test
-    void eventSourcingHandler_setsCancelledTrue_systemCancelled() {
+    void eventSourcingHandler_setsCancelledStatus_systemCancelled() {
         BookingAggregate aggregate = new BookingAggregate();
         aggregate.on(new ReservationCreatedEvent("b123", "u1", "FL001", "6B"));
         aggregate.on(new BookingCancelledEvent("b123"));
 
-        assertTrue(aggregate.isCancelled());
-        assertFalse(aggregate.isUserCancelled());
+        assertEquals(CancellationStatus.SYSTEM_CANCELLED, aggregate.getCancellationStatus());
     }
 
     @Test
-    void eventSourcingHandler_setsCancelledAndUserCancelledTrue_userInitiated() {
+    void eventSourcingHandler_setsCancelledStatus_userInitiated() {
         BookingAggregate aggregate = new BookingAggregate();
         aggregate.on(new ReservationCreatedEvent("b123", "u1", "FL001", "6B"));
         aggregate.on(new BookingCancellationRequestedEvent("b123"));
 
-        assertTrue(aggregate.isCancelled());
-        assertTrue(aggregate.isUserCancelled());
+        assertEquals(CancellationStatus.USER_CANCELLED, aggregate.getCancellationStatus());
     }
 
     @Test

@@ -10,6 +10,7 @@ import ru.otus.common.command.BookFlightCommand;
 import ru.otus.common.command.CancelFlightCommand;
 import ru.otus.common.command.ConfirmBookingCommand;
 import ru.otus.common.command.ReservationCancelledCommand;
+import ru.otus.common.enums.CancellationStatus;
 import ru.otus.common.saga.*;
 
 import static org.axonframework.modelling.command.AggregateLifecycle.apply;
@@ -23,8 +24,7 @@ public class BookingAggregate {
     @AggregateIdentifier
     private String bookingId;
     private boolean confirmed;
-    private boolean cancelled;
-    private boolean userCancelled;
+    private CancellationStatus cancellationStatus;
 
     public BookingAggregate() {}
 
@@ -39,8 +39,7 @@ public class BookingAggregate {
         log.info("Handling flight booked event: {}", event);
         this.bookingId = event.bookingId();
         this.confirmed = false;
-        this.cancelled = false;
-        this.userCancelled = false;
+        this.cancellationStatus = CancellationStatus.NONE;
     }
 
     @CommandHandler
@@ -62,7 +61,7 @@ public class BookingAggregate {
     @CommandHandler
     public void handle(ReservationCancelledCommand cmd) {
         log.info("Handling reservation cancelled command: {}", cmd);
-        if (this.cancelled) {
+        if (this.cancellationStatus != CancellationStatus.NONE) {
             log.warn("Booking {} already cancelled. Skipping.", cmd.bookingId());
             return;
         }
@@ -72,14 +71,13 @@ public class BookingAggregate {
     @EventSourcingHandler
     public void on(BookingCancelledEvent event) {
         log.info("Handling booking cancelled event: {}", event);
-        this.cancelled = true;
-        this.userCancelled = false;
+        this.cancellationStatus = CancellationStatus.SYSTEM_CANCELLED;
     }
 
     @CommandHandler
     public void handle(CancelFlightCommand cmd) {
         log.info("Handling user cancelled command: {}", cmd);
-        if (this.cancelled) {
+        if (this.cancellationStatus != CancellationStatus.NONE) {
             log.warn("Booking {} already cancelled. Skipping.", cmd.bookingId());
             return;
         }
@@ -89,7 +87,6 @@ public class BookingAggregate {
     @EventSourcingHandler
     public void on(BookingCancellationRequestedEvent event) {
         log.info("Handling booking cancelled by user event: {}", event);
-        this.cancelled = true;
-        this.userCancelled = true;
+        this.cancellationStatus = CancellationStatus.USER_CANCELLED;
     }
 }
