@@ -7,6 +7,7 @@ http://localhost:8084/actuator/prometheus - метрики
 
 TODO:
 
+!cache monitoring не работает
 !проверить работу системы в целом отдельными запросами из requests
 !проверить работу на jmeter
 !проверить дашборды
