@@ -16,16 +16,11 @@ import java.time.Duration;
 @Slf4j
 public class CacheConfig {
 
-    public static final String BOOKINGS_BY_FLIGHT = "bookingsByFlight";
-    public static final String BOOKING_BY_ID = "bookingById";
     public static final String ROUND_TRIP_FLIGHTS = "roundTripFlights";
-
 
     @Bean
     public CacheManager cacheManager() {
         CaffeineCacheManager manager = new CaffeineCacheManager(
-                BOOKINGS_BY_FLIGHT,
-                BOOKING_BY_ID,
                 ROUND_TRIP_FLIGHTS
         );
         manager.setCaffeine(defaultCacheSpec());

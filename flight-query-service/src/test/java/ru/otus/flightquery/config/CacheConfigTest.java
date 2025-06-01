@@ -35,7 +35,7 @@ class CacheConfigTest {
 
     @Test
     void shouldRegisterCacheMetricsAndReflectCacheUsage() {
-        String cacheName = CacheConfig.BOOKINGS_BY_FLIGHT;
+        String cacheName = CacheConfig.ROUND_TRIP_FLIGHTS;
         CaffeineCacheManager caffeineCacheManager = (CaffeineCacheManager) cacheManager;
         CaffeineCache springCache = (CaffeineCache) caffeineCacheManager.getCache(cacheName);
         var nativeCache = springCache.getNativeCache();

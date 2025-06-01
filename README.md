@@ -2,15 +2,17 @@ mvn clean verify - проверить 70% покрытие тестами
 Rule violated for bundle flight-query-service: instructions covered ratio is 0.04, but expected minimum is 0.70
 http://localhost:8024/ - axon server
 
-http://localhost:8084/actuator/prometheus - метрики
+http://localhost:16686/ - jaeger ui
+axon_aggregate_identifier=0f9957ec-29b4-42e8-9138-1b4ea4ccd94b
+
+http://localhost:3000/login - grafana
+
 ----------------------------------------------------
 
 TODO:
 
-!cache monitoring не работает
 !проверить работу системы в целом отдельными запросами из requests
 !проверить работу на jmeter
-!проверить дашборды
 !!!выключить circuitbreaker
 
 Booking Orchestrator Service выступает как управляющий сервис саги.

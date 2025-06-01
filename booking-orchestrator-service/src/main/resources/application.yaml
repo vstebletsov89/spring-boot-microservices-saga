@@ -32,7 +32,17 @@ axon:
   axonserver:
     enabled: true
     servers: axon-server:8124
+  tracing:
+    attribute-providers:
+      messageId: true
+      messageType: true
+      messageName: true
+      aggregateIdentifier: true
+      payloadType: true
+      metadata: true
   serializer:
     general: jackson
     events: jackson
     messages: jackson
+
+

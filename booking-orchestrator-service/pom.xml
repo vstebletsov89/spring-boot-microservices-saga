@@ -80,6 +80,11 @@
 			<artifactId>micrometer-registry-prometheus</artifactId>
 		</dependency>
 
+		<dependency>
+			<groupId>org.axonframework</groupId>
+			<artifactId>axon-tracing-opentelemetry</artifactId>
+			<version>4.11.1</version>
+		</dependency>
 
 	</dependencies>
 
