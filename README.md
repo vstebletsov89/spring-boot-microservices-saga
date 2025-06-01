@@ -3,7 +3,7 @@ Rule violated for bundle flight-query-service: instructions covered ratio is 0.0
 http://localhost:8024/ - axon server
 
 http://localhost:16686/ - jaeger ui
-axon_aggregate_identifier=0f9957ec-29b4-42e8-9138-1b4ea4ccd94b
+axon_aggregate_identifier=c2b351ff-7d2b-433b-8d4f-9d1289df51b8
 
 http://localhost:3000/login - grafana
 

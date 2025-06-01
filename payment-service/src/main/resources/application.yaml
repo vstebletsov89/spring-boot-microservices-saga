@@ -31,6 +31,14 @@ spring:
     change-log: classpath:db/changelog/db.changelog-master.yaml
 
 axon:
+  tracing:
+    attribute-providers:
+      messageId: true
+      messageType: true
+      messageName: true
+      aggregateIdentifier: true
+      payloadType: true
+      metadata: true
   axonserver:
     enabled: true
     servers: axon-server:8124

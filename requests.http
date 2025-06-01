@@ -22,7 +22,7 @@ Content-Type: application/json
 }
 
 ### Variables
-@bookingId = 0f9957ec-29b4-42e8-9138-1b4ea4ccd94b
+@bookingId = c2b351ff-7d2b-433b-8d4f-9d1289df51b8
 
 ### Получить детали конкретного бронирования
 GET http://localhost:8081/api/tickets/booking/{{bookingId}}
