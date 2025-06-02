@@ -5,7 +5,7 @@ mvn clean package
 ```
 
 ```console 
-java -jar target/-1.0-SNAPSHOT.jar
+java -jar target/auth-service-jmh-benchmark-0.0.1-SNAPSHOT.jar
 ```
 ![run_hash_benchmarks.png](src/main/resources/run_hash_benchmarks.png)
 
