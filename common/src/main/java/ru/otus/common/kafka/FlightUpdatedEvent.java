@@ -6,6 +6,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 public record FlightUpdatedEvent(
+        String eventId,
         String flightNumber,
         FlightStatus status,
         LocalDateTime departureTime,

@@ -12,8 +12,7 @@ import ru.otus.flight.publisher.FlightPublisher;
 import ru.otus.flight.repository.AirportRepository;
 import ru.otus.flight.repository.FlightRepository;
 
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -51,6 +50,7 @@ public class FlightWriteService {
     private void publishFlightCreatedEvent(Flight flight) {
 
         FlightCreatedEvent event = new FlightCreatedEvent(
+                UUID.randomUUID().toString(),
                 flight.getFlightNumber(),
                 flight.getDepartureAirport().getCode(),
                 flight.getArrivalAirport().getCode(),

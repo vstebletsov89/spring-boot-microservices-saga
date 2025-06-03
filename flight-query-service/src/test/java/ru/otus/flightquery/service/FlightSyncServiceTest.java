@@ -15,6 +15,7 @@ import ru.otus.flightquery.repository.FlightRepository;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Optional;
+import java.util.UUID;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.argThat;
@@ -43,6 +44,7 @@ class FlightSyncServiceTest {
     @Test
     void shouldHandleFlightCreatedEvent() {
         FlightCreatedEvent event = new FlightCreatedEvent(
+                UUID.randomUUID().toString(),
                 "FL123", "DXB", "SVO",
                 FlightStatus.SCHEDULED,
                 departureTime, arrivalTime, new BigDecimal("999.99"),
@@ -77,7 +79,7 @@ class FlightSyncServiceTest {
         when(flightRepository.findById("FL123")).thenReturn(Optional.of(existingFlight));
 
         FlightUpdatedEvent event = new FlightUpdatedEvent(
-                "FL123", FlightStatus.CANCELLED,
+                UUID.randomUUID().toString(), "FL123", FlightStatus.CANCELLED,
                 departureTime, arrivalTime, new BigDecimal("888.88"),
                 150, 10, new BigDecimal("5.00")
         );
@@ -101,7 +103,7 @@ class FlightSyncServiceTest {
         when(flightRepository.findById("UNKNOWN")).thenReturn(Optional.empty());
 
         FlightUpdatedEvent event = new FlightUpdatedEvent(
-                "UNKNOWN", FlightStatus.SCHEDULED,
+                UUID.randomUUID().toString(), "UNKNOWN", FlightStatus.SCHEDULED,
                 departureTime, arrivalTime, new BigDecimal("100.00"),
                 100, 10, new BigDecimal("5.00")
         );

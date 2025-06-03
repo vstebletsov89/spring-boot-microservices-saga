@@ -26,6 +26,7 @@ import ru.otus.flightquery.service.FlightSyncService;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 import static org.mockito.ArgumentMatchers.eq;
@@ -68,6 +69,7 @@ class KafkaFlightStreamProcessorTest {
         LocalDateTime arrivalTime = departureTime.plusHours(8);
 
         FlightCreatedEvent event = new FlightCreatedEvent(
+                UUID.randomUUID().toString(),
                 "FL123", "SVO", "JFK",
                 ru.otus.common.enums.FlightStatus.SCHEDULED,
                 departureTime,
@@ -93,6 +95,7 @@ class KafkaFlightStreamProcessorTest {
         LocalDateTime arrivalTime = departureTime.plusHours(6);
 
         FlightUpdatedEvent event = new FlightUpdatedEvent(
+                UUID.randomUUID().toString(),
                 "FL456",
                 FlightStatus.DELAYED,
                 departureTime,

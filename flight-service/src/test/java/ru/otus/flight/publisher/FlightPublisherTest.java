@@ -90,6 +90,7 @@ class FlightPublisherTest {
 
     private FlightCreatedEvent getSampleEvent() {
         return new FlightCreatedEvent(
+                UUID.randomUUID().toString(),
                 "FL123",
                 "SVO",
                 "JFK",

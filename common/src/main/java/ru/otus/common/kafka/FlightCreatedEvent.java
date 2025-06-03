@@ -6,6 +6,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 public record FlightCreatedEvent(
+        String eventId,
         String flightNumber,
         String departureAirportCode,
         String arrivalAirportCode,

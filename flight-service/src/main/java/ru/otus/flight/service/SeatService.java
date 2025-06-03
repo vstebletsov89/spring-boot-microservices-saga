@@ -23,6 +23,7 @@ import java.math.RoundingMode;
 import java.time.Instant;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -132,6 +133,7 @@ public class SeatService {
         flightPublisher.publish(
                 flight.getFlightNumber(),
                 new FlightUpdatedEvent(
+                        UUID.randomUUID().toString(),
                         flight.getFlightNumber(),
                         flight.getStatus(),
                         flight.getDepartureTime(),

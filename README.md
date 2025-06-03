@@ -1,3 +1,14 @@
+# Описание системы:
+
+* Booking Orchestrator Service выступает как управляющий сервис саги.
+* Reservation Service хранит и управляет информацией о бронированиях.
+* Flight Service отвечает за резервирование и освобождение мест на рейсах.
+* Payment Service проводит оплату.
+* Flight Query Service не участвует в оркестровке (только для чтения).
+* Auth Service - сервис авторизации
+
+TODO: add saga screen
+
 mvn clean verify - проверить 70% покрытие тестами
 Rule violated for bundle flight-query-service: instructions covered ratio is 0.04, but expected minimum is 0.70
 http://localhost:8024/ - axon server
@@ -11,33 +22,27 @@ http://localhost:3000/login - grafana
 
 TODO:
 
-!!!jmh - auth service
-!!!добавить helm скрипты
 !!!concurrent collections (???) ->!!!идемпотентые consumer в kafka?
-!!!offheap storage
+  add class for cache to check processed events
+
+add tests for deduplicationCache
+and update tests for consumer
+run all tests
+run integration tests
+
 !!!shedlock???
+!!!добавить helm скрипты
+!!!offheap storage
 
 !проверить работу системы в целом отдельными запросами из requests
 !проверить работу на jmeter
 !!!выключить circuitbreaker?
-
-Booking Orchestrator Service выступает как управляющий сервис саги.
-
-Reservation Service хранит и управляет информацией о бронированиях.
-
-Flight Command Service отвечает за резервирование и освобождение мест на рейсах.
-
-Payment Service проводит оплату.
-
-Flight Query Service не участвует в оркестровке (только для чтения).
 
 добавить в readme какие темы покрыты с ссылками на код (сервис:класс:метод или docker compose?)
 
 !!!5. В отдельной папке проекта размещаются helm скрипты для деплоя каждого приложения (в подпапках)
 
 https://github.com/moryakovdv/otus-project - check helm scripts
-
-!!!6. Должны быть тесты с применением JMH 
 
 +7. Для всех эндпоинтов должны быть запросы с применением JMeter
 
@@ -57,4 +62,4 @@ https://github.com/moryakovdv/otus-project - check helm scripts
 
 б) При обработке запросов обеспечить защиту от перегрузки
 
-!!!api-gateway?
+
