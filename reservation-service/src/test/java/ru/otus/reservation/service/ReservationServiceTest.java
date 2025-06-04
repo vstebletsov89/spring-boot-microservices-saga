@@ -1,7 +1,5 @@
 package ru.otus.reservation.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -13,6 +11,7 @@ import ru.otus.reservation.repository.BookingOutboxRepository;
 import ru.otus.reservation.util.PayloadUtil;
 
 import java.time.Instant;
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.argThat;
@@ -32,7 +31,7 @@ class ReservationServiceTest {
 
     @Test
     void shouldCreateBookingRequestAndSaveToOutbox() {
-        ReservationCreatedEvent event = new ReservationCreatedEvent("1", "FL123", "b1", "6B");
+        ReservationCreatedEvent event = new ReservationCreatedEvent(UUID.randomUUID().toString(),"1", "FL123", "b1", "6B");
         String expectedPayload = "{\"mocked\":\"payload\"}";
         when(payloadUtil.extractPayload(event)).thenReturn(expectedPayload);
 
@@ -47,7 +46,7 @@ class ReservationServiceTest {
 
     @Test
     void shouldCancelBookingRequestAndSaveToOutbox() {
-        ReservationCancelledEvent event = new ReservationCancelledEvent("1", "FL123", "b1");
+        ReservationCancelledEvent event = new ReservationCancelledEvent(UUID.randomUUID().toString(), "1", "FL123", "b1");
         String expectedPayload = "{\"mocked\":\"cancelPayload\"}";
         when(payloadUtil.extractPayload(event)).thenReturn(expectedPayload);
 
@@ -63,7 +62,7 @@ class ReservationServiceTest {
     @Test
     void shouldThrowExceptionWhenSerializationFails() throws Exception {
         BookingOutboxRepository repository = mock(BookingOutboxRepository.class);
-        ReservationCreatedEvent event = new ReservationCreatedEvent("b1", "FL123", "1", "6B");
+        ReservationCreatedEvent event = new ReservationCreatedEvent(UUID.randomUUID().toString(),"b1", "FL123", "1", "6B");
         when(payloadUtil.extractPayload(event))
                 .thenThrow(new RuntimeException("Failed to serialize booking request"));
 

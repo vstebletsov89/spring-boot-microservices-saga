@@ -7,7 +7,7 @@ sequenceDiagram
 
 %% Saga start: booking created
     UI->>RS: Booking request (API)
-    RS->>BOS: ReservationCreatedEvent
+    RS->>BOS: BookingCreatedEvent
     BOS->>FCS: ReserveSeatCommand
 
     alt Seat reserved

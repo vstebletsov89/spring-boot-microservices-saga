@@ -26,13 +26,13 @@ class BookingAggregateTest {
         fixture.givenNoPriorActivity()
                 .when(new BookFlightCommand(bookingId, "1", "FL123", "6B"))
                 .expectSuccessfulHandlerExecution()
-                .expectEvents(new ReservationCreatedEvent(bookingId, "1", "FL123", "6B"));
+                .expectEvents(new BookingCreatedEvent(bookingId, "1", "FL123", "6B"));
     }
 
     @Test
     void shouldConfirmBookingOnConfirmBookingCommand() {
         String bookingId = UUID.randomUUID().toString();
-        fixture.given(new ReservationCreatedEvent(bookingId, "1", "FL123", "6B"))
+        fixture.given(new BookingCreatedEvent(bookingId, "1", "FL123", "6B"))
                 .when(new ConfirmBookingCommand(bookingId))
                 .expectSuccessfulHandlerExecution()
                 .expectEvents(new BookingConfirmedEvent(bookingId));
@@ -41,7 +41,7 @@ class BookingAggregateTest {
     @Test
     void shouldCancelBookingOnReservationCancelledCommand() {
         String bookingId = UUID.randomUUID().toString();
-        fixture.given(new ReservationCreatedEvent(bookingId, "1", "FL123", "6B"))
+        fixture.given(new BookingCreatedEvent(bookingId, "1", "FL123", "6B"))
                 .when(new ReservationCancelledCommand(bookingId))
                 .expectSuccessfulHandlerExecution()
                 .expectEvents(new BookingCancelledEvent(bookingId));
@@ -50,7 +50,7 @@ class BookingAggregateTest {
     @Test
     void shouldRequestBookingCancellationOnCancelFlightCommand() {
         String bookingId = UUID.randomUUID().toString();
-        fixture.given(new ReservationCreatedEvent(bookingId, "1", "FL123", "6B"))
+        fixture.given(new BookingCreatedEvent(bookingId, "1", "FL123", "6B"))
                 .when(new CancelFlightCommand(bookingId, "1", "FL123"))
                 .expectSuccessfulHandlerExecution()
                 .expectEvents(new BookingCancellationRequestedEvent(bookingId));
@@ -59,7 +59,7 @@ class BookingAggregateTest {
     @Test
     void eventSourcingHandler_setsInitialStateOnReservationCreated() {
         BookingAggregate aggregate = new BookingAggregate();
-        aggregate.on(new ReservationCreatedEvent("b123", "u1", "FL001", "6B"));
+        aggregate.on(new BookingCreatedEvent("b123", "u1", "FL001", "6B"));
 
         assertEquals("b123", aggregate.getBookingId());
         assertFalse(aggregate.isConfirmed());
@@ -69,7 +69,7 @@ class BookingAggregateTest {
     @Test
     void eventSourcingHandler_setsConfirmedTrue() {
         BookingAggregate aggregate = new BookingAggregate();
-        aggregate.on(new ReservationCreatedEvent("b123", "u1", "FL001", "6B"));
+        aggregate.on(new BookingCreatedEvent("b123", "u1", "FL001", "6B"));
         aggregate.on(new BookingConfirmedEvent("b123"));
 
         assertTrue(aggregate.isConfirmed());
@@ -78,7 +78,7 @@ class BookingAggregateTest {
     @Test
     void eventSourcingHandler_setsCancelledStatus_systemCancelled() {
         BookingAggregate aggregate = new BookingAggregate();
-        aggregate.on(new ReservationCreatedEvent("b123", "u1", "FL001", "6B"));
+        aggregate.on(new BookingCreatedEvent("b123", "u1", "FL001", "6B"));
         aggregate.on(new BookingCancelledEvent("b123"));
 
         assertEquals(CancellationStatus.SYSTEM_CANCELLED, aggregate.getCancellationStatus());
@@ -87,7 +87,7 @@ class BookingAggregateTest {
     @Test
     void eventSourcingHandler_setsCancelledStatus_userInitiated() {
         BookingAggregate aggregate = new BookingAggregate();
-        aggregate.on(new ReservationCreatedEvent("b123", "u1", "FL001", "6B"));
+        aggregate.on(new BookingCreatedEvent("b123", "u1", "FL001", "6B"));
         aggregate.on(new BookingCancellationRequestedEvent("b123"));
 
         assertEquals(CancellationStatus.USER_CANCELLED, aggregate.getCancellationStatus());
@@ -97,7 +97,7 @@ class BookingAggregateTest {
     void shouldNotEmitEventIfAlreadyCancelledByUser() {
         String bookingId = UUID.randomUUID().toString();
         fixture.given(
-                        new ReservationCreatedEvent(bookingId, "1", "FL123", "6B"),
+                        new BookingCreatedEvent(bookingId, "1", "FL123", "6B"),
                         new BookingCancellationRequestedEvent(bookingId)
                 )
                 .when(new CancelFlightCommand(bookingId, "1", "FL123"))
@@ -108,7 +108,7 @@ class BookingAggregateTest {
     void shouldNotEmitEventIfAlreadyCancelledBySystem() {
         String bookingId = UUID.randomUUID().toString();
         fixture.given(
-                        new ReservationCreatedEvent(bookingId, "1", "FL123", "6B"),
+                        new BookingCreatedEvent(bookingId, "1", "FL123", "6B"),
                         new BookingCancelledEvent(bookingId)
                 )
                 .when(new CancelFlightCommand(bookingId, "1", "FL123"))
@@ -119,7 +119,7 @@ class BookingAggregateTest {
     void shouldNotEmitEventIfAlreadyConfirmed() {
         String bookingId = UUID.randomUUID().toString();
         fixture.given(
-                        new ReservationCreatedEvent(bookingId, "1", "FL123", "6B"),
+                        new BookingCreatedEvent(bookingId, "1", "FL123", "6B"),
                         new BookingConfirmedEvent(bookingId)
                 )
                 .when(new ConfirmBookingCommand(bookingId))

@@ -31,11 +31,11 @@ public class BookingAggregate {
     @CommandHandler
     public BookingAggregate(BookFlightCommand cmd) {
         log.info("Handling booking command: {}", cmd);
-        apply(new ReservationCreatedEvent(cmd.bookingId(), cmd.userId(), cmd.flightNumber(), cmd.seatNumber()));
+        apply(new BookingCreatedEvent(cmd.bookingId(), cmd.userId(), cmd.flightNumber(), cmd.seatNumber()));
     }
 
     @EventSourcingHandler
-    public void on(ReservationCreatedEvent event) {
+    public void on(BookingCreatedEvent event) {
         log.info("Handling flight booked event: {}", event);
         this.bookingId = event.bookingId();
         this.confirmed = false;

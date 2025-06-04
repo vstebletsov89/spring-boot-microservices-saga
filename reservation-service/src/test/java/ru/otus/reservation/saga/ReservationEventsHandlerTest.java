@@ -29,7 +29,7 @@ class ReservationEventsHandlerTest {
 
     @Test
     void shouldHandleReservationCreatedEventSuccessfully() {
-        var event = new ReservationCreatedEvent("1", "1", "FL123", "6B");
+        var event = new BookingCreatedEvent("1", "1", "FL123", "6B");
 
         handler.on(event);
 
@@ -38,8 +38,8 @@ class ReservationEventsHandlerTest {
     }
 
     @Test
-    void shouldSendToDltOnReservationCreatedEventFailure() {
-        var event = new ReservationCreatedEvent("b1", "1", "FL123", "6B");
+    void shouldSendToDltOnBookingCreatedEventFailure() {
+        var event = new BookingCreatedEvent("b1", "1", "FL123", "6B");
         String payload = "{\"mocked\":true}";
         doThrow(new RuntimeException("Test failure"))
                 .when(bookingSyncService).handleReservationCreated(event);

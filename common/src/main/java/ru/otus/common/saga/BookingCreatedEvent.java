@@ -1,6 +1,6 @@
 package ru.otus.common.saga;
 
-public record ReservationCreatedEvent(
+public record BookingCreatedEvent(
         String bookingId,
         String userId,
         String flightNumber,

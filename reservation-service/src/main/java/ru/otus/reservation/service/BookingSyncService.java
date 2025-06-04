@@ -19,7 +19,7 @@ public class BookingSyncService {
     private final BookingRepository bookingRepository;
 
     @Transactional
-    public void handleReservationCreated(ReservationCreatedEvent event) {
+    public void handleReservationCreated(BookingCreatedEvent event) {
 
         bookingRepository.save(BookingInfo.builder()
                 .bookingId(event.bookingId())

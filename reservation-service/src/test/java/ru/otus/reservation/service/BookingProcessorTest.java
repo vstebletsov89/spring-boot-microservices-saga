@@ -15,6 +15,7 @@ import ru.otus.common.command.CancelFlightCommand;
 import ru.otus.common.kafka.ReservationCancelledEvent;
 import ru.otus.common.kafka.ReservationCreatedEvent;
 
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -37,7 +38,7 @@ class BookingProcessorTest {
 
     @Test
     void shouldSendBookFlightCommand() {
-        ReservationCreatedEvent event = new ReservationCreatedEvent("1", "FL123", "b1", "6B");
+        ReservationCreatedEvent event = new ReservationCreatedEvent(UUID.randomUUID().toString(),"1", "FL123", "b1", "6B");
 
         CompletableFuture<Object> future = CompletableFuture.completedFuture("success");
         when(commandGateway.send(any())).thenReturn(future);
@@ -56,7 +57,7 @@ class BookingProcessorTest {
 
     @Test
     void shouldSendCancelFlightCommand() {
-        ReservationCancelledEvent  event = new ReservationCancelledEvent("1", "FL123", "b1");
+        ReservationCancelledEvent  event = new ReservationCancelledEvent(UUID.randomUUID().toString(),"1", "FL123", "b1");
 
         CompletableFuture<Object> future = CompletableFuture.completedFuture("success");
         when(commandGateway.send(any())).thenReturn(future);
@@ -74,7 +75,7 @@ class BookingProcessorTest {
 
     @Test
     void shouldLogErrorIfCommandFails(CapturedOutput output) {
-        ReservationCreatedEvent event = new ReservationCreatedEvent("2", "FL456", "b2", "6B");
+        ReservationCreatedEvent event = new ReservationCreatedEvent(UUID.randomUUID().toString(),"2", "FL456", "b2", "6B");
 
         CompletableFuture<Object> failedFuture = new CompletableFuture<>();
         failedFuture.completeExceptionally(new RuntimeException("Command failed"));

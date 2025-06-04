@@ -11,6 +11,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 import ru.otus.common.kafka.ReservationCancelledEvent;
 import ru.otus.common.kafka.ReservationCreatedEvent;
+import ru.otus.reservation.cache.EventDeduplicationCache;
 import ru.otus.reservation.publisher.DltPublisher;
 import ru.otus.reservation.service.BookingProcessor;
 
@@ -22,6 +23,7 @@ public class KafkaTicketStreamProcessor {
     private final ObjectMapper objectMapper;
     private final BookingProcessor bookingProcessor;
     private final DltPublisher dltPublisher;
+    private final EventDeduplicationCache eventDeduplicationCache;
 
     @Value("${app.kafka.topic.reservations}")
     private String topic;
@@ -38,8 +40,21 @@ public class KafkaTicketStreamProcessor {
 
             try {
                 JsonNode root = objectMapper.readTree(value);
-                String type = root.get("type").asText();
+                JsonNode eventIdNode = root.get("eventId");
 
+                if (eventIdNode == null || eventIdNode.asText().isEmpty()) {
+                    log.warn("eventId is missing, skipping message: {}", value);
+                    dltPublisher.publish(dltTopic, key, value);
+                    return;
+                }
+
+                String eventId = eventIdNode.asText();
+                if (eventDeduplicationCache.isDuplicate(eventId)) {
+                    log.info("Duplicate event detected, skipping eventId={}", eventId);
+                    return;
+                }
+
+                String type = root.get("type").asText();
                 switch (type) {
                     case "ReservationCreatedEvent" -> {
                         ReservationCreatedEvent event = objectMapper.readValue(value, ReservationCreatedEvent.class);

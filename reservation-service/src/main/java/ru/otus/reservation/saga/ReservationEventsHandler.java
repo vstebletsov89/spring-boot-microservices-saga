@@ -23,8 +23,8 @@ public class ReservationEventsHandler {
     private String dltTopic;
 
     @EventHandler
-    public void on(ReservationCreatedEvent event) {
-        handleEvent("ReservationCreatedEvent", event.bookingId(), event, () ->
+    public void on(BookingCreatedEvent event) {
+        handleEvent("BookingCreatedEvent", event.bookingId(), event, () ->
                 bookingSyncService.handleReservationCreated(event));
     }
 

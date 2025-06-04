@@ -22,9 +22,6 @@ http://localhost:3000/login - grafana
 
 TODO:
 
-!!!concurrent collections (???) ->!!!идемпотентые consumer в kafka?
-  add class for cache to check processed events
-
 add eventdeduplication to reservation service
 update tests for processor
 

@@ -51,6 +51,7 @@ public class ReservationController {
 
         UUID bookingId = UUID.randomUUID();
         ReservationCreatedEvent event = new ReservationCreatedEvent(
+                UUID.randomUUID().toString(),
                 request.userId(),
                 request.flightNumber(),
                 bookingId.toString(),
@@ -82,6 +83,7 @@ public class ReservationController {
             @RequestBody @Valid CancelReservationRequest request) {
 
         ReservationCancelledEvent event = new ReservationCancelledEvent(
+                UUID.randomUUID().toString(),
                 request.userId(),
                 request.flightNumber(),
                 request.bookingId()

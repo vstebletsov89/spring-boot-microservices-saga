@@ -25,7 +25,7 @@ class BookingSyncServiceTest {
 
     @Test
     void handleReservationCreated_shouldSaveBooking() {
-        ReservationCreatedEvent event = new ReservationCreatedEvent(
+        BookingCreatedEvent event = new BookingCreatedEvent(
                 "b1", "1", "FL123","6B"
         );
 

@@ -23,7 +23,7 @@ public class BookingSaga {
 
     @StartSaga
     @SagaEventHandler(associationProperty = "bookingId")
-    public void on(ReservationCreatedEvent event) {
+    public void on(BookingCreatedEvent event) {
         log.info("Try to reserve seat for: {}", event);
         if (bookingMetrics != null) bookingMetrics.incrementCreated();
 
