@@ -6,8 +6,8 @@ Accept: application/json
 {
   "fromCode": "DXB",
   "toCode": "JFK",
-  "departureDate": "2025-06-04T11:30:00Z",
-  "returnDate": "2025-06-20T11:30:00Z",
+  "departureDate": "2025-08-04T11:30:00Z",
+  "returnDate": "2025-08-20T11:30:00Z",
   "passengerCount": 2
 }
 
@@ -22,7 +22,7 @@ Content-Type: application/json
 }
 
 ### Variables
-@bookingId = c2b351ff-7d2b-433b-8d4f-9d1289df51b8
+@bookingId = 854ed379-11ec-4044-a869-4e0f2f2aa013
 
 ### Получить детали конкретного бронирования
 GET http://localhost:8081/api/tickets/booking/{{bookingId}}
