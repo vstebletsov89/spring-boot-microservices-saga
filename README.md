@@ -22,10 +22,6 @@ http://localhost:3000/login - grafana
 
 TODO:
 
-add eventdeduplication to reservation service
-update tests for processor
-
-run all tests
 run integration tests
 
 !!!shedlock???
