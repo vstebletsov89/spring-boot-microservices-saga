@@ -18,6 +18,7 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import ru.otus.common.enums.FlightStatus;
 import ru.otus.common.kafka.FlightCreatedEvent;
 import ru.otus.common.kafka.FlightUpdatedEvent;
+import ru.otus.flightquery.cache.EventDeduplicationCache;
 import ru.otus.flightquery.config.JacksonConfig;
 import ru.otus.flightquery.config.KafkaStreamsTestConfig;
 import ru.otus.flightquery.publisher.DltPublisher;
@@ -30,10 +31,13 @@ import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoInteractions;
+import static org.mockito.Mockito.*;
 
-@SpringBootTest(classes = {KafkaFlightStreamProcessor.class, JacksonConfig.class, KafkaStreamsTestConfig.class})
+@SpringBootTest(classes = {
+        KafkaFlightStreamProcessor.class,
+        JacksonConfig.class,
+        KafkaStreamsTestConfig.class,
+        EventDeduplicationCache.class})
 @EmbeddedKafka(partitions = 1, topics = {"test-topic", "test-dlt"})
 @TestPropertySource(properties = {
         "app.kafka.topic.flights=test-topic",
@@ -48,6 +52,9 @@ class KafkaFlightStreamProcessorTest {
     @Autowired
     private ObjectMapper objectMapper;
 
+    @Autowired
+    private EventDeduplicationCache eventDeduplicationCache;
+
     @MockitoBean
     private FlightSyncService flightSyncService;
 
@@ -60,6 +67,7 @@ class KafkaFlightStreamProcessorTest {
     void setupKafkaTemplate() {
         Map<String, Object> producerProps = KafkaTestUtils.producerProps(embeddedKafka);
         kafkaTemplate = new KafkaTemplate<>(new DefaultKafkaProducerFactory<>(producerProps, new StringSerializer(), new StringSerializer()));
+        eventDeduplicationCache.clear();
     }
 
     @Test
@@ -127,5 +135,62 @@ class KafkaFlightStreamProcessorTest {
             verify(dltPublisher).publish(eq("test-dlt"), eq("invalid"), eq(invalidJson));
             verifyNoInteractions(flightSyncService);
         });
+    }
+
+    @Test
+    void shouldNotProcessDuplicateFlightCreatedEvent() throws Exception {
+        LocalDateTime departureTime = LocalDateTime.parse("2025-04-23T15:07:15");
+        LocalDateTime arrivalTime = departureTime.plusHours(8);
+        String duplicateEventId = UUID.randomUUID().toString();
+
+        FlightCreatedEvent event = new FlightCreatedEvent(
+                duplicateEventId,
+                "FL999", "SVO", "JFK",
+                FlightStatus.SCHEDULED,
+                departureTime,
+                arrivalTime,
+                new BigDecimal("199.99"),
+                180, 0, new BigDecimal("10.00"));
+
+        String payload = objectMapper.writeValueAsString(event);
+
+        kafkaTemplate.send(new ProducerRecord<>("test-topic", "FL999", payload));
+        kafkaTemplate.send(new ProducerRecord<>("test-topic", "FL999", payload));
+
+        Awaitility.await().atMost(5, TimeUnit.SECONDS)
+                .untilAsserted(() -> {
+                    verify(flightSyncService, times(1)).handleCreated(eq(event));
+                    verifyNoInteractions(dltPublisher);
+                });
+    }
+
+    @Test
+    void shouldNotProcessDuplicateFlightUpdatedEvent() throws Exception {
+        LocalDateTime departureTime = LocalDateTime.parse("2025-04-25T12:00:00");
+        LocalDateTime arrivalTime = departureTime.plusHours(6);
+        String duplicateEventId = UUID.randomUUID().toString();
+
+        FlightUpdatedEvent event = new FlightUpdatedEvent(
+                duplicateEventId,
+                "FL888",
+                FlightStatus.DELAYED,
+                departureTime,
+                arrivalTime,
+                new BigDecimal("888.88"),
+                200,
+                50,
+                new BigDecimal("5.00")
+        );
+
+        String payload = objectMapper.writeValueAsString(event);
+
+        kafkaTemplate.send(new ProducerRecord<>("test-topic", "FL888", payload));
+        kafkaTemplate.send(new ProducerRecord<>("test-topic", "FL888", payload));
+
+        Awaitility.await().atMost(5, TimeUnit.SECONDS)
+                .untilAsserted(() -> {
+                    verify(flightSyncService, times(1)).handleUpdated(eq(event));
+                    verifyNoInteractions(dltPublisher);
+                });
     }
 }

@@ -25,8 +25,9 @@ TODO:
 !!!concurrent collections (???) ->!!!идемпотентые consumer в kafka?
   add class for cache to check processed events
 
-add tests for deduplicationCache
-and update tests for consumer
+add eventdeduplication to reservation service
+update tests for processor
+
 run all tests
 run integration tests
 
@@ -38,7 +39,8 @@ run integration tests
 !проверить работу на jmeter
 !!!выключить circuitbreaker?
 
-добавить в readme какие темы покрыты с ссылками на код (сервис:класс:метод или docker compose?)
+добавить в readme какие темы покрыты с ссылками на код (сервис:к
+ласс:метод или docker compose?)
 
 !!!5. В отдельной папке проекта размещаются helm скрипты для деплоя каждого приложения (в подпапках)
 

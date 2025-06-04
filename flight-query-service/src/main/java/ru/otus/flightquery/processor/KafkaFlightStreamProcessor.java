@@ -42,7 +42,7 @@ public class KafkaFlightStreamProcessor {
                 JsonNode root = objectMapper.readTree(value);
                 JsonNode eventIdNode = root.get("eventId");
 
-                if (eventIdNode == null || eventIdNode.isNull()) {
+                if (eventIdNode == null || eventIdNode.asText().isEmpty()) {
                     log.warn("eventId is missing, skipping message: {}", value);
                     dltPublisher.publish(dltTopic, key, value);
                     return;

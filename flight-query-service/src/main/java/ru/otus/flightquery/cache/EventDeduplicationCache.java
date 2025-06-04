@@ -12,7 +12,7 @@ public class EventDeduplicationCache {
 
     private final ConcurrentHashMap<String, Boolean> cache = new ConcurrentHashMap<>();
     private final ConcurrentLinkedQueue<String> queue = new ConcurrentLinkedQueue<>();
-    private static final int MAX_CACHE_SIZE = 100_000;
+    private int MAX_CACHE_SIZE = 100_000;
 
     public boolean isDuplicate(String eventId) {
 
@@ -25,9 +25,10 @@ public class EventDeduplicationCache {
         queue.offer(eventId);
 
         // remove the oldest event
-        while (cache.size() > MAX_CACHE_SIZE) {
+        if (cache.size() > MAX_CACHE_SIZE) {
             String evictedId = queue.poll();
             if (evictedId != null) {
+                log.info("{} removed from cache", eventId);
                 cache.remove(evictedId);
             }
         }
