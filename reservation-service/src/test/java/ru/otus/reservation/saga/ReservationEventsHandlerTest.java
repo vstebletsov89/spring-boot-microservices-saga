@@ -2,6 +2,7 @@ package ru.otus.reservation.saga;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.test.util.ReflectionTestUtils;
 import ru.otus.common.saga.*;
 import ru.otus.reservation.publisher.DltPublisher;
 import ru.otus.reservation.service.BookingSyncService;
@@ -24,7 +25,7 @@ class ReservationEventsHandlerTest {
         dltPublisher = mock(DltPublisher.class);
         payloadUtil = mock(PayloadUtil.class);
         handler = new ReservationEventsHandler(bookingSyncService, dltPublisher, payloadUtil);
-        injectDltTopic(handler, dltTopic);
+        ReflectionTestUtils.setField(handler, "dltTopic", dltTopic);
     }
 
     @Test
@@ -93,15 +94,5 @@ class ReservationEventsHandlerTest {
         handler.on(event);
 
         verify(dltPublisher).publish(eq(dltTopic), eq("b1"), eq(payload));
-    }
-
-    private void injectDltTopic(ReservationEventsHandler handler, String topic) {
-        try {
-            var field = ReservationEventsHandler.class.getDeclaredField("dltTopic");
-            field.setAccessible(true);
-            field.set(handler, topic);
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to inject dltTopic", e);
-        }
     }
 }
