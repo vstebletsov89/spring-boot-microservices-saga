@@ -1,0 +1,29 @@
+syntax = "proto3";
+
+option java_package = "ru.otus.grpc";
+option java_multiple_files = true;
+
+service AuthServiceGrpc {
+  rpc Register(RegisterRequestGrpc) returns (AuthResponseGrpc);
+  rpc Login(AuthRequestGrpc) returns (AuthResponseGrpc);
+  rpc Refresh(RefreshRequestGrpc) returns (AuthResponseGrpc);
+}
+
+message RegisterRequestGrpc {
+  string username = 1;
+  string password = 2;
+}
+
+message AuthRequestGrpc {
+  string username = 1;
+  string password = 2;
+}
+
+message RefreshRequestGrpc {
+  string refreshToken = 1;
+}
+
+message AuthResponseGrpc {
+  string accessToken = 1;
+  string refreshToken = 2;
+}

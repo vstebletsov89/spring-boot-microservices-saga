@@ -24,9 +24,10 @@ TODO:
 
 run integration tests
 
-!!!shedlock???
+!!!GRPC to auth
 !!!добавить helm скрипты
-!!!offheap storage
+!!!offheap storage?
+
 
 !проверить работу системы в целом отдельными запросами из requests
 !проверить работу на jmeter
