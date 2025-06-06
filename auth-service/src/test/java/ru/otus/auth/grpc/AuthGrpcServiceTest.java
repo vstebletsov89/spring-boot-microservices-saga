@@ -1,0 +1,75 @@
+package ru.otus.auth.grpc;
+
+import io.grpc.ManagedChannel;
+import io.grpc.ManagedChannelBuilder;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
+class AuthGrpcServiceTest {
+
+    private static ManagedChannel channel;
+    private static ru.otus.auth.grpc.AuthServiceGrpc.AuthServiceBlockingStub stub;
+
+    @BeforeAll
+    static void setUp() {
+        channel = ManagedChannelBuilder
+                .forAddress("localhost", 9090)
+                .usePlaintext()
+                .build();
+        stub = ru.otus.auth.grpc.AuthServiceGrpc.newBlockingStub(channel);
+    }
+
+    @AfterAll
+    static void tearDown() {
+        channel.shutdownNow();
+    }
+
+    @Test
+    void shouldRegisterUser() {
+        var request = ru.otus.auth.grpc.RegisterRequestGrpc.newBuilder()
+                .setUsername("testuser")
+                .setPassword("testpass")
+                .build();
+
+        ru.otus.auth.grpc.AuthResponseGrpc response = stub.register(request);
+
+        assertThat(response.getAccessToken()).isNotBlank();
+        assertThat(response.getRefreshToken()).isNotBlank();
+    }
+
+    @Test
+    void shouldLoginUser() {
+        var request = ru.otus.auth.grpc.AuthRequestGrpc.newBuilder()
+                .setUsername("testuser")
+                .setPassword("testpass")
+                .build();
+
+        ru.otus.auth.grpc.AuthResponseGrpc response = stub.login(request);
+
+        assertThat(response.getAccessToken()).isNotBlank();
+        assertThat(response.getRefreshToken()).isNotBlank();
+    }
+
+    @Test
+    void shouldRefreshToken() {
+        var loginRequest = ru.otus.auth.grpc.AuthRequestGrpc.newBuilder()
+                .setUsername("testuser")
+                .setPassword("testpass")
+                .build();
+        var loginResponse = stub.login(loginRequest);
+
+        var refreshRequest = ru.otus.auth.grpc.RefreshRequestGrpc.newBuilder()
+                .setRefreshToken(loginResponse.getRefreshToken())
+                .build();
+
+        var refreshed = stub.refresh(refreshRequest);
+
+        assertThat(refreshed.getAccessToken()).isNotBlank();
+        assertThat(refreshed.getRefreshToken()).isNotBlank();
+    }
+}
