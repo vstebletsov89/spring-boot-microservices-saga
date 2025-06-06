@@ -22,19 +22,16 @@ http://localhost:3000/login - grafana
 
 TODO:
 
-run integration tests
-
-!!!GRPC to auth
-!!!добавить helm скрипты
-!!!offheap storage?
-
+!добавить helm скрипты
+!скриншоты
+!добавить в readme какие темы покрыты с ссылками на код (сервис:к
+ласс:метод или docker compose?)
+!offheap storage?
 
 !проверить работу системы в целом отдельными запросами из requests
 !проверить работу на jmeter
-!!!выключить circuitbreaker?
+!выключить circuitbreaker?
 
-добавить в readme какие темы покрыты с ссылками на код (сервис:к
-ласс:метод или docker compose?)
 
 !!!5. В отдельной папке проекта размещаются helm скрипты для деплоя каждого приложения (в подпапках)
 

@@ -32,8 +32,8 @@ class AuthGrpcServiceTest {
     @Test
     void shouldRegisterUser() {
         var request = ru.otus.auth.grpc.RegisterRequestGrpc.newBuilder()
-                .setUsername("testuser")
-                .setPassword("testpass")
+                .setUsername("user1")
+                .setPassword("pass1")
                 .build();
 
         ru.otus.auth.grpc.AuthResponseGrpc response = stub.register(request);
@@ -44,23 +44,38 @@ class AuthGrpcServiceTest {
 
     @Test
     void shouldLoginUser() {
-        var request = ru.otus.auth.grpc.AuthRequestGrpc.newBuilder()
-                .setUsername("testuser")
-                .setPassword("testpass")
+        var request = ru.otus.auth.grpc.RegisterRequestGrpc.newBuilder()
+                .setUsername("user2")
+                .setPassword("pass2")
                 .build();
 
-        ru.otus.auth.grpc.AuthResponseGrpc response = stub.login(request);
+       stub.register(request);
 
-        assertThat(response.getAccessToken()).isNotBlank();
-        assertThat(response.getRefreshToken()).isNotBlank();
+        var loginRequest = ru.otus.auth.grpc.AuthRequestGrpc.newBuilder()
+                .setUsername("user2")
+                .setPassword("pass2")
+                .build();
+
+        ru.otus.auth.grpc.AuthResponseGrpc loginResponse = stub.login(loginRequest);
+
+        assertThat(loginResponse.getAccessToken()).isNotBlank();
+        assertThat(loginResponse.getRefreshToken()).isNotBlank();
     }
 
     @Test
     void shouldRefreshToken() {
-        var loginRequest = ru.otus.auth.grpc.AuthRequestGrpc.newBuilder()
-                .setUsername("testuser")
-                .setPassword("testpass")
+        var request = ru.otus.auth.grpc.RegisterRequestGrpc.newBuilder()
+                .setUsername("user3")
+                .setPassword("pass3")
                 .build();
+
+        stub.register(request);
+
+        var loginRequest = ru.otus.auth.grpc.AuthRequestGrpc.newBuilder()
+                .setUsername("user3")
+                .setPassword("pass3")
+                .build();
+
         var loginResponse = stub.login(loginRequest);
 
         var refreshRequest = ru.otus.auth.grpc.RefreshRequestGrpc.newBuilder()
