@@ -5,8 +5,6 @@ import org.mapstruct.Mapping;
 import ru.otus.common.entity.Flight;
 import ru.otus.common.response.FlightResponse;
 
-import java.util.List;
-
 @Mapper(componentModel = "spring")
 public interface FlightMapper {
 

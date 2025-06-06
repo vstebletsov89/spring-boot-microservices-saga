@@ -1,9 +1,12 @@
 syntax = "proto3";
 
-option java_package = "ru.otus.grpc";
-option java_multiple_files = true;
+package proto;
 
-service AuthServiceGrpc {
+option java_multiple_files = true;
+option java_package = "ru.otus.auth.grpc";
+option java_outer_classname = "AuthProto";
+
+service AuthService {
   rpc Register(RegisterRequestGrpc) returns (AuthResponseGrpc);
   rpc Login(AuthRequestGrpc) returns (AuthResponseGrpc);
   rpc Refresh(RefreshRequestGrpc) returns (AuthResponseGrpc);
