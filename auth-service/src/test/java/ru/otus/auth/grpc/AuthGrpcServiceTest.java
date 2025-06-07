@@ -9,7 +9,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
+@SpringBootTest(properties = {
+        "grpc.server.port=9091"
+})
 class AuthGrpcServiceTest {
 
     private static ManagedChannel channel;
@@ -18,7 +20,7 @@ class AuthGrpcServiceTest {
     @BeforeAll
     static void setUp() {
         channel = ManagedChannelBuilder
-                .forAddress("localhost", 9090)
+                .forAddress("localhost", 9091)
                 .usePlaintext()
                 .build();
         stub = ru.otus.auth.grpc.AuthServiceGrpc.newBlockingStub(channel);

@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import ru.otus.auth.AuthServiceApplication;
 import ru.otus.auth.dto.AuthRequest;
 import ru.otus.auth.dto.AuthResponse;
 import ru.otus.auth.dto.RegisterRequest;
@@ -18,7 +19,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
-@SpringBootTest(classes = AuthService.class)
+@SpringBootTest
 class AuthServiceTest {
 
     @Autowired
@@ -35,10 +36,10 @@ class AuthServiceTest {
 
     @Test
     void register_success() {
-        RegisterRequest req = new RegisterRequest("user", "password");
+        RegisterRequest req = new RegisterRequest("user", "complex_password");
 
         when(userRepository.findByUsername("user")).thenReturn(Optional.empty());
-        when(passwordEncoder.encode("password")).thenReturn("hashedPwd");
+        when(passwordEncoder.encode("complex_password")).thenReturn("hashedPwd");
         when(jwtService.generateAccessToken("user")).thenReturn("access.jwt");
         when(jwtService.generateRefreshToken("user")).thenReturn("refresh.jwt");
         when(userRepository.save(any())).thenAnswer(inv -> inv.getArgument(0));
@@ -48,6 +49,18 @@ class AuthServiceTest {
         assertThat(resp.accessToken()).isEqualTo("access.jwt");
         assertThat(resp.refreshToken()).isEqualTo("refresh.jwt");
         verify(userRepository).save(any(User.class));
+    }
+
+    @Test
+    void register_compromisedPassword_shouldThrow() {
+        RegisterRequest req = new RegisterRequest("user", "password");
+        when(userRepository.findByUsername("user")).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> authService.register(req))
+                .isInstanceOf(RuntimeException.class)
+                .hasMessageContaining("Password was compromised. Chose another one");
+
+        verify(userRepository, never()).save(any());
     }
 
     @Test
