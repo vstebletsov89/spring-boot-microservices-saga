@@ -36,7 +36,7 @@ public class BloomFilterManager {
                     new ByteArrayInputStream(storage.readBytes()))) {
                 this.bloomFilter = (BloomFilter<byte[]>) ois.readObject();
             }
-            System.out.println("Bloom filter loaded successfully");
+            log.info("Bloom filter loaded successfully");
         } catch (Exception e) {
             throw new RuntimeException("Failed to load Bloom filter", e);
         }
