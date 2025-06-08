@@ -29,24 +29,32 @@ kubectl get nodes
 cd helm
 ./auth-service/deploy.sh
 ```
+![helm_4.png](helm_4.png)
+![helm_5.png](helm_5.png)
+![helm_6.png](helm_6.png)
 
 * смотрим есть ли под
 ```shell
 kubectl get pods -n microservices
-
 ```
+![helm_7.png](helm_7.png)
+
 * Смотрим внешний ip
 ```shell
 kubectl get svc -n microservices
 ```
+![helm_8.png](helm_8.png)
 
-* делаем port forward
+* для удобства делаем port forward
 ```shell
 kubectl port-forward svc/auth-service-chart 8090:8090 -n microservices
 ```
+![helm_9.png](helm_9.png)
 
-* Выполянем запросы , смотрим логи kubernetes
+* Выполняем запросы из requests.http, под доступен и отвечает на запросы
 
+![helm_10.png](helm_10.png)
+![helm_11.png](helm_11.png)
 
 * удаление сервиса
 ```shell
