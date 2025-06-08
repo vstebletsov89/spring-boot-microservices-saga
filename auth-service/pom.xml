@@ -124,6 +124,7 @@
     </dependencies>
 
     <build>
+        <finalName>auth-service</finalName>
         <extensions>
             <extension>
                 <groupId>kr.motd.maven</groupId>

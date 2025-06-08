@@ -20,7 +20,7 @@ jwt:
   secret: 94e2fd772ac68832dfe104a5c87a905d
 
 bloom-filter:
-  file-path: /app/resources/compromised.bin
+  file-path: src/main/resources/compromised.bin
   buffer-size: 1048576 # 1MB
   false-positive-rate: 0.01
   expected-insertions: 10000

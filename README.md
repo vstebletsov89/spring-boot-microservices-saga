@@ -23,7 +23,6 @@ http://localhost:3000/login - grafana
 TODO:
 
 !добавить helm скрипты
-!offheap storage?
 !скриншоты
 !добавить в readme какие темы покрыты с ссылками на код (сервис:к
 ласс:метод или docker compose?)

@@ -2,15 +2,15 @@ package ru.otus.auth.util;
 
 import com.google.common.hash.BloomFilter;
 import com.google.common.hash.Funnels;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
 import java.util.List;
 
 import static ru.otus.auth.util.PasswordHashUtil.hashPassword;
 
+@ActiveProfiles("test")
 public class BloomFilterGenerator {
     public static void main(String[] args) throws Exception {
 

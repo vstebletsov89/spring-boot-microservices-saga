@@ -1,0 +1,16 @@
+replicaCount: 1
+
+image:
+  repository: localhost:5000/reservation-service
+  tag: latest
+  pullPolicy: Always
+
+containerPort: 8080
+
+service:
+  type: NodePort
+  port: 8080
+  nodePort: 30081
+
+autoscaling:
+  enabled: false
