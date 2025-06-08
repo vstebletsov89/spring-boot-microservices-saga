@@ -17,8 +17,9 @@ Content-Type: application/json
 }
 
 ### refresh
-TODO: make json input, add logs to controllers
 POST http://localhost:8090/api/auth/refresh
 Content-Type: application/json
 
-"eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJtb3J0YXI4OSIsImlhdCI6MTc0OTM4NTgwOSwiZXhwIjoxNzQ5NDcyMjA5fQ.9YJvy3hf5UATfxLPcoJMQBl633pimUfNZ2KHrf0wy0I"
+{
+  "refreshToken": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJtb3J0YXI4OSIsImlhdCI6MTc0OTM4NzI1NSwiZXhwIjoxNzQ5NDczNjU1fQ.DmInM6E02gX31WLFh6Y12g7OtTPzeRVkjCQhHTfpL9A"
+}

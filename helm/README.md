@@ -55,6 +55,10 @@ kubectl port-forward svc/auth-service-chart 8090:8090 -n microservices
 
 ![helm_10.png](helm_10.png)
 ![helm_11.png](helm_11.png)
+![helm_12.png](helm_12.png)
+
+* проверяем логи k8s, лги подвтерждают что под обрабатывает запросы
+![helm_13.png](helm_13.png)
 
 * удаление сервиса
 ```shell
