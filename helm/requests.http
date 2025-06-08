@@ -1,7 +1,23 @@
+### регистрация
 POST http://localhost:8090/api/auth/register
 Content-Type: application/json
 
 {
-  "username": "testuser",
+  "username": "mortar89",
   "password": "testpassword"
 }
+
+### логин
+POST http://localhost:8090/api/auth/login
+Content-Type: application/json
+
+{
+"username": "mortar89",
+"password": "testpassword"
+}
+
+### refresh
+POST http://localhost:8090/api/auth/refresh
+Content-Type: application/json
+
+"your_refresh_token_here"
