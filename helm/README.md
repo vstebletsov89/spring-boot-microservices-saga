@@ -44,3 +44,7 @@ kubectl get svc -n microservices
 * Выполянем запросы , смотрим логи kubernetes
 
 
+* удаление сервиса
+```shell
+helm uninstall auth-service -n microservices
+```
