@@ -24,3 +24,12 @@ bloom-filter:
   buffer-size: 1048576 # 1MB
   false-positive-rate: 0.01
   expected-insertions: 10000
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info
+  endpoint:
+    health:
+      show-details: always
