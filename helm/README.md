@@ -35,11 +35,15 @@ cd helm
 kubectl get pods -n microservices
 
 ```
-Смотрим внешний ip
+* Смотрим внешний ip
 ```shell
 kubectl get svc -n microservices
 ```
 
+* делаем port forward
+```shell
+kubectl port-forward svc/auth-service-chart 8090:8090 -n microservices
+```
 
 * Выполянем запросы , смотрим логи kubernetes
 
