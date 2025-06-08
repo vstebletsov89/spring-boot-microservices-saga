@@ -8,7 +8,7 @@ VALUES_FILE="./$SERVICE_NAME/values.yaml"
 NAMESPACE="microservices"
 
 # build and push
-docker build -t $SERVICE_NAME $DOCKER_CONTEXT
+docker build --no-cache -t $SERVICE_NAME $DOCKER_CONTEXT
 docker tag $SERVICE_NAME $IMAGE_NAME
 docker push $IMAGE_NAME
 
