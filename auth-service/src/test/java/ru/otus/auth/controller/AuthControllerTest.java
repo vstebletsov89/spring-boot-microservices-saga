@@ -76,7 +76,7 @@ class AuthControllerTest {
 
         mockMvc.perform(post("/api/auth/refresh")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("\"" + refreshToken + "\""))
+                        .content("{\"refreshToken\":\"" + refreshToken + "\"}"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.accessToken").value("new.access.jwt"))
                 .andExpect(jsonPath("$.refreshToken").value("new.refresh.jwt"));
@@ -112,7 +112,7 @@ class AuthControllerTest {
 
         mockMvc.perform(post("/api/auth/refresh")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("\"test\""))
+                        .content("{\"refreshToken\":\"test\"}"))
                 .andExpect(status().isNotFound());
     }
 }
