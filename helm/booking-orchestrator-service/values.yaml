@@ -1,16 +1,16 @@
 replicaCount: 1
 
 image:
-  repository: localhost:5000/reservation-service
+  repository: localhost:5000/booking-orchestrator-service
   tag: latest
   pullPolicy: Always
 
-containerPort: 8095
+containerPort: 8091
 
 service:
   type: NodePort
-  port: 8095
-  nodePort: 9095
+  port: 8091
+  nodePort: 9091
 
 autoscaling:
   enabled: false
@@ -18,7 +18,7 @@ autoscaling:
 livenessProbe:
   httpGet:
     path: /actuator/health
-    port: 8095
+    port: 8091
   initialDelaySeconds: 20
   periodSeconds: 15
   timeoutSeconds: 5
@@ -27,7 +27,7 @@ livenessProbe:
 readinessProbe:
   httpGet:
     path: /actuator/health
-    port: 8095
+    port: 8091
   initialDelaySeconds: 15
   periodSeconds: 10
   timeoutSeconds: 3

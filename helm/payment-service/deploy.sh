@@ -1,6 +1,6 @@
 #!/bin/bash
 
-SERVICE_NAME="reservation-service"
+SERVICE_NAME="payment-service"
 IMAGE_NAME="localhost:5000/$SERVICE_NAME"
 DOCKER_CONTEXT="../$SERVICE_NAME"
 HELM_CHART_DIR="./$SERVICE_NAME/chart"
