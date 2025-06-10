@@ -6,8 +6,8 @@ GW --> RES[Reservation Service]
 
 RES --> TOB[Transactional Outbox]
 TOB --> SCH[Scheduler]
-SCH --> KAFKA_RES_TOPIC[Kafka: reservation-service.bookings]
 
+SCH --> KAFKA_RES_TOPIC[Kafka: reservation-service.bookings]
 KAFKA_RES_TOPIC --> EDC1[EventDeduplicationCache]
 EDC1 --> ORC[Booking Orchestrator Service]
 
@@ -15,10 +15,8 @@ ORC --> FLIGHT[Flight Service]
 ORC --> PAY[Payment Service]
 
 FLIGHT --> KAFKA_FLIGHT_TOPIC[Kafka: flight-service.events]
-KAFKA_FLIGHT_TOPIC --> FQ[Flight Query Service]
-
 KAFKA_FLIGHT_TOPIC --> EDC2[EventDeduplicationCache]
-EDC2 --> FQ
+EDC2 --> FQ[Flight Query Service]
 
 PAY --> KAFKA_PAYMENT_TOPIC[Kafka: payment-service.payments]
 
