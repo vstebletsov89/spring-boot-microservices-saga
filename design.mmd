@@ -33,17 +33,16 @@ PAY --> PGPAY[(PostgreSQL)]
 RES --> AXON[Axon Server]
 ORC --> AXON
 FLIGHT --> AXON
-FQ --> AXON
 PAY --> AXON
 
-%% Monitoring
+%% Tracing
 RES --> OTEL[OpenTelemetry<br/>Java Agent]
 ORC --> OTEL
 FLIGHT --> OTEL
 FQ --> OTEL
 PAY --> OTEL
 
-%% Additional monitoring
+%% Monitoring
 RES --> PROM[Prometheus]
 ORC --> PROM
 FLIGHT --> PROM
@@ -54,14 +53,14 @@ PROM --> GRAF[Grafana]
 OTEL --> JAEGER[Jaeger]
 
 %% Kafka UI
-%%KAFKA_RES_TOPIC     --> KAFDROP[Kafdrop]
-%%KAFKA_FLIGHT_TOPIC  --> KAFDROP
-%%KAFKA_PAYMENT_TOPIC --> KAFDROP
+KAFKA_RES_TOPIC     --> KAFDROP[Kafdrop]
+KAFKA_FLIGHT_TOPIC  --> KAFDROP
+KAFKA_PAYMENT_TOPIC --> KAFDROP
 
 %% Saga Pattern
-ORC -.->|Saga Coordination| FLIGHT
-ORC -.->|Saga Coordination| PAY
-ORC -.->|Saga Coordination| RES
+ORC -.->|Saga coordination| FLIGHT
+ORC -.->|Saga coordination| PAY
+ORC -.->|Saga coordination| RES
 
 %% Event Flow
 FLIGHT -.->|Flight events| KAFKA_FLIGHT_TOPIC
