@@ -6,16 +6,21 @@ GW --> RES[Reservation Service]
 
 RES --> TOB[Transactional Outbox]
 TOB --> SCH[Scheduler]
-SCH --> ORC[Booking Orchestrator Service]
+SCH --> KAFKA_RES_TOPIC[Kafka: reservation-service.bookings]
+
+KAFKA_RES_TOPIC --> EDC1[EventDeduplicationCache]
+EDC1 --> ORC[Booking Orchestrator Service]
 
 ORC --> FLIGHT[Flight Service]
 ORC --> PAY[Payment Service]
 
-FLIGHT --> KAFKA[Kafka]
-KAFKA --> FQ[Flight Query Service]
+FLIGHT --> KAFKA_FLIGHT_TOPIC[Kafka: flight-service.events]
+KAFKA_FLIGHT_TOPIC --> FQ[Flight Query Service]
 
-KAFKA --> EDC[EventDeduplicationCache]
-EDC --> FQ
+KAFKA_FLIGHT_TOPIC --> EDC2[EventDeduplicationCache]
+EDC2 --> FQ
+
+PAY --> KAFKA_PAYMENT_TOPIC[Kafka: payment-service.payments]
 
 %% Databases
 RES --> PGRES[(PostgreSQL)]
@@ -49,7 +54,9 @@ PROM --> GRAF[Grafana]
 OTEL --> JAEGER[Jaeger]
 
 %% Kafka UI
-KAFKA --> KAFDROP[Kafdrop]
+%%KAFKA_RES_TOPIC     --> KAFDROP[Kafdrop]
+%%KAFKA_FLIGHT_TOPIC  --> KAFDROP
+%%KAFKA_PAYMENT_TOPIC --> KAFDROP
 
 %% Saga Pattern
 ORC -.->|Saga Coordination| FLIGHT
@@ -57,7 +64,7 @@ ORC -.->|Saga Coordination| PAY
 ORC -.->|Saga Coordination| RES
 
 %% Event Flow
-FLIGHT -.->|Events| KAFKA
-KAFKA -.->|Sync Events| FQ
+FLIGHT -.->|Flight events| KAFKA_FLIGHT_TOPIC
+KAFKA_FLIGHT_TOPIC -.->|Sync flight events| FQ
 
 
