@@ -1,0 +1,58 @@
+graph TD
+UI[UI Frontend] --> GW[API Gateway]
+
+GW --> AUTH[Auth Service]
+GW --> RES[Reservation Service<br/>:8081]
+
+RES --> TOB[Transactional Outbox]
+TOB --> SCH[Scheduler]
+SCH --> ORC[Booking Orchestrator Service<br/>:8082]
+
+ORC --> FLIGHT[Flight Service<br/>:8083]
+ORC --> PAY[Payment Service<br/>:8085]
+
+FLIGHT --> KAFKA[Kafka<br/>:9092]
+KAFKA --> FQ[Flight Query Service<br/>:8084]
+
+KAFKA --> EDC[EventDeduplicationCache]
+EDC --> FQ
+
+%% Databases
+RES --> PGRES[(PostgreSQL<br/>Reservation DB<br/>:5435)]
+ORC --> PGBOOK[(PostgreSQL<br/>Booking DB<br/>:5437)]
+FLIGHT --> PGFLIGHT[(PostgreSQL<br/>Flight DB<br/>:5434)]
+FQ --> PGQUERY[(PostgreSQL<br/>Flight Query DB<br/>:5433)]
+PAY --> PGPAY[(PostgreSQL<br/>Payment DB<br/>:5436)]
+
+%% Axon Server
+RES --> AXON[Axon Server<br/>:8024/:8124]
+ORC --> AXON
+FLIGHT --> AXON
+FQ --> AXON
+PAY --> AXON
+
+%% Monitoring
+RES --> OTEL[OpenTelemetry<br/>Java Agent]
+ORC --> OTEL
+FLIGHT --> OTEL
+FQ --> OTEL
+PAY --> OTEL
+
+OTEL --> JAEGER[Jaeger<br/>:16686]
+
+%% Additional monitoring
+PROM[Prometheus<br/>:9090] --> GRAF[Grafana<br/>:3000]
+
+%% Kafka UI
+KAFKA --> KAFDROP[Kafdrop<br/>:9000]
+
+%% Saga Pattern
+ORC -.->|Saga Coordination| FLIGHT
+ORC -.->|Saga Coordination| PAY
+ORC -.->|Saga Coordination| RES
+
+%% Event Flow
+FLIGHT -.->|Events| KAFKA
+KAFKA -.->|Sync Events| FQ
+
+
