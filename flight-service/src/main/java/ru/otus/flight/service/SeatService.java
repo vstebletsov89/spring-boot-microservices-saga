@@ -83,6 +83,7 @@ public class SeatService {
     }
 
     public BigDecimal calculateFreeSeats(Flight flight) {
+        // freeSeats = (totalSeats * (1 + overbookingPercentage / 100)) - bookedSeats
         BigDecimal totalSeats = BigDecimal.valueOf(flight.getTotalSeats());
         BigDecimal bookedSeats = BigDecimal.valueOf(flight.getReservedSeats());
         BigDecimal overbookFactor = BigDecimal.ONE.add(

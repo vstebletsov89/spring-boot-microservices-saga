@@ -5,7 +5,7 @@
 * agents - open telemetry agent для трейсов.
 * auth-service - сервис авторизации.
 * auth-service-jmh-benchmark - JMH бенчмарки для сервиса авторизации
-* booking-orchestrator-service - выступает как управляющий сервис саги.
+* booking-orchestrator-service - управляющий сервис саги.
 * common - общий модуль с общими dto (enums, saga commands/events, kafka events, requests/responses)
 * common-entity - общий модуль с entity для flight-service и flight-query-service
 * flight-query-service - не участвует в оркестровке (только для чтения информации о доступных рейсах)
@@ -20,7 +20,7 @@
 Описание модулей:
 
 > auth-service: \
-> Есть два интерфейса взаимодействия REST для пользователей и gRPC для внутренних сервисов.
+> Есть два интерфейса взаимодействия: 1) REST для пользователей и 2) gRPC для внутренних сервисов.
 > Для авторизации используются JWT токены.
 > off-heap используется для загрузки в память файла скомпрометированных паролей, при регистрации
 проверятся если пароль скомпрометирован, регистрация не проходит. Для этого используется BloomFilter из библиотеки guava.
@@ -69,8 +69,16 @@
 * Kafka Streams обработчик: flight-query-service/src/main/java/ru/otus/flightquery/processor/KafkaFlightStreamProcessor.java
 * Liquibase миграционные скрипты: flight-query-service/src/main/resources/db/changelog/db.changelog-master.yaml
 
-
-
+> flight-service: \
+> Сервис для резервирования и освобождения мест на рейсах, добавления новых рейсов.
+> Используется пессимистическая блокировка @Lock(LockModeType.PESSIMISTIC_WRITE) чтобы избежать проблемы race conditions при большом количестве запросов к одному рейсу.
+> Реализована возможность overbooking по формуле: [freeSeats = (totalSeats * (1 + overbookingPercentage / 100)) - bookedSeats].
+> Участвует в саге. Публикует Kafka события FlightCreatedEvent, FlightUpdatedEvent.
+> Используется liquibase для создания таблиц и вставки dummy записей.
+* findByFlightNumberForUpdate с     flight-service/src/main/java/ru/otus/flight/repository/FlightRepository.java
+* Контроллер со swagger аннотациями: flight-service/src/main/java/ru/otus/flight/controller/FlightWriteController.java 
+* Kafka producer: flight-service/src/main/java/ru/otus/flight/publisher/FlightPublisher.java
+* Liquibase миграционные скрипты: flight-service/src/main/resources/db/changelog/db.changelog-master.yaml
 
 
 TODO: add saga screen
