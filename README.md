@@ -1,11 +1,23 @@
 # Описание системы:
 
-* Booking Orchestrator Service выступает как управляющий сервис саги.
-* Reservation Service хранит и управляет информацией о бронированиях.
-* Flight Service отвечает за резервирование и освобождение мест на рейсах.
-* Payment Service проводит оплату.
-* Flight Query Service не участвует в оркестровке (только для чтения).
-* Auth Service - сервис авторизации.
+Мультимодульный maven проект, краткое описание компонентов: 
+
+* agents - open telemetry agent для трейсов.
+* auth-service - сервис авторизации.
+* auth-service-jmh-benchmark - JMH бенчмарки для сервиса авторизации
+* booking-orchestrator-service - выступает как управляющий сервис саги.
+* common - общий модуль с общими dto (enums, saga commands/events, kafka events, requests/responses)
+* common-entity - общий модуль с entity для flight-service и flight-query-service
+* flight-query-service - не участвует в оркестровке (только для чтения информации о доступных рейсах)
+* flight-service - отвечает за резервирование и освобождение мест на рейсах, добавление новых рейсов
+* helm - папка для деплоя каждого сервиса
+* jmeter - папка для хранения тестовых планов используя jmeter
+* monitoring - папка для настроек prometheus и дашбордов grafana
+* payment-service - сервис для обработки платежей
+* reservation-service - точка входа, сервис который запускает саги для резервации билета
+или отмену брони. Хранит и управляет информацией о бронированиях.
+
+Описание модулей:
 
 > auth-service: \
 > Есть два интерфейса взаимодействия REST для пользователей и gRPC для внутренних сервисов.
@@ -19,6 +31,9 @@
 * JwtService: auth-service/src/main/java/ru/otus/auth/service/JwtService.java
 * JMH бенчмарки: auth-service-jmh-benchmark/src/main/java/ru/otus/benchmark/jmh/PasswordHashBenchmark.java
 * Результаты бенчмарков: auth-service-jmh-benchmark/README.md
+
+> booking-orchestrator-service: \
+> todo
 
 TODO: add saga screen
 
