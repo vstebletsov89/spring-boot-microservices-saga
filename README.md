@@ -49,8 +49,12 @@
 * Responses: common/src/main/java/ru/otus/common/response
 * Saga события: common/src/main/java/ru/otus/common/saga
 
-> common: \
-> Модуль с общими dto для всех сервисов
+> common-entity: \
+> Модуль с общими entity для flight-service и flight-query-service
+* common-entity/src/main/java/ru/otus/common/entity/Airport.java
+* common-entity/src/main/java/ru/otus/common/entity/Flight.java
+
+
 
 TODO: add saga screen
 
