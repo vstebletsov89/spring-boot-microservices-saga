@@ -56,6 +56,50 @@ public class SeatServiceTest {
     private SeatService seatService;
 
     @Test
+    void shouldIgnoreCancelledBookings() {
+        Flight flight = createFlight(0);
+        when(flightRepository.findByFlightNumberForUpdate(FLIGHT_NUMBER))
+                .thenReturn(Optional.of(flight));
+
+        List<BookingSeatMapping> existingBookings = List.of(
+                BookingSeatMapping.builder()
+                        .seatNumber("1A")
+                        .bookingId("b1")
+                        .status(BookingStatus.CANCELLED)
+                        .flightNumber(FLIGHT_NUMBER)
+                        .build(),
+                BookingSeatMapping.builder()
+                        .seatNumber("1B")
+                        .bookingId("A1")
+                        .status(BookingStatus.PAID)
+                        .flightNumber(FLIGHT_NUMBER)
+                        .build()
+        );
+
+        List<BookingSeatMapping> savedBookings = new ArrayList<>();
+        when(mappingRepository.findAllByFlightNumberForUpdate(FLIGHT_NUMBER))
+                .thenReturn(existingBookings);
+
+        doAnswer(inv -> {
+            BookingSeatMapping mapping = inv.getArgument(0);
+            savedBookings.add(mapping);
+            return mapping;
+        }).when(mappingRepository).save(any(BookingSeatMapping.class));
+
+        seatService.handle(new ReserveSeatCommand(BOOKING_ID, FLIGHT_NUMBER, USER_ID));
+
+        List<String> alreadyUsed = existingBookings.stream()
+                .filter(b -> b.getStatus() != BookingStatus.CANCELLED)
+                .map(BookingSeatMapping::getSeatNumber)
+                .toList();
+
+        List<String> allSeats = new ArrayList<>(alreadyUsed);
+        allSeats.add(savedBookings.get(0).getSeatNumber());
+
+        assertThat(allSeats).doesNotHaveDuplicates();
+    }
+
+    @Test
     void shouldReserveAllOverbookedSeats() {
         // 220 seats must be reserved
         final String flightNumber = "FL200";

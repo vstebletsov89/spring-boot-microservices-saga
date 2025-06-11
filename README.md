@@ -75,7 +75,8 @@
 > Реализована возможность overbooking по формуле: [freeSeats = (totalSeats * (1 + overbookingPercentage / 100)) - bookedSeats].
 > Участвует в саге. Публикует Kafka события FlightCreatedEvent, FlightUpdatedEvent.
 > Используется liquibase для создания таблиц и вставки dummy записей.
-* findByFlightNumberForUpdate с     flight-service/src/main/java/ru/otus/flight/repository/FlightRepository.java
+* Repository с PESSIMISTIC_WRITE для информации о рассадке мест: flight-service/src/main/java/ru/otus/flight/repository/BookingSeatMappingRepository.java
+* Repository с PESSIMISTIC_WRITE для информации о рейсе: flight-service/src/main/java/ru/otus/flight/repository/FlightRepository.java
 * Контроллер со swagger аннотациями: flight-service/src/main/java/ru/otus/flight/controller/FlightWriteController.java 
 * Kafka producer: flight-service/src/main/java/ru/otus/flight/publisher/FlightPublisher.java
 * Liquibase миграционные скрипты: flight-service/src/main/resources/db/changelog/db.changelog-master.yaml

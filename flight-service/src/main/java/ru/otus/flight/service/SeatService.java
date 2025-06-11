@@ -95,6 +95,7 @@ public class SeatService {
 
     private String generateSeatNumber(List<BookingSeatMapping> existingMappings) {
         Set<String> reserved = existingMappings.stream()
+                .filter(mapping -> mapping.getStatus() != BookingStatus.CANCELLED)
                 .map(BookingSeatMapping::getSeatNumber)
                 .collect(Collectors.toSet());
 

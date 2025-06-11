@@ -19,7 +19,6 @@ public class Flight {
     @Id
     private String flightNumber;
 
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "departure_airport_code", nullable = false)
     private Airport departureAirport;
