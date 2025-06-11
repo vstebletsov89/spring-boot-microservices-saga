@@ -33,7 +33,24 @@
 * Результаты бенчмарков: auth-service-jmh-benchmark/README.md
 
 > booking-orchestrator-service: \
-> todo
+> Оркестратор сервис содержит основную логику для саги бронирования авиабилета и саги отмены авиабилета пользователем.
+> Используется Axon фреймворк для реализации саги. 
+> Также сервис содержит кастомные метрики: totalBookings, confirmedBookings, cancelledBookings которые отображаются на дашборде.
+* booking-orchestrator-service/src/main/java/ru/otus/orchestrator/metrics/BookingMetrics.java
+* booking-orchestrator-service/src/main/java/ru/otus/orchestrator/saga/BookingSaga.java
+* booking-orchestrator-service/src/main/java/ru/otus/orchestrator/saga/BookingCancellationSaga.java
+
+> common: \
+> Модуль с общими dto для всех сервисов
+* Saga команды: common/src/main/java/ru/otus/common/command
+* Общие enums: common/src/main/java/ru/otus/common/enums
+* Kafka события: common/src/main/java/ru/otus/common/kafka
+* Requests: common/src/main/java/ru/otus/common/request
+* Responses: common/src/main/java/ru/otus/common/response
+* Saga события: common/src/main/java/ru/otus/common/saga
+
+> common: \
+> Модуль с общими dto для всех сервисов
 
 TODO: add saga screen
 

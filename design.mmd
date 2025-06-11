@@ -28,10 +28,10 @@ FQ --> PGQUERY[(PostgreSQL)]
 PAY --> PGPAY[(PostgreSQL)]
 
 %% Axon Server
-RES --> AXON[Axon Server]
-ORC --> AXON
-FLIGHT --> AXON
-PAY --> AXON
+RES <--> AXON[Axon Server]
+ORC <--> AXON
+FLIGHT <--> AXON
+PAY <--> AXON
 
 %% Tracing
 RES --> OTEL[OpenTelemetry<br/>Java Agent]

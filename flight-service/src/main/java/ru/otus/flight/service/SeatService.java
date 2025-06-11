@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.otus.common.command.ReleaseSeatCommand;
 import ru.otus.common.command.ReserveSeatCommand;
-import ru.otus.common.entity.BookingSeatMapping;
+import ru.otus.flight.entity.BookingSeatMapping;
 import ru.otus.common.entity.Flight;
 import ru.otus.common.enums.BookingStatus;
 import ru.otus.common.kafka.FlightUpdatedEvent;

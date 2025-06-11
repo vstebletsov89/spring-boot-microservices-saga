@@ -1,4 +1,4 @@
-package ru.otus.common.entity;
+package ru.otus.flight.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
