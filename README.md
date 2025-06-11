@@ -36,9 +36,9 @@
 > Оркестратор сервис содержит основную логику для саги бронирования авиабилета и саги отмены авиабилета пользователем.
 > Используется Axon фреймворк для реализации саги. 
 > Также сервис содержит кастомные метрики: totalBookings, confirmedBookings, cancelledBookings которые отображаются на дашборде.
-* booking-orchestrator-service/src/main/java/ru/otus/orchestrator/metrics/BookingMetrics.java
-* booking-orchestrator-service/src/main/java/ru/otus/orchestrator/saga/BookingSaga.java
-* booking-orchestrator-service/src/main/java/ru/otus/orchestrator/saga/BookingCancellationSaga.java
+* Метрики: booking-orchestrator-service/src/main/java/ru/otus/orchestrator/metrics/BookingMetrics.java
+* Сага бронирования авиабилета: booking-orchestrator-service/src/main/java/ru/otus/orchestrator/saga/BookingSaga.java
+* Сага отмены авиабилета: booking-orchestrator-service/src/main/java/ru/otus/orchestrator/saga/BookingCancellationSaga.java
 
 > common: \
 > Модуль с общими dto для всех сервисов
@@ -50,9 +50,26 @@
 * Saga события: common/src/main/java/ru/otus/common/saga
 
 > common-entity: \
-> Модуль с общими entity для flight-service и flight-query-service
+> Модуль с общими entity для flight-service и flight-query-service.
 * common-entity/src/main/java/ru/otus/common/entity/Airport.java
 * common-entity/src/main/java/ru/otus/common/entity/Flight.java
+
+> flight-query-service: \
+> Этот сервис был создан для реализации CQRS паттерна. Он предназначен только для чтения информации о рейсах.
+> Он реализует принцип eventual consistency и синхронизирует информацию о рейсах через Kafka события.
+> Для исключения повторной обработки событий реализован EventDeduplicationCache на основе ConcurrentHashMap и ConcurrentLinkedQueue.
+> В качестве consumer используется Kafka Streams. Обрабатываются события: FlightCreatedEvent, FlightUpdatedEvent.
+> Также есть возможность поиска билетов.
+> Есть кеширование данных о рейсах с помощью Caffeine и кастомные метрики
+> cache_size, cache_requests_hit, cache_requests_miss которые отображаются на дашборде.
+> Используется liquibase для создания таблиц и вставки dummy записей.
+* Кеш для дедупликации событий: flight-query-service/src/main/java/ru/otus/flightquery/cache/EventDeduplicationCache.java
+* Настройки Caffeine кеша и метрик: flight-query-service/src/main/java/ru/otus/flightquery/config/CacheConfig.java
+* Контроллер со swagger аннотациями: flight-query-service/src/main/java/ru/otus/flightquery/controller/FlightQueryController.java
+* Kafka Streams обработчик: flight-query-service/src/main/java/ru/otus/flightquery/processor/KafkaFlightStreamProcessor.java
+* Liquibase миграционные скрипты: flight-query-service/src/main/resources/db/changelog/db.changelog-master.yaml
+
+
 
 
 

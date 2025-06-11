@@ -3,6 +3,7 @@ UI[UI Client/User] --> GW[API Gateway]
 
 GW --> AUTH[Auth Service]
 GW --> RES[Reservation Service]
+GW --> FQ[Flight Query Service]
 
 RES --> TOB[Transactional Outbox]
 TOB --> SCH[Scheduler]
@@ -16,7 +17,7 @@ ORC --> PAY[Payment Service]
 
 FLIGHT --> KAFKA_FLIGHT_TOPIC[Kafka: flight-service.events]
 KAFKA_FLIGHT_TOPIC --> EDC2[EventDeduplicationCache]
-EDC2 --> FQ[Flight Query Service]
+EDC2 --> FQ
 
 PAY --> KAFKA_PAYMENT_TOPIC[Kafka: payment-service.payments]
 
