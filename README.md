@@ -5,7 +5,20 @@
 * Flight Service отвечает за резервирование и освобождение мест на рейсах.
 * Payment Service проводит оплату.
 * Flight Query Service не участвует в оркестровке (только для чтения).
-* Auth Service - сервис авторизации
+* Auth Service - сервис авторизации.
+
+> auth-service: \
+> Есть два интерфейса взаимодействия REST для пользователей и gRPC для внутренних сервисов.
+> Для авторизации используются JWT токены.
+> off-heap используется для загрузки в память файла скомпрометированных паролей, при регистрации
+проверятся если пароль скомпрометирован, регистрация не проходит. Для этого используется BloomFilter из библиотеки guava.
+> JMH бенчмарки выделены в отдельный модуль.
+* gRPC сервис: auth-service/src/main/java/ru/otus/auth/grpc/AuthGrpcService.java
+* Off-heap: auth-service/src/main/java/ru/otus/auth/offheap/MappedByteBufferStorageImpl.java
+* BloomFilterManager: auth-service/src/main/java/ru/otus/auth/service/BloomFilterManager.java
+* JwtService: auth-service/src/main/java/ru/otus/auth/service/JwtService.java
+* JMH бенчмарки: auth-service-jmh-benchmark/src/main/java/ru/otus/benchmark/jmh/PasswordHashBenchmark.java
+* Результаты бенчмарков: auth-service-jmh-benchmark/README.md
 
 TODO: add saga screen
 
