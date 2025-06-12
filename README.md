@@ -1,23 +1,7 @@
-# Описание системы:
+# Описание компонентов проекта:
 
-Мультимодульный maven проект, краткое описание компонентов: 
-
-* agents - open telemetry agent для трейсов.
-* auth-service - сервис авторизации.
-* auth-service-jmh-benchmark - JMH бенчмарки для сервиса авторизации
-* booking-orchestrator-service - управляющий сервис саги.
-* common - общий модуль с общими dto (enums, saga commands/events, kafka events, requests/responses)
-* common-entity - общий модуль с entity для flight-service и flight-query-service
-* flight-query-service - не участвует в оркестровке (только для чтения информации о доступных рейсах)
-* flight-service - отвечает за резервирование и освобождение мест на рейсах, добавление новых рейсов
-* helm - папка для деплоя каждого сервиса
-* jmeter - папка для хранения тестовых планов используя jmeter
-* monitoring - папка для настроек prometheus и дашбордов grafana
-* payment-service - сервис для обработки платежей
-* reservation-service - точка входа, сервис который запускает саги для резервации билета
-или отмену брони. Хранит и управляет информацией о бронированиях.
-
-Описание модулей:
+> **agents**: \
+> OpenTelemetry java agent для трейсов. Встраивается в каждый микросервис на этапе запуска. Динамически внедряет байт-код для сбора телеметрии.
 
 > **auth-service**: \
 > Есть два интерфейса взаимодействия: 1) REST для пользователей и 2) gRPC для внутренних сервисов.
@@ -96,9 +80,16 @@
 > **monitoring**: \
 > TODO: add dashboards
 
+> **payment-service**: \
+> Cервис для обработки платежей. 
+> TODO:
 
+> **reservation-service**: \
+> Точка входа, сервис который запускает саги для резервации билета
+> или отмену брони. Хранит и управляет информацией о бронированиях.
+> TODO:
 
-TODO: add saga screen
+TODO: add screens of diagrams, dashboards, traces, axon, kafkadrop, add instruction how to start project(run axon in standalone mode)
 
 mvn clean verify - проверить 70% покрытие тестами
 Rule violated for bundle flight-query-service: instructions covered ratio is 0.04, but expected minimum is 0.70
@@ -110,12 +101,6 @@ axon_aggregate_identifier=854ed379-11ec-4044-a869-4e0f2f2aa013
 http://localhost:3000/login - grafana
 
 ----------------------------------------------------
-
-TODO:
-
-!добавить в readme какие темы покрыты с ссылками на код (сервис:к
-ласс:метод или docker compose?)
-!нарисовать диаграммы?
 
 !скриншоты
 !проверить работу системы в целом отдельными запросами из requests
