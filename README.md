@@ -83,6 +83,19 @@
 * Kafka producer: flight-service/src/main/java/ru/otus/flight/publisher/FlightPublisher.java
 * Liquibase миграционные скрипты: flight-service/src/main/resources/db/changelog/db.changelog-master.yaml
 
+> **helm**: \
+> Для деплоя каждого сервиса используется deploy.sh скрипт и соответствующий values.yaml.
+* helm/auth-service/deploy.sh
+* helm/booking-orchestrator-service/deploy.sh
+* helm/flight-query-service/deploy.sh
+* helm/flight-service/deploy.sh
+* helm/payment-service/deploy.sh
+* helm/reservation-service/deploy.sh
+* пример деплоя сервиса авторизации: helm/README.md
+
+> **monitoring**: \
+> TODO: add dashboards
+
 
 
 TODO: add saga screen
