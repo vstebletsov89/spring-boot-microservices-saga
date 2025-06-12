@@ -81,8 +81,14 @@
 > TODO: add dashboards
 
 > **payment-service**: \
-> Cервис для обработки платежей. 
-> TODO:
+> Cервис для обработки платежей. Эмулирует вызов платежного провайдера по адресу "http://localhost:8080/mock-payments"
+> через RestClient. Используется resilience4j библиотека.
+> Участвует в саге. Публикует Kafka событиe ```PaymentEvent```.
+> Используется liquibase для создания таблиц.
+* Адаптер для проведения оплаты с ```@Retry, @CircuitBreaker, @RateLimiter```: payment-service/src/main/java/ru/otus/payment/client/PaymentClientAdapter.java
+* RestClient:  payment-service/src/main/java/ru/otus/payment/client/PaymentClient.java
+* Kafka producer: payment-service/src/main/java/ru/otus/payment/publisher/PaymentPublisher.java
+* Liquibase миграционные скрипты: payment-service/src/main/resources/db/changelog/db.changelog-master.yaml
 
 > **reservation-service**: \
 > Точка входа, сервис который запускает саги для резервации билета
