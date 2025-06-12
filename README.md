@@ -19,7 +19,7 @@
 
 Описание модулей:
 
-> auth-service: \
+> **auth-service**: \
 > Есть два интерфейса взаимодействия: 1) REST для пользователей и 2) gRPC для внутренних сервисов.
 > Для авторизации используются JWT токены.
 > off-heap используется для загрузки в память файла скомпрометированных паролей, при регистрации
@@ -32,15 +32,15 @@
 * JMH бенчмарки: auth-service-jmh-benchmark/src/main/java/ru/otus/benchmark/jmh/PasswordHashBenchmark.java
 * Результаты бенчмарков: auth-service-jmh-benchmark/README.md
 
-> booking-orchestrator-service: \
+> **booking-orchestrator-service**: \
 > Оркестратор сервис содержит основную логику для саги бронирования авиабилета и саги отмены авиабилета пользователем.
 > Используется Axon фреймворк для реализации саги. 
-> Также сервис содержит кастомные метрики: totalBookings, confirmedBookings, cancelledBookings которые отображаются на дашборде.
+> Также сервис содержит кастомные метрики: ```totalBookings, confirmedBookings, cancelledBookings``` которые отображаются на дашборде.
 * Метрики: booking-orchestrator-service/src/main/java/ru/otus/orchestrator/metrics/BookingMetrics.java
 * Сага бронирования авиабилета: booking-orchestrator-service/src/main/java/ru/otus/orchestrator/saga/BookingSaga.java
 * Сага отмены авиабилета: booking-orchestrator-service/src/main/java/ru/otus/orchestrator/saga/BookingCancellationSaga.java
 
-> common: \
+> **common**: \
 > Модуль с общими dto для всех сервисов
 * Saga команды: common/src/main/java/ru/otus/common/command
 * Общие enums: common/src/main/java/ru/otus/common/enums
@@ -49,19 +49,19 @@
 * Responses: common/src/main/java/ru/otus/common/response
 * Saga события: common/src/main/java/ru/otus/common/saga
 
-> common-entity: \
+> **common-entity**: \
 > Модуль с общими entity для flight-service и flight-query-service.
 * common-entity/src/main/java/ru/otus/common/entity/Airport.java
 * common-entity/src/main/java/ru/otus/common/entity/Flight.java
 
-> flight-query-service: \
+> **flight-query-service**: \
 > Этот сервис был создан для реализации CQRS паттерна. Он предназначен только для чтения информации о рейсах.
 > Он реализует принцип eventual consistency и синхронизирует информацию о рейсах через Kafka события.
 > Для исключения повторной обработки событий реализован EventDeduplicationCache на основе ConcurrentHashMap и ConcurrentLinkedQueue.
-> В качестве consumer используется Kafka Streams. Обрабатываются события: FlightCreatedEvent, FlightUpdatedEvent.
+> В качестве consumer используется Kafka Streams. Обрабатываются события: ```FlightCreatedEvent, FlightUpdatedEvent```.
 > Также есть возможность поиска билетов.
 > Есть кеширование данных о рейсах с помощью Caffeine и кастомные метрики
-> cache_size, cache_requests_hit, cache_requests_miss которые отображаются на дашборде.
+> ```cache_size, cache_requests_hit, cache_requests_miss``` которые отображаются на дашборде.
 > Используется liquibase для создания таблиц и вставки dummy записей.
 * Кеш для дедупликации событий: flight-query-service/src/main/java/ru/otus/flightquery/cache/EventDeduplicationCache.java
 * Настройки Caffeine кеша и метрик: flight-query-service/src/main/java/ru/otus/flightquery/config/CacheConfig.java
@@ -69,17 +69,20 @@
 * Kafka Streams обработчик: flight-query-service/src/main/java/ru/otus/flightquery/processor/KafkaFlightStreamProcessor.java
 * Liquibase миграционные скрипты: flight-query-service/src/main/resources/db/changelog/db.changelog-master.yaml
 
-> flight-service: \
+> **flight-service**: \
 > Сервис для резервирования и освобождения мест на рейсах, добавления новых рейсов.
-> Используется пессимистическая блокировка @Lock(LockModeType.PESSIMISTIC_WRITE) чтобы избежать проблемы race conditions при большом количестве запросов к одному рейсу.
-> Реализована возможность overbooking по формуле: [freeSeats = (totalSeats * (1 + overbookingPercentage / 100)) - bookedSeats].
-> Участвует в саге. Публикует Kafka события FlightCreatedEvent, FlightUpdatedEvent.
+> Используется пессимистическая блокировка ```@Lock(LockModeType.PESSIMISTIC_WRITE)``` чтобы избежать проблемы race condition при большом количестве параллельных запросов к одному рейсу.
+> Реализована возможность overbooking по формуле: ```freeSeats = (totalSeats * (1 + overbookingPercentage / 100)) - bookedSeats```.
+> Участвует в саге. Публикует Kafka события ```FlightCreatedEvent, FlightUpdatedEvent```.
 > Используется liquibase для создания таблиц и вставки dummy записей.
+> Также добавлен constraint на уровне БД, чтобы не зарезервировать одно и тоже место дважды:
+> ```@UniqueConstraint(name = "uc_flight_seat", columnNames = {"flight_number", "seat_number"})```
 * Repository с PESSIMISTIC_WRITE для информации о рассадке мест: flight-service/src/main/java/ru/otus/flight/repository/BookingSeatMappingRepository.java
 * Repository с PESSIMISTIC_WRITE для информации о рейсе: flight-service/src/main/java/ru/otus/flight/repository/FlightRepository.java
 * Контроллер со swagger аннотациями: flight-service/src/main/java/ru/otus/flight/controller/FlightWriteController.java 
 * Kafka producer: flight-service/src/main/java/ru/otus/flight/publisher/FlightPublisher.java
 * Liquibase миграционные скрипты: flight-service/src/main/resources/db/changelog/db.changelog-master.yaml
+
 
 
 TODO: add saga screen
