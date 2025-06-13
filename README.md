@@ -91,9 +91,26 @@
 * Liquibase миграционные скрипты: payment-service/src/main/resources/db/changelog/db.changelog-master.yaml
 
 > **reservation-service**: \
-> Точка входа, сервис который запускает саги для резервации билета
-> или отмену брони. Хранит и управляет информацией о бронированиях.
-> TODO:
+> Cервис который запускает саги для резервации билета
+> или отмену брони. Также обрабатывает сообщения от саги для синхронизации данных.
+> Хранит и управляет информацией о бронированиях.
+> Чтобы обеспечить высокую пропускную способность и гарантию доставки сообщений в Kafka,
+> используется паттерн ```transactional outbox```. Сначала сервис сохраняет запрос от пользователя
+> в таблицу ```outbox_events```. Далее Scheduler периодически вычитывает из таблицы 
+> самые старые неотправленные события и публикует их в Kafka топик (```ReservationCreatedEvent, ReservationCancelledEvent```).
+> Для исключения повторной обработки событий реализован EventDeduplicationCache на основе ConcurrentHashMap и ConcurrentLinkedQueue.
+> Далее Kafka Streams consumer (processor) обрабатывает их и отправляет команды
+> в сагу: ```BookFlightCommand, CancelFlightCommand``` .
+> Используется liquibase для создания таблиц.
+* Кеш для дедупликации событий: reservation-service/src/main/java/ru/otus/reservation/cache/EventDeduplicationCache.java
+* Контроллер для резервирования/отмены билетов со swagger аннотациями: reservation-service/src/main/java/ru/otus/reservation/controller/ReservationController.java
+* Outbox таблица: reservation-service/src/main/java/ru/otus/reservation/entity/BookingOutboxEvent.java
+* Kafka Streams обработчик: reservation-service/src/main/java/ru/otus/reservation/processor/KafkaTicketStreamProcessor.java
+* Scheduler: reservation-service/src/main/java/ru/otus/reservation/publisher/ReservationEventPublisher.java 
+* Обработчик сага событий: reservation-service/src/main/java/ru/otus/reservation/saga/ReservationEventsHandler.java
+* Сервис отправки команд в сагу: reservation-service/src/main/java/ru/otus/reservation/service/BookingProcessor.java
+* Liquibase миграционные скрипты: reservation-service/src/main/resources/db/changelog/db.changelog-master.yaml
+
 
 TODO: add screens of diagrams, dashboards, traces, axon, kafkadrop, add instruction how to start project(run axon in standalone mode)
 
