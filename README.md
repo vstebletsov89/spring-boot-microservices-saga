@@ -1,6 +1,11 @@
 # Архитектура проекта
 
+![design.png](screenshots/design.png)
+[design.mmd](design.mmd)
 
+# Описание саги
+![saga.png](screenshots/saga.png)
+[saga.mmd](saga.mmd)
 
 # Описание компонентов проекта
 
