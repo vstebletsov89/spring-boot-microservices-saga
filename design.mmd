@@ -12,18 +12,18 @@ SCH --> KAFKA_RES_TOPIC[Kafka: reservation-service.bookings]
 KAFKA_RES_TOPIC --> EDC1[EventDeduplicationCache]
 EDC1 --> ORC[Booking Orchestrator Service]
 
-ORC --> FLIGHT[Flight Service]
-ORC --> PAY[Payment Service]
+%%ORC --> FLIGHT[Flight Service]
+%%ORC --> PAY[Payment Service]
 
-FLIGHT --> KAFKA_FLIGHT_TOPIC[Kafka: flight-service.events]
+FLIGHT[Flight Service] --> KAFKA_FLIGHT_TOPIC[Kafka: flight-service.events]
 KAFKA_FLIGHT_TOPIC --> EDC2[EventDeduplicationCache]
 EDC2 --> FQ
 
-PAY --> KAFKA_PAYMENT_TOPIC[Kafka: payment-service.payments]
+PAY[Payment Service] --> KAFKA_PAYMENT_TOPIC[Kafka: payment-service.payments]
 
 %% Databases
 RES --> PGRES[(PostgreSQL)]
-ORC --> PGBOOK[(PostgreSQL)]
+%%ORC --> PGBOOK[(PostgreSQL)]
 FLIGHT --> PGFLIGHT[(PostgreSQL)]
 FQ --> PGQUERY[(PostgreSQL)]
 PAY --> PGPAY[(PostgreSQL)]
