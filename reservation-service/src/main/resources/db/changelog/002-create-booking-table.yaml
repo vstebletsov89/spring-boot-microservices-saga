@@ -27,11 +27,6 @@ databaseChangeLog:
                   name: status
                   type: VARCHAR(50)
 
-        - addUniqueConstraint:
-            tableName: booking_info
-            columnNames: flight_number, seat_number
-            constraintName: uc_flight_seat
-
         - createIndex:
             tableName: booking_info
             indexName: idx_booking_id

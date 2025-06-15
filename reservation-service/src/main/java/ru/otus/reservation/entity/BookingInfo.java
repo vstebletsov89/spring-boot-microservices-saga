@@ -14,10 +14,6 @@ import java.time.Instant;
 @Builder
 @Table(
         name = "booking_info",
-        uniqueConstraints = {
-                @UniqueConstraint(name = "uc_flight_seat",
-                        columnNames = {"flight_number", "seat_number"})
-        },
         indexes = {
                 @Index(name = "idx_booking_id", columnList = "booking_id"),
                 @Index(name = "idx_flight_number", columnList = "flight_number")
