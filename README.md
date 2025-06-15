@@ -7,6 +7,22 @@
 ![saga.png](screenshots/saga.png)
 [saga.mmd](saga.mmd)
 
+# Сборка и настройка проекта
+* для сборки проекта необходимо собрать сначала все модули
+используя команду ```mvn clean verify```
+Настроена проверка на покрытие кода тестами в 70% c помощью jacoco плагина.
+Если покрытие модуля меньше, то происходит ошибка:
+![build_verify_0.png](screenshots/build_verify_0.png)
+Если у всех модулей покрытие тестами не менее 70%, то сборка успешна:
+![build_verify_1.png](screenshots/build_verify_1.png)
+* далее необходимо запустить docker compose из корня проекта ```docker compose up```
+* после старта axon контейнера нужно зайти по адресу: http://localhost:8024/
+нужно выбрать "Start standalone node" и нажать "Сomplete"
+![axon_1.png](screenshots/axon_1.png)
+* после этого остальные микросервисы должны будут присоединиться к axon серверу
+![axon_2.png](screenshots/axon_2.png)
+* после этого микросервисы готовы принимать запросы
+
 # Описание компонентов проекта
 
 > **agents**: \
