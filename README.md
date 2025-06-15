@@ -43,6 +43,14 @@
 ![kafdrop_3.png](screenshots/kafdrop_3.png)
 ![kafdrop_4.png](screenshots/kafdrop_4.png)
 
+* мониторинг grafana: http://localhost:3000/login
+* дашборды для тестовых запросов
+![grafana_1.png](screenshots/grafana_1.png)
+![grafana_2.png](screenshots/grafana_2.png)
+![grafana_3.png](screenshots/grafana_3.png)
+
+* дашборды после запуска 500 запросов с помощью jmeter:
+TODO
 # Описание компонентов проекта
 
 > **agents**: \
@@ -123,7 +131,12 @@
 * пример деплоя сервиса авторизации: helm/README.md
 
 > **monitoring**: \
-> TODO: add dashboards
+> Папка для хранения глобальных настроек prometheus и grafana. А также дашбордов, для provisioning.
+* Настройки prometheus: monitoring/prometheus/prometheus.yml
+* Настройки grafana: monitoring/grafana/provisioning/dashboards/dashboard.yaml
+* Дашборд для метрик бронирования: monitoring/grafana/dashboards/booking_metrics.json
+* Дашборд для метрик кеша поиска авиабилетов: monitoring/grafana/dashboards/cache-monitoring.json
+* Дашборд для golden signals: monitoring/grafana/dashboards/golden-signals-dashboard.json
 
 > **payment-service**: \
 > Cервис для обработки платежей. Эмулирует вызов платежного провайдера по адресу "http://localhost:8080/mock-payments"
@@ -157,16 +170,9 @@
 * Liquibase миграционные скрипты: reservation-service/src/main/resources/db/changelog/db.changelog-master.yaml
 
 
-TODO:  dashboards, 
-
-
-
-http://localhost:3000/login - grafana
-
 ----------------------------------------------------
 
 !скриншоты
-!проверить работу системы в целом отдельными запросами из requests
 !проверить работу на jmeter
 !выключить circuitbreaker?
 
