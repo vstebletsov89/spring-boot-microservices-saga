@@ -70,7 +70,7 @@ public class BookingAggregate {
 
     @EventSourcingHandler
     public void on(BookingCancelledEvent event) {
-        log.info("Handling booking cancelled event: {}", event);
+        log.info("Handling booking system cancelled event: {}", event);
         this.cancellationStatus = CancellationStatus.SYSTEM_CANCELLED;
     }
 
