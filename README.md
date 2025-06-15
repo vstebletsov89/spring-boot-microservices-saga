@@ -16,12 +16,25 @@
 Если у всех модулей покрытие тестами не менее 70%, то сборка успешна:
 ![build_verify_1.png](screenshots/build_verify_1.png)
 * далее необходимо запустить docker compose из корня проекта ```docker compose up```
-* после старта axon контейнера нужно зайти по адресу: http://localhost:8024/
-нужно выбрать "Start standalone node" и нажать "Сomplete"
+* после старта Axon контейнера нужно зайти по адресу: http://localhost:8024/
+выбрать "Start standalone node" и нажать "Сomplete"
 ![axon_1.png](screenshots/axon_1.png)
-* после этого остальные микросервисы должны будут присоединиться к axon серверу
+* после этого остальные микросервисы должны будут присоединиться к Axon серверу
 ![axon_2.png](screenshots/axon_2.png)
 * после этого микросервисы готовы принимать запросы
+* можно использовать ```requests.http``` из корня проекта для тестовых запросов:
+![requests_1.png](screenshots/requests_1.png)
+![requests_2.png](screenshots/requests_2.png)
+![requests_3.png](screenshots/requests_3.png)
+![requests_4.png](screenshots/requests_4.png)
+![requests_5.png](screenshots/requests_5.png)
+* можно зайти в jaeger ui по адресу http://localhost:16686/ 
+ и указать в поле Tags фильтр по bookingId.
+Т.к. bookingId является уникальным идентификатором агрегата, по которому Axon маршрутизирует команды. ```axon_aggregate_identifier=def6a67e-6ef2-4f10-9972-5065195e18cd```
+* после фильтрации можно увидеть 2 трейса, это две разные саги. одна для бронирования билета, вторая для отмены бронирования
+![jaeger_1.png](screenshots/jaeger_1.png)
+* можно также посмотреть более подробную информацию 
+![jaeger_2.png](screenshots/jaeger_2.png)
 
 # Описание компонентов проекта
 
@@ -137,14 +150,10 @@
 * Liquibase миграционные скрипты: reservation-service/src/main/resources/db/changelog/db.changelog-master.yaml
 
 
-TODO: add screens of diagrams, dashboards, traces, axon, kafkadrop, add instruction how to start project(run axon in standalone mode)
+TODO:  dashboards, traces, kafkadrop
 
-mvn clean verify - проверить 70% покрытие тестами
-Rule violated for bundle flight-query-service: instructions covered ratio is 0.04, but expected minimum is 0.70
-http://localhost:8024/ - axon server
 
-http://localhost:16686/ - jaeger ui
-axon_aggregate_identifier=854ed379-11ec-4044-a869-4e0f2f2aa013
+
 
 http://localhost:3000/login - grafana
 
