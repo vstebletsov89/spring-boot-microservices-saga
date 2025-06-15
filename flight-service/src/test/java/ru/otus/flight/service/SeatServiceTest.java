@@ -65,13 +65,11 @@ public class SeatServiceTest {
                 BookingSeatMapping.builder()
                         .seatNumber("1A")
                         .bookingId("b1")
-                        .status(BookingStatus.CANCELLED)
                         .flightNumber(FLIGHT_NUMBER)
                         .build(),
                 BookingSeatMapping.builder()
                         .seatNumber("1B")
                         .bookingId("A1")
-                        .status(BookingStatus.PAID)
                         .flightNumber(FLIGHT_NUMBER)
                         .build()
         );
@@ -89,7 +87,6 @@ public class SeatServiceTest {
         seatService.handle(new ReserveSeatCommand(BOOKING_ID, FLIGHT_NUMBER, USER_ID));
 
         List<String> alreadyUsed = existingBookings.stream()
-                .filter(b -> b.getStatus() != BookingStatus.CANCELLED)
                 .map(BookingSeatMapping::getSeatNumber)
                 .toList();
 
@@ -243,7 +240,6 @@ public class SeatServiceTest {
                 .bookingId(BOOKING_ID)
                 .flightNumber(FLIGHT_NUMBER)
                 .seatNumber("A1")
-                .status(BookingStatus.RESERVED)
                 .build();
 
         Flight flight = createFlight(50);
@@ -254,7 +250,7 @@ public class SeatServiceTest {
         seatService.handle(new ReleaseSeatCommand(BOOKING_ID));
 
         verify(flightRepository).save(any());
-        verify(mappingRepository).save(any());
+        verify(mappingRepository).delete(any());
         verify(flightPublisher).publish(eq(FLIGHT_NUMBER), any(FlightUpdatedEvent.class));
     }
 

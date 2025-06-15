@@ -10,7 +10,6 @@ import ru.otus.common.command.ReleaseSeatCommand;
 import ru.otus.common.command.ReserveSeatCommand;
 import ru.otus.flight.entity.BookingSeatMapping;
 import ru.otus.common.entity.Flight;
-import ru.otus.common.enums.BookingStatus;
 import ru.otus.common.kafka.FlightUpdatedEvent;
 import ru.otus.common.saga.SeatReservationFailedEvent;
 import ru.otus.common.saga.SeatReservedEvent;
@@ -68,7 +67,6 @@ public class SeatService {
                 .flightNumber(cmd.flightNumber())
                 .seatNumber(seatNumber)
                 .reservedAt(Instant.now())
-                .status(BookingStatus.RESERVED)
                 .build();
         mappingRepository.save(seatMapping);
 
@@ -95,7 +93,6 @@ public class SeatService {
 
     private String generateSeatNumber(List<BookingSeatMapping> existingMappings) {
         Set<String> reserved = existingMappings.stream()
-                .filter(mapping -> mapping.getStatus() != BookingStatus.CANCELLED)
                 .map(BookingSeatMapping::getSeatNumber)
                 .collect(Collectors.toSet());
 
@@ -125,9 +122,7 @@ public class SeatService {
                         publishFlightUpdatedEvent(flight);
                     });
 
-
-            mapping.setStatus(BookingStatus.CANCELLED);
-            mappingRepository.save(mapping);
+            mappingRepository.delete(mapping);
         });
     }
 

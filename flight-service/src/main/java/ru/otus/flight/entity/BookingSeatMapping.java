@@ -38,6 +38,4 @@ public class BookingSeatMapping {
 
     private Instant reservedAt;
 
-    @Enumerated(EnumType.STRING)
-    private BookingStatus status;
 }
