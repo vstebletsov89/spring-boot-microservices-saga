@@ -37,6 +37,10 @@
 ![jaeger_2.png](screenshots/jaeger_2.png)
 * в трейсах видна также обработка Kafka событий
 ![jaeger_3.png](screenshots/jaeger_3.png)
+* также в случае ошибок их тоже можно обнаружить в трейсах
+![jaeger_8.png](screenshots/jaeger_8.png)
+![jaeger_7.png](screenshots/jaeger_7.png)
+![jaeger_9.png](screenshots/jaeger_9.png)
 * содержимое топиков Kafka можно посмотреть в Kafdrop: http://localhost:9000/
 ![kafdrop_1.png](screenshots/kafdrop_1.png)
 ![kafdrop_2.png](screenshots/kafdrop_2.png)
@@ -50,7 +54,9 @@
 ![grafana_3.png](screenshots/grafana_3.png)
 
 * дашборды после запуска запросов с помощью jmeter:
-TODO
+TODO: добавить скриншот с бронированиями
+![grafana_jmeter_2.png](screenshots/grafana_jmeter_2.png)
+![grafana_jmeter_3.png](screenshots/grafana_jmeter_3.png)
 # Описание компонентов проекта
 
 > **agents**: \
