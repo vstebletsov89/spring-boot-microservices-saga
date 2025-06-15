@@ -49,7 +49,7 @@
 ![grafana_2.png](screenshots/grafana_2.png)
 ![grafana_3.png](screenshots/grafana_3.png)
 
-* дашборды после запуска 500 запросов с помощью jmeter:
+* дашборды после запуска запросов с помощью jmeter:
 TODO
 # Описание компонентов проекта
 
