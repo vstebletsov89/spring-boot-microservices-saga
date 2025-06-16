@@ -53,10 +53,10 @@
 ![grafana_2.png](screenshots/grafana_2.png)
 ![grafana_3.png](screenshots/grafana_3.png)
 
-* дашборды после запуска запросов с помощью jmeter:
-TODO: добавить скриншот с бронированиями
+* дашборды после 500 запросов бронирования с помощью jmeter (максимальное количество билетов 220 было забронировано, далее сага начала отменять бронирования):
+![grafana_jmeter_1.png](screenshots/grafana_jmeter_1.png)
 ![grafana_jmeter_2.png](screenshots/grafana_jmeter_2.png)
-![grafana_jmeter_3.png](screenshots/grafana_jmeter_3.png)
+
 # Описание компонентов проекта
 
 > **agents**: \
