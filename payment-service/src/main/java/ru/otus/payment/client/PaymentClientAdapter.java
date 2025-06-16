@@ -23,8 +23,8 @@ public class PaymentClientAdapter {
     private final PaymentClient paymentClient;
 
     @Retry(name = "paymentRetry", fallbackMethod = "fallback")
-    @CircuitBreaker(name = "defaultCircuitBreaker", fallbackMethod = "fallback")
-    @RateLimiter(name = "RPMRateLimiter", fallbackMethod = "fallback")
+    @CircuitBreaker(name = "defaultCircuitBreaker")
+    @RateLimiter(name = "RPMRateLimiter")
     public ResponseEntity<PaymentResponse> doResilientPayment(PaymentRequest request) {
         log.info("PaymentClientAdapter: {}", request);
         return paymentClient.doPayment(request);

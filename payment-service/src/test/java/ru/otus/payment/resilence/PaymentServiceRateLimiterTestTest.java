@@ -14,6 +14,7 @@ import org.springframework.kafka.annotation.KafkaStreamsDefaultConfiguration;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import ru.otus.common.command.ProcessPaymentCommand;
 import ru.otus.common.enums.PaymentStatus;
+import ru.otus.common.kafka.PaymentEvent;
 import ru.otus.common.response.PaymentResponse;
 import ru.otus.payment.client.PaymentClient;
 import ru.otus.payment.client.PaymentClientAdapter;
@@ -26,9 +27,8 @@ import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @SpringBootTest
 @Import(CircuitBreakerTestConfig.class)
@@ -67,17 +67,17 @@ class PaymentServiceRateLimiterTestTest {
                 .thenReturn(new ResponseEntity<>(
                         new PaymentResponse("1", PaymentStatus.SUCCESS, "", Instant.now()), HttpStatus.OK));
 
-        int failures = 0;
         for (int i = 0; i < 35; i++) {
-            try {
-                paymentService.process(cmd);
-            } catch (Exception ex) {
-                if (ex.getMessage().contains("RateLimiter 'RPMRateLimiter' does not permit further calls")) {
-                    failures++;
-                }
-            }
+            paymentService.process(cmd);
         }
 
-        assertTrue(failures > 0);
+        verify(paymentPublisher, atLeastOnce()).publish(
+                anyString(),
+                argThat(event ->
+                        event instanceof PaymentEvent &&
+                                ((PaymentEvent)event).status() == PaymentStatus.FAILED &&
+                                ((PaymentEvent)event).failureReason().equals("The service is temporarily unavailable. Please try again later.")
+                )
+        );
     }
 }
