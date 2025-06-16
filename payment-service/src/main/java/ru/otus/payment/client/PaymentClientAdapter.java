@@ -6,10 +6,14 @@ import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
 import io.github.resilience4j.retry.annotation.Retry;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+import ru.otus.common.enums.PaymentStatus;
 import ru.otus.common.request.PaymentRequest;
 import ru.otus.common.response.PaymentResponse;
+
+import java.time.Instant;
 
 @Slf4j
 @Component
@@ -29,6 +33,21 @@ public class PaymentClientAdapter {
     public ResponseEntity<PaymentResponse> fallback(PaymentRequest request, Throwable throwable) {
         var cb = CircuitBreakerRegistry.ofDefaults().circuitBreaker("defaultCircuitBreaker");
         log.info("CircuitBreaker is now: {}", cb.getState());
-        throw new RuntimeException("PaymentClientAdapter fallback: " + throwable.getMessage(), throwable);
+
+        log.warn("Fallback triggered for PaymentRequest: {}. Reason: {}", request, throwable.toString());
+
+        // TODO: add metric to dashboard
+        // metricsService.increment("payment.fallback.count");
+
+        PaymentResponse fallbackResponse = new PaymentResponse(
+                request.userId(),
+                PaymentStatus.FAILED,
+                "The service is temporarily unavailable. Please try again later.",
+                Instant.now()
+        );
+
+        return ResponseEntity
+                .status(HttpStatus.SERVICE_UNAVAILABLE)
+                .body(fallbackResponse);
     }
 }

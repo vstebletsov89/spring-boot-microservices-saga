@@ -14,7 +14,6 @@ import ru.otus.common.response.PaymentResponse;
 import ru.otus.common.saga.PaymentFailedEvent;
 import ru.otus.common.saga.PaymentProcessedEvent;
 import ru.otus.common.saga.PaymentRefundedEvent;
-import ru.otus.payment.client.PaymentClient;
 import ru.otus.payment.client.PaymentClientAdapter;
 import ru.otus.payment.entity.Payment;
 import ru.otus.payment.publisher.PaymentPublisher;
@@ -33,8 +32,6 @@ public class PaymentService {
     private final PaymentPublisher paymentPublisher;
 
     private final PaymentRepository paymentRepository;
-
-    private final PaymentClient paymentClient;
 
     private final PaymentClientAdapter paymentClientAdapter;
 
