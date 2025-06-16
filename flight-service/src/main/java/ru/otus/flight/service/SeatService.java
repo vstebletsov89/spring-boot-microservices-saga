@@ -36,7 +36,6 @@ public class SeatService {
     private final FlightPublisher flightPublisher;
 
     @Transactional
-    @CommandHandler
     public void handle(ReserveSeatCommand cmd) {
         log.info("Attempting to reserve seat: {}", cmd);
 
@@ -109,7 +108,6 @@ public class SeatService {
     }
 
     @Transactional
-    @CommandHandler
     public void handle(ReleaseSeatCommand cmd) {
         log.info("Releasing seat for bookingId={}", cmd.bookingId());
 
