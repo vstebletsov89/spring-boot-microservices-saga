@@ -36,9 +36,6 @@ public class PaymentClientAdapter {
 
         log.warn("Fallback triggered for PaymentRequest: {}. Reason: {}", request, throwable.toString());
 
-        // TODO: add metric to dashboard
-        // metricsService.increment("payment.fallback.count");
-
         PaymentResponse fallbackResponse = new PaymentResponse(
                 request.userId(),
                 PaymentStatus.FAILED,
