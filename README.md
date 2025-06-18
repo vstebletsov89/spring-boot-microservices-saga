@@ -177,7 +177,7 @@
 
 
 ----------------------------------------------------
-
+!add scrrens for memory dump, find my cache for events and explain
 !проверить работу на jmeter
 !выключить circuitbreaker?
 
