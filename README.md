@@ -184,6 +184,33 @@
 
 ----------------------------------------------------
 !add screens for memory dump, find my cache for events and explain
+
+* узнаем id или имя контейнера: docker ps
+```
+CONTAINER ID   IMAGE                                                         COMMAND                  CREATED          STATUS                    PORTS                                                                                                                                                                                               
+80904507c079   spring-boot-microservices-saga-reservation-service            "java -jar app.jar"      24 minutes ago   Up 24 minutes             0.0.0.0:8081->8080/tcp, [::]:8081->8080/tcp                                                    
+```
+* узнаем PID процесса: docker exec -it reservation-service jps
+```
+ Picked up JAVA_TOOL_OPTIONS: -javaagent:/agents/opentelemetry-javaagent.jar
+ OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
+ [otel.javaagent 2025-06-19 13:32:52:757 +0000] [main] INFO io.opentelemetry.javaagent.tooling.VersionLogger - opentelemetry-javaagent - version: 2.15.0
+ 1 app.jar
+ 1577 Jps
+```
+* PID = 1, снимаем dump: docker exec reservation-service jmap -dump:live,format=b,file=/app/heap.hprof 1
+```
+Picked up JAVA_TOOL_OPTIONS: -javaagent:/agents/opentelemetry-javaagent.jar
+OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
+[otel.javaagent 2025-06-19 13:40:10:380 +0000] [main] INFO io.opentelemetry.javaagent.tooling.VersionLogger - opentelemetry-javaagent - version: 2.15.0
+Dumping heap to /app/heap.hprof ...
+Heap dump file created [113687892 bytes in 0.771 secs]
+```
+* копируем дамп из контейнера на диск: docker cp reservation-service:/app/heap.hprof ./heap.hprof
+```
+Successfully copied 114MB to /home/vstebletsov/heap.hprof
+```
+docker exec reservation-service rm -f /app/heap.hprof
 !проверить работу на jmeter
 
 
