@@ -57,6 +57,12 @@
 ![grafana_jmeter_1.png](screenshots/grafana_jmeter_1.png)
 ![grafana_jmeter_2.png](screenshots/grafana_jmeter_2.png)
 
+* документация в формате OpenAPI
+![swagger_1.png](screenshots/swagger_1.png)
+![swagger_2.png](screenshots/swagger_2.png)
+![swagger_3.png](screenshots/swagger_3.png)
+![swagger_4.png](screenshots/swagger_4.png)
+
 # Описание компонентов проекта
 
 > **agents**: \
