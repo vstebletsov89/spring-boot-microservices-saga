@@ -15,7 +15,7 @@ public class EventDeduplicationCache {
     private int MAX_CACHE_SIZE = 100_000;
 
     public boolean isDuplicate(String eventId) {
-
+        log.info("Cache size: {}", cache.size());
         if (cache.containsKey(eventId)) {
             log.info("{} already processed", eventId);
             return true;
@@ -28,7 +28,7 @@ public class EventDeduplicationCache {
         if (cache.size() > MAX_CACHE_SIZE) {
             String evictedId = queue.poll();
             if (evictedId != null) {
-                log.info("{} removed from cache", eventId);
+                log.info("{} removed from cache", evictedId);
                 cache.remove(evictedId);
             }
         }
