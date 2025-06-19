@@ -198,19 +198,20 @@ CONTAINER ID   IMAGE                                                         COM
  1 app.jar
  1577 Jps
 ```
-* PID = 1, снимаем dump: docker exec reservation-service jmap -dump:live,format=b,file=/app/heap.hprof 1
+* PID = 1, снимаем dump: docker exec reservation-service jcmd 1 GC.heap_dump /app/heap.hprof
 ```
 Picked up JAVA_TOOL_OPTIONS: -javaagent:/agents/opentelemetry-javaagent.jar
 OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
-[otel.javaagent 2025-06-19 13:40:10:380 +0000] [main] INFO io.opentelemetry.javaagent.tooling.VersionLogger - opentelemetry-javaagent - version: 2.15.0
+[otel.javaagent 2025-06-19 18:15:59:998 +0000] [main] INFO io.opentelemetry.javaagent.tooling.VersionLogger - opentelemetry-javaagent - version: 2.15.0
+1:
 Dumping heap to /app/heap.hprof ...
-Heap dump file created [113687892 bytes in 0.771 secs]
+Heap dump file created [283582820 bytes in 3.210 secs]
 ```
 * копируем дамп из контейнера на диск: docker cp reservation-service:/app/heap.hprof ./heap.hprof
 ```
 Successfully copied 114MB to /home/vstebletsov/heap.hprof
 ```
 docker exec reservation-service rm -f /app/heap.hprof
-!проверить работу на jmeter
+!проверить работу на jmeter 10000 запросов
 
 
