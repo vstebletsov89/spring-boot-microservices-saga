@@ -15,7 +15,7 @@ public class EventDeduplicationCache {
     private int MAX_CACHE_SIZE = 100_000;
 
     public boolean isDuplicate(String eventId) {
-        log.info("Cache size: {}", cache.size());
+
         if (cache.containsKey(eventId)) {
             log.info("{} already processed", eventId);
             return true;
@@ -33,6 +33,7 @@ public class EventDeduplicationCache {
             }
         }
 
+        log.info("Cache size: {}", cache.size());
         return false;
     }
 
