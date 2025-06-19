@@ -183,9 +183,7 @@
 
 
 ----------------------------------------------------
-!add screen for swagger
-!add scrrens for memory dump, find my cache for events and explain
+!add screens for memory dump, find my cache for events and explain
 !проверить работу на jmeter
-!выключить circuitbreaker?
 
 
