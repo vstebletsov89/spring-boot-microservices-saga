@@ -22,6 +22,8 @@
 * после этого остальные микросервисы должны будут присоединиться к Axon серверу
 ![axon_2.png](screenshots/axon_2.png)
 * после этого микросервисы готовы принимать запросы
+
+# Демо запросы
 * можно использовать ```requests.http``` из корня проекта для тестовых запросов:
 ![requests_1.png](screenshots/requests_1.png)
 ![requests_2.png](screenshots/requests_2.png)
@@ -66,6 +68,7 @@
 * подаем нагрузку с помощью jmeter в 5000 запросов
 ![grafana_jmeter_5000.png](screenshots/grafana_jmeter_5000.png)
 
+# Анализ heap dump
 * узнаем id и имя контейнера: docker ps
 ```
 CONTAINER ID   IMAGE                                                         COMMAND                  CREATED          STATUS                    PORTS                                                                                                                                                                                               
