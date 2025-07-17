@@ -15,9 +15,6 @@ public record FeatureFlagsResponse(
         @Schema(description = "Student discount enabled", example = "false")
         boolean student,
 
-        @Schema(description = "Promo code discount enabled", example = "true")
-        boolean promoCode,
-
         @Schema(description = "Summer seasonal discount enabled", example = "true")
         boolean summerDiscount
 ) {}

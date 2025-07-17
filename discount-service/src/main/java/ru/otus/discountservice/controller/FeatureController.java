@@ -40,7 +40,6 @@ public class FeatureController {
                 .earlyBooking(featureChecker.isEarlyBookingEnabled())
                 .loyalty(featureChecker.isLoyaltyEnabled())
                 .student(featureChecker.isStudentEnabled())
-                .promoCode(featureChecker.isPromoCodeEnabled())
                 .summerDiscount(featureChecker.isSummerDiscountEnabled())
                 .build();
     }

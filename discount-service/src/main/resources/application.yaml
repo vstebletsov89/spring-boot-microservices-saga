@@ -17,5 +17,4 @@ discount:
     early-booking: true
     loyalty: true
     student: true
-    promo-code: false
-    summer-discount: true
+    summer-discount: false
