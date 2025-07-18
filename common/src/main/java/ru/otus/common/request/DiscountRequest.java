@@ -28,10 +28,6 @@ public record DiscountRequest(
         @Schema(description = "Flag indicating if the passenger is a student", example = "true")
         boolean isStudent,
 
-        @Schema(description = "Promo code applied by the user, if any", example = "FLY50")
-        @Size(max = 20, message = "Promo code must be at most 20 characters")
-        String promoCode,
-
         @Min(value = 0, message = "Completed bookings cannot be negative")
         @Schema(description = "Number of previously completed bookings by the user", example = "7")
         int completedBookings
