@@ -53,8 +53,7 @@ class DiscountControllerTest {
         BigDecimal result = response.finalPrice();
 
         assertThat(result)
-                .isGreaterThan(BigDecimal.valueOf(0))
-                .isLessThan(BigDecimal.valueOf(1000));
+                .isEqualByComparingTo(BigDecimal.valueOf(726.75));
     }
 
     @Test
