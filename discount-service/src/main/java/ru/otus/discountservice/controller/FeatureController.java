@@ -44,21 +44,4 @@ public class FeatureController {
                 .build();
     }
 
-    @Operation(
-            summary = "Reload feature flags and update metrics",
-            description = "Reloads the feature flag values from configuration and refreshes Prometheus metrics"
-    )
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Feature flags reloaded and gauges updated")
-    })
-    @PostMapping("/reload")
-    public FeatureReloadResponse reloadFlags() {
-        featureChecker.updateGauges();
-        log.info("Feature flags reloaded and gauges updated");
-
-        return FeatureReloadResponse.builder()
-                .status("reloaded")
-                .occurredAt(Instant.now())
-                .build();
-    }
 }

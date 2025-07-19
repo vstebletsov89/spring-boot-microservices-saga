@@ -1,3 +1,4 @@
+# get final price
 POST http://localhost:8080/api/discounts/calculate
 Content-Type: application/json
 Accept: application/json
@@ -9,3 +10,14 @@ Accept: application/json
   "isStudent": true,
   "completedBookings": 100
 }
+
+###
+GET http://localhost:8080/api/features
+Accept: application/json
+
+#{
+#  "earlyBooking": true,
+#  "loyalty": true,
+#  "student": true,
+#  "summerDiscount": false
+#}
