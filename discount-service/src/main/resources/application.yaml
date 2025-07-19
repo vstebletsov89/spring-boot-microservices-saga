@@ -1,3 +1,7 @@
+spring:
+  application:
+    name: discount-service
+
 management:
   endpoints:
     web:
@@ -18,3 +22,10 @@ discount:
     loyalty: true
     student: true
     summer-discount: false
+
+logging:
+  level:
+    com.fasterxml.jackson.databind: DEBUG
+    org.springframework.http.converter.json: DEBUG
+    org.springframework.web: DEBUG
+    org.springframework.validation: DEBUG

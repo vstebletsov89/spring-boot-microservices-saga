@@ -1,0 +1,11 @@
+POST http://localhost:8080/api/discounts/calculate
+Content-Type: application/json
+Accept: application/json
+
+{
+  "basePrice": 1000.00,
+  "bookingDate": "2025-07-19",
+  "departureDate": "2025-08-28",
+  "student": true,
+  "completedBookings": 100
+}
