@@ -6,6 +6,6 @@ Accept: application/json
   "basePrice": 1000.00,
   "bookingDate": "2025-07-19",
   "departureDate": "2025-08-28",
-  "student": true,
+  "isStudent": true,
   "completedBookings": 100
 }

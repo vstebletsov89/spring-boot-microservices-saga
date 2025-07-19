@@ -26,9 +26,9 @@ public record DiscountRequest(
         LocalDate departureDate,
 
         @Schema(description = "Flag indicating if the passenger is a student", example = "true")
-        boolean isStudent,
+        Boolean isStudent,
 
         @Min(value = 0, message = "Completed bookings cannot be negative")
         @Schema(description = "Number of previously completed bookings by the user", example = "7")
-        int completedBookings
+        Integer completedBookings
 ) {}
