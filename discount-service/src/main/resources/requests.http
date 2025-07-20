@@ -11,7 +11,7 @@ Accept: application/json
   "completedBookings": 100
 }
 
-###
+### get current features
 GET http://localhost:8080/api/features
 Accept: application/json
 
@@ -21,3 +21,7 @@ Accept: application/json
 #  "student": true,
 #  "summerDiscount": false
 #}
+
+### 
+GET http://localhost:8080/actuator/prometheus
+Accept: text/plain

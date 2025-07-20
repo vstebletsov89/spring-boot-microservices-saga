@@ -65,6 +65,7 @@ management:
 
 logging:
   level:
+    ru.otus: DEBUG
     org.springframework.cache: DEBUG
     com.github.benmanes.caffeine.cache: TRACE
 
