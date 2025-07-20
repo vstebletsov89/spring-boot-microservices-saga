@@ -11,6 +11,31 @@ Accept: application/json
   "passengerCount": 2
 }
 
+### Threads info
+GET http://localhost:8084/actuator/metrics/executor.pool.size?tag=name:discountExecutor
+Accept: application/json
+
+#{
+#  "name": "executor.pool.size",
+#  "description": "The current number of threads in the pool",
+#  "baseUnit": "threads",
+#  "measurements": [
+#    {
+#      "statistic": "VALUE",
+#      "value": 2.0
+#    }
+#  ],
+#  "availableTags": [
+#    {
+#      "tag": "application",
+#      "values": [
+#        "flight-query-service"
+#      ]
+#    }
+#  ]
+#}
+
+
 #### Бронируем рейс
 POST http://localhost:8081/api/tickets
 Content-Type: application/json

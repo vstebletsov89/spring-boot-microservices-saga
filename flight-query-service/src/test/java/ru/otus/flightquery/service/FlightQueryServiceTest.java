@@ -6,16 +6,20 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import ru.otus.common.entity.Airport;
 import ru.otus.common.entity.Flight;
+import ru.otus.common.request.DiscountRequest;
 import ru.otus.common.request.FlightSearchRequest;
 import ru.otus.common.response.RoundTripFlightResponse;
+import ru.otus.flightquery.client.DiscountServiceClient;
 import ru.otus.flightquery.mapper.FlightMapperImpl;
 import ru.otus.flightquery.repository.FlightRepository;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest(classes = {FlightQueryService.class, FlightMapperImpl.class})
@@ -23,6 +27,9 @@ class FlightQueryServiceTest {
 
     @MockitoBean
     private FlightRepository flightRepository;
+
+    @MockitoBean
+    private DiscountServiceClient discountServiceClient;
 
     @Autowired
     private FlightQueryService flightQueryService;
@@ -37,6 +44,11 @@ class FlightQueryServiceTest {
                 .thenReturn(List.of(outbound));
         when(flightRepository.findFlightsBetweenDates("JFK", "SVO", request.departureDate(), request.returnDate()))
                 .thenReturn(List.of(inbound));
+        when(discountServiceClient.getDiscountedPriceAsync(any()))
+                .thenAnswer(invocation -> {
+                    DiscountRequest dr = invocation.getArgument(0);
+                    return CompletableFuture.completedFuture(dr.basePrice().subtract(BigDecimal.valueOf(100)));
+                });
 
         RoundTripFlightResponse result = flightQueryService.searchRoundTripFlights(request);
 
@@ -53,6 +65,11 @@ class FlightQueryServiceTest {
                 .thenReturn(List.of(outbound));
         when(flightRepository.findFlightsBetweenDates("JFK", "SVO", request.departureDate(), request.returnDate()))
                 .thenReturn(List.of());
+        when(discountServiceClient.getDiscountedPriceAsync(any()))
+                .thenAnswer(invocation -> {
+                    DiscountRequest dr = invocation.getArgument(0);
+                    return CompletableFuture.completedFuture(dr.basePrice().subtract(BigDecimal.valueOf(100)));
+                });
 
         RoundTripFlightResponse result = flightQueryService.searchRoundTripFlights(request);
 

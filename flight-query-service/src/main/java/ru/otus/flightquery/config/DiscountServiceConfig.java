@@ -13,7 +13,7 @@ public class DiscountServiceConfig {
     @Bean
     public RestClient discountRestClient() {
         return RestClient.builder()
-                .baseUrl("http://discount-service:8086")
+                .baseUrl("http://discount-service:8080")
                 .build();
     }
 
