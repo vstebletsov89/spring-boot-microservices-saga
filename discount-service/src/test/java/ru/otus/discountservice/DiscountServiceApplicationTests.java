@@ -8,7 +8,7 @@ class DiscountServiceApplicationTests {
 
     //TODO: check calling discount-service from flight-query-service
     //TODO: add aop to measure time of methods in ms for flight-query-service calling discount service
-
+    //TODO: uint tests for applyDiscountsAsync
     //TODO: add notification service using transactional outbox and completebaleFuture's
 
 
