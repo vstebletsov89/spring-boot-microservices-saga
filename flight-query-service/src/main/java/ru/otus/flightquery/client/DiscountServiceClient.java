@@ -3,7 +3,6 @@ package ru.otus.flightquery.client;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.RestClient;
 import ru.otus.common.request.DiscountRequest;
 import ru.otus.common.response.DiscountResponse;
 
@@ -16,20 +15,16 @@ import java.util.concurrent.Executor;
 @Slf4j
 public class DiscountServiceClient {
 
-    private final RestClient discountRestClient;
+    private final DiscountApiClient discountApiClient;
     private final Executor discountExecutor;
 
     public CompletableFuture<BigDecimal> getDiscountedPriceAsync(DiscountRequest request) {
         return CompletableFuture.supplyAsync(() -> {
             try {
 
-                DiscountResponse response = discountRestClient.post()
-                        .uri("/api/discounts/calculate")
-                        .body(request)
-                        .retrieve()
-                        .body(DiscountResponse.class);
-
+                DiscountResponse response = discountApiClient.getDiscount(request);
                 return response.finalPrice();
+
             } catch (Exception ex) {
                 log.error("Error calling Discount Service: {}", ex.getMessage(), ex);
                 return request.basePrice();

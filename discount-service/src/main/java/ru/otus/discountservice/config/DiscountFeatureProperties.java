@@ -13,6 +13,5 @@ public class DiscountFeatureProperties {
     private boolean earlyBooking;
     private boolean loyalty;
     private boolean student;
-    private boolean promoCode;
     private boolean summerDiscount;
 }
