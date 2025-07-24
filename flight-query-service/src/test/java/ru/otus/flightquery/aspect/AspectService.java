@@ -8,6 +8,6 @@ public class AspectService {
 
     @LogExecutionTime
     public void doWork() throws InterruptedException {
-        Thread.sleep(300);
+        Thread.sleep(30);
     }
 }
