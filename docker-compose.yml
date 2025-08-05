@@ -1,5 +1,22 @@
 services:
 
+  redis-event-cache:
+    image: redis:8.2.0-alpine
+    container_name: redis-event-cache
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_event_data:/data
+    command: ["redis-server", "--save", "60", "1", "--loglevel", "warning"]
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - app-network
+
   jaeger:
     image: jaegertracing/all-in-one:latest
     container_name: jaeger
@@ -398,6 +415,7 @@ volumes:
   axon-events:
   kafka-data:
   grafana_data:
+  redis_event_data:
 
 networks:
   app-network:

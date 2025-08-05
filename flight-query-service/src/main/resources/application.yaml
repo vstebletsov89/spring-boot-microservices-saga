@@ -45,6 +45,11 @@ axon:
     events: jackson
     messages: jackson
 
+  redis:
+    host: redis-event-cache
+    port: 6379
+    timeout: 2000
+
 springdoc:
   api-docs:
     path: /api-docs
