@@ -16,7 +16,7 @@ public class RedisEventDeduplicationCache {
     private static final Duration EVENT_TTL = Duration.ofHours(24);
 
     public boolean isDuplicate(String eventId) {
-        if (redisTemplate.hasKey(eventId)) {
+        if (Boolean.TRUE.equals(redisTemplate.hasKey(eventId))) {
             log.info("{} already processed", eventId);
             return true;
         }
