@@ -16,12 +16,13 @@ public class RedisEventDeduplicationCache {
     private static final Duration EVENT_TTL = Duration.ofHours(24);
 
     public boolean isDuplicate(String eventId) {
-        if (Boolean.TRUE.equals(redisTemplate.hasKey(eventId))) {
+        Boolean wasSet = redisTemplate.opsForValue().setIfAbsent(eventId, "1", EVENT_TTL);
+
+        if (Boolean.FALSE.equals(wasSet)) {
             log.info("{} already processed", eventId);
             return true;
         }
 
-        redisTemplate.opsForValue().setIfAbsent(eventId, "1", EVENT_TTL);
         log.debug("{} added to Redis cache with TTL {}", eventId, EVENT_TTL);
         return false;
     }
