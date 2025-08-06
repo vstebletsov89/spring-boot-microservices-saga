@@ -52,4 +52,9 @@ class RedisEventDeduplicationCacheTest {
         assertThat(cache.isDuplicate("event-1")).isTrue();
         assertThat(cache.isDuplicate("event-2")).isTrue();
     }
+
+    @Test
+    void shouldHandleParallelRequests() {
+        //TODO:
+    }
 }
