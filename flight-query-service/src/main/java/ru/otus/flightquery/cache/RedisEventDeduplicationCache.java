@@ -23,7 +23,7 @@ public class RedisEventDeduplicationCache {
             return true;
         }
 
-        log.debug("{} added to Redis cache with TTL {}", eventId, EVENT_TTL);
+        log.info("{} added to Redis cache with TTL {}", eventId, EVENT_TTL);
         return false;
     }
 }
