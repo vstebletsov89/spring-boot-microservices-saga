@@ -7,6 +7,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 class NotificationServiceApplicationTests {
 
 
+    //TODO: remove notifications table/entity/migration
     //TODO: add Scheduled Poller (ShedLock) using transactional outbox
 
     @Test
