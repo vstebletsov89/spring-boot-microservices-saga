@@ -1,0 +1,16 @@
+databaseChangeLog:
+  - changeSet:
+      id: 002-create-processed-events
+      author: vstebletsov
+      changes:
+        - createTable:
+            tableName: processed_events
+            columns:
+              - column:
+                  name: event_id
+                  type: text
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: processed_at
+                  type: timestamp

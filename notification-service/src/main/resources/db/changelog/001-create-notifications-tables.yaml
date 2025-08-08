@@ -1,0 +1,56 @@
+databaseChangeLog:
+  - changeSet:
+      id: 001-create-notifications
+      author: vstebletsov
+      changes:
+        - createTable:
+            tableName: notifications
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: user_id
+                  type: text
+              - column:
+                  name: type
+                  type: text
+              - column:
+                  name: message
+                  type: text
+              - column:
+                  name: created_at
+                  type: timestamp
+
+  - changeSet:
+      id: 002-create-notification-outbox
+      author: vstebletsov
+      changes:
+        - createTable:
+            tableName: notification_outbox
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: notification_id
+                  type: uuid
+              - column:
+                  name: status
+                  type: text
+              - column:
+                  name: retry_count
+                  type: int
+              - column:
+                  name: last_attempt
+                  type: timestamp
+              - column:
+                  name: next_attempt
+                  type: timestamp
+              - column:
+                  name: created_at
+                  type: timestamp

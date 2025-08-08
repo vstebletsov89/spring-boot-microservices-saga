@@ -1,0 +1,25 @@
+spring:
+  application:
+    name: notification-service
+
+  kafka:
+    bootstrap-servers: kafka:29092
+    streams:
+      application-id: notification-service
+      default-key-serde: org.apache.kafka.common.serialization.Serdes$StringSerde
+      default-value-serde: org.apache.kafka.common.serialization.Serdes$StringSerde
+    consumer:
+      properties:
+        spring.json.trusted.packages: ru.otus.common.events
+
+logging:
+  level:
+    org.apache.kafka.streams: INFO
+
+app:
+  kafka:
+    topic:
+      payments: payment-service.payments
+      dlt: payment-service.payments-dlt
+  notification:
+    default-type: EMAIL

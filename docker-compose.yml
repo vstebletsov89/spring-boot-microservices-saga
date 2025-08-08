@@ -1,5 +1,22 @@
 services:
 
+  cassandra:
+    image: cassandra:5.0.5
+    container_name: cassandra
+    ports:
+      - "9042:9042"
+    environment:
+      CASSANDRA_CLUSTER_NAME: "notification-cluster"
+      CASSANDRA_DC: datacenter1
+      CASSANDRA_KEYSPACE: notification_keyspace
+    volumes:
+      - cassandra_data:/var/lib/cassandra
+    healthcheck:
+      test: [ "CMD-SHELL", "cqlsh -e 'describe keyspaces'" ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
   redis-event-cache:
     image: redis:8.2.0-alpine
     container_name: redis-event-cache
@@ -244,6 +261,29 @@ services:
     networks:
       - app-network
 
+  kafka-connect:
+    image: confluentinc/cp-kafka-connect:7.5.0
+    container_name: kafka-connect
+    depends_on:
+      - kafka
+    ports:
+      - "8090:8083"
+    environment:
+      CONNECT_BOOTSTRAP_SERVERS: kafka:29092
+      CONNECT_REST_ADVERTISED_HOST_NAME: kafka-connect
+      CONNECT_GROUP_ID: kafka-connect-group
+      CONNECT_CONFIG_STORAGE_TOPIC: _connect-configs
+      CONNECT_OFFSET_STORAGE_TOPIC: _connect-offsets
+      CONNECT_STATUS_STORAGE_TOPIC: _connect-status
+      CONNECT_KEY_CONVERTER: org.apache.kafka.connect.storage.StringConverter
+      CONNECT_VALUE_CONVERTER: org.apache.kafka.connect.json.JsonConverter
+      CONNECT_VALUE_CONVERTER_SCHEMAS_ENABLE: "false"
+      CONNECT_KEY_CONVERTER_SCHEMAS_ENABLE: "false"
+      CONNECT_PLUGIN_PATH: /usr/share/java,/etc/kafka-connect/jars
+    volumes:
+      - ./connectors:/etc/kafka-connect/jars
+
+
   kafdrop:
     image: obsidiandynamics/kafdrop
     container_name: kafdrop
@@ -416,6 +456,7 @@ volumes:
   kafka-data:
   grafana_data:
   redis_event_data:
+  cassandra_data:
 
 networks:
   app-network:
