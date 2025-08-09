@@ -28,6 +28,56 @@ services:
     networks:
       - app-network
 
+  postgres-notification:
+    image: postgres:17-alpine
+    container_name: postgres-notification
+    restart: always
+    environment:
+      POSTGRES_DB: notifcationdb
+      POSTGRES_USER: pguser
+      POSTGRES_PASSWORD: pgpass
+    ports:
+      - "5438:5432"
+    volumes:
+      - pg_data_notification:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U pguser -d notifcationdb"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - app-network
+
+  notification-service:
+    build: ./notification-service
+    container_name: notification-service
+    ports:
+      - "8087:8080"
+    volumes:
+      - ./agents:/agents:ro
+    environment:
+      SERVER_PORT: 8080
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-notification:5432/notifcationdb
+      SPRING_DATASOURCE_DRIVER_CLASS_NAME: org.postgresql.Driver
+      SPRING_DATASOURCE_USERNAME: pguser
+      SPRING_DATASOURCE_PASSWORD: pgpass
+      SPRING_JPA_HIBERNATE_DDL_AUTO: none
+      SPRING_JPA_SHOW_SQL: "true"
+      JAVA_TOOL_OPTIONS: "-javaagent:/agents/opentelemetry-javaagent.jar"
+      OTEL_SERVICE_NAME: "notification-service"
+      OTEL_TRACES_EXPORTER: "otlp"
+      OTEL_EXPORTER_OTLP_ENDPOINT: "http://jaeger:4317"
+      OTEL_EXPORTER_OTLP_PROTOCOL: "grpc"
+      OTEL_METRICS_EXPORTER: "none"
+      OTEL_LOGS_EXPORTER: "none"
+    depends_on:
+      postgres-notification:
+        condition: service_healthy
+      jaeger:
+        condition: service_started
+    networks:
+      - app-network
+
   reservation-service:
     build: ./reservation-service
     container_name: reservation-service
