@@ -1,10 +1,10 @@
 databaseChangeLog:
   - changeSet:
-      id: 001-create-notifications
+      id: 001-create-notification-outbox
       author: vstebletsov
       changes:
         - createTable:
-            tableName: notifications
+            tableName: notification_outbox
             columns:
               - column:
                   name: id
@@ -23,22 +23,6 @@ databaseChangeLog:
               - column:
                   name: created_at
                   type: timestamp
-
-  - changeSet:
-      id: 002-create-notification-outbox
-      author: vstebletsov
-      changes:
-        - createTable:
-            tableName: notification_outbox
-            columns:
-              - column:
-                  name: id
-                  type: uuid
-                  constraints:
-                    primaryKey: true
-              - column:
-                  name: notification_id
-                  type: uuid
               - column:
                   name: status
                   type: text
@@ -50,7 +34,4 @@ databaseChangeLog:
                   type: timestamp
               - column:
                   name: next_attempt
-                  type: timestamp
-              - column:
-                  name: created_at
                   type: timestamp

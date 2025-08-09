@@ -10,7 +10,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import ru.otus.common.kafka.PaymentEvent;
 import ru.otus.notification.dlt.DltPublisher;
-import ru.otus.notification.entity.Notification;
 import ru.otus.notification.mapper.NotificationMapper;
 import ru.otus.notification.repository.ProcessedEventDao;
 import ru.otus.notification.service.NotificationWriter;
@@ -49,7 +48,7 @@ public class PaymentSinkTopology {
                     return;
                 }
 
-                Notification notification = mapper.toNotification(event);
+                var notification = mapper.toOutbox(event);
                 CompletableFuture
                         .runAsync(() -> writer.save(notification), writeExecutor)
                         .exceptionally(ex -> {
