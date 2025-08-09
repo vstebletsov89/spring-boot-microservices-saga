@@ -1,8 +1,7 @@
 package ru.otus.notification.entity;
 
+import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.data.cassandra.core.mapping.PrimaryKey;
-import org.springframework.data.cassandra.core.mapping.Table;
 import ru.otus.notification.enums.NotificationStatus;
 import ru.otus.notification.enums.NotificationType;
 
@@ -14,20 +13,33 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Table("notification_outbox")
+@Entity
+@Table(
+        name = "notification_outbox",
+        indexes = {
+                @Index(name = "idx_outbox_status_next", columnList = "status,next_attempt")
+        },
+        uniqueConstraints = {
+                @UniqueConstraint(name = "uq_outbox_event", columnNames = "event_id")
+        }
+)
 public class NotificationOutbox {
 
-    @PrimaryKey
+    @Id
     private UUID id;
+
+    private String eventId;
 
     private String userId;
 
+    @Enumerated(EnumType.STRING)
     private NotificationType type;
 
     private String message;
 
     private Instant createdAt;
 
+    @Enumerated(EnumType.STRING)
     private NotificationStatus status;
 
     private int retryCount;

@@ -10,9 +10,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import ru.otus.common.kafka.PaymentEvent;
 import ru.otus.notification.dlt.DltPublisher;
-import ru.otus.notification.mapper.NotificationMapper;
-import ru.otus.notification.repository.ProcessedEventDao;
-import ru.otus.notification.service.NotificationWriter;
+import ru.otus.notification.mapper.NotificationOutboxMapper;
+import ru.otus.notification.repository.NotificationOutboxRepository;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
@@ -23,9 +22,8 @@ import java.util.concurrent.Executor;
 public class PaymentSinkTopology {
 
     private final ObjectMapper objectMapper;
-    private final NotificationMapper mapper;
-    private final NotificationWriter writer;
-    private final ProcessedEventDao processedEventDao;
+    private final NotificationOutboxMapper mapper;
+    private final NotificationOutboxRepository repository;
     private final DltPublisher dltPublisher;
     private final Executor writeExecutor;
 
@@ -43,16 +41,13 @@ public class PaymentSinkTopology {
         stream.foreach((key, value) -> {
             try {
                 PaymentEvent event = objectMapper.readValue(value, PaymentEvent.class);
-
-                if (!processedEventDao.tryMarkProcessed(event.eventId())) {
-                    return;
-                }
-
-                var notification = mapper.toOutbox(event);
+                var outbox = mapper.toOutbox(event);
                 CompletableFuture
-                        .runAsync(() -> writer.save(notification), writeExecutor)
+                        .runAsync(() -> {
+                            repository.save(outbox);
+                        }, writeExecutor)
                         .exceptionally(ex -> {
-                            log.error("Async save failed for notification id={}", notification.getId(), ex);
+                            log.error("Async save failed for outbox id={}, eventId={}", outbox.getId(), outbox.getEventId(), ex);
                             dltPublisher.publish(dltTopic, key, value);
                             return null;
                         });
@@ -65,6 +60,4 @@ public class PaymentSinkTopology {
 
         return stream;
     }
-
-
 }

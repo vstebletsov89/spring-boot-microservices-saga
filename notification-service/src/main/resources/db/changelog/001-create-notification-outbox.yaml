@@ -11,27 +11,58 @@ databaseChangeLog:
                   type: uuid
                   constraints:
                     primaryKey: true
+                    nullable: false
+              - column:
+                  name: event_id
+                  type: text
+                  constraints:
+                    nullable: false
               - column:
                   name: user_id
                   type: text
+                  constraints:
+                    nullable: false
               - column:
                   name: type
                   type: text
+                  constraints:
+                    nullable: false
               - column:
                   name: message
                   type: text
+                  constraints:
+                    nullable: false
               - column:
                   name: created_at
-                  type: timestamp
+                  type: timestamp with time zone
+                  defaultValueComputed: now()
               - column:
                   name: status
                   type: text
+                  constraints:
+                    nullable: false
               - column:
                   name: retry_count
                   type: int
+                  defaultValueNumeric: 0
               - column:
                   name: last_attempt
-                  type: timestamp
+                  type: timestamp with time zone
               - column:
                   name: next_attempt
-                  type: timestamp
+                  type: timestamp with time zone
+                  defaultValueComputed: now()
+
+        - addUniqueConstraint:
+            tableName: notification_outbox
+            columnNames: event_id
+            constraintName: uq_outbox_event
+
+        - createIndex:
+            tableName: notification_outbox
+            indexName: idx_outbox_status_next
+            columns:
+              - column:
+                  name: status
+              - column:
+                  name: next_attempt

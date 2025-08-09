@@ -1,22 +1,5 @@
 services:
 
-  cassandra:
-    image: cassandra:5.0.5
-    container_name: cassandra
-    ports:
-      - "9042:9042"
-    environment:
-      CASSANDRA_CLUSTER_NAME: "notification-cluster"
-      CASSANDRA_DC: datacenter1
-      CASSANDRA_KEYSPACE: notification_keyspace
-    volumes:
-      - cassandra_data:/var/lib/cassandra
-    healthcheck:
-      test: [ "CMD-SHELL", "cqlsh -e 'describe keyspaces'" ]
-      interval: 30s
-      timeout: 10s
-      retries: 5
-
   redis-event-cache:
     image: redis:8.2.0-alpine
     container_name: redis-event-cache

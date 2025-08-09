@@ -1,6 +1,5 @@
 package ru.otus.notification.mapper;
 
-import com.datastax.oss.driver.api.core.uuid.Uuids;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import ru.otus.common.kafka.PaymentEvent;
@@ -12,29 +11,26 @@ import java.time.Instant;
 import java.util.UUID;
 
 @Component
-public class NotificationMapper {
+public class NotificationOutboxMapper {
 
     private final NotificationType defaultType;
 
-    public NotificationMapper(@Value("${app.notification.default-type}") NotificationType defaultType) {
+    public NotificationOutboxMapper(@Value("${app.notification.default-type}") NotificationType defaultType) {
         this.defaultType = defaultType;
     }
 
-    public NotificationOutbox toOutbox(PaymentEvent event) {
-        String msg = formatMessage(event);
-        UUID id = Uuids.timeBased();
-        Instant now = Instant.now();
-
+    public NotificationOutbox toOutbox(PaymentEvent e) {
         return NotificationOutbox.builder()
-                .id(id)
-                .userId(event.userId())
+                .id(UUID.randomUUID())
+                .eventId(e.eventId())
+                .userId(e.userId())
                 .type(defaultType)
-                .message(msg)
-                .createdAt(event.occurredAt())
+                .message(formatMessage(e))
+                .createdAt(e.occurredAt())
                 .status(NotificationStatus.NEW)
                 .retryCount(0)
                 .lastAttempt(null)
-                .nextAttempt(now)
+                .nextAttempt(Instant.now())
                 .build();
     }
 
