@@ -19,7 +19,7 @@ import java.util.concurrent.Executor;
 @Slf4j
 @Configuration
 @RequiredArgsConstructor
-public class PaymentSinkTopology {
+public class PaymentConsumer {
 
     private final ObjectMapper objectMapper;
     private final NotificationOutboxMapper mapper;
