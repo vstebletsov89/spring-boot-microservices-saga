@@ -40,12 +40,11 @@ public class PaymentConsumer {
 
         stream.foreach((key, value) -> {
             try {
+                log.info("Received Payment Event: {}", objectMapper.writeValueAsString(value));
                 PaymentEvent event = objectMapper.readValue(value, PaymentEvent.class);
                 var outbox = mapper.toOutbox(event);
                 CompletableFuture
-                        .runAsync(() -> {
-                            repository.save(outbox);
-                        }, writeExecutor)
+                        .runAsync(() -> repository.save(outbox), writeExecutor)
                         .exceptionally(ex -> {
                             log.error("Async save failed for outbox id={}, eventId={}", outbox.getId(), outbox.getEventId(), ex);
                             dltPublisher.publish(dltTopic, key, value);

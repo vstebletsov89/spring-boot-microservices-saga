@@ -294,28 +294,42 @@ services:
     networks:
       - app-network
 
-  kafka-connect:
-    image: confluentinc/cp-kafka-connect:7.5.0
-    container_name: kafka-connect
+  kafka-init:
+    image: apache/kafka:4.0.0
     depends_on:
-      - kafka
-    ports:
-      - "8090:8083"
-    environment:
-      CONNECT_BOOTSTRAP_SERVERS: kafka:29092
-      CONNECT_REST_ADVERTISED_HOST_NAME: kafka-connect
-      CONNECT_GROUP_ID: kafka-connect-group
-      CONNECT_CONFIG_STORAGE_TOPIC: _connect-configs
-      CONNECT_OFFSET_STORAGE_TOPIC: _connect-offsets
-      CONNECT_STATUS_STORAGE_TOPIC: _connect-status
-      CONNECT_KEY_CONVERTER: org.apache.kafka.connect.storage.StringConverter
-      CONNECT_VALUE_CONVERTER: org.apache.kafka.connect.json.JsonConverter
-      CONNECT_VALUE_CONVERTER_SCHEMAS_ENABLE: "false"
-      CONNECT_KEY_CONVERTER_SCHEMAS_ENABLE: "false"
-      CONNECT_PLUGIN_PATH: /usr/share/java,/etc/kafka-connect/jars
-    volumes:
-      - ./connectors:/etc/kafka-connect/jars
+      kafka:
+        condition: service_healthy
+    networks:
+      - app-network
+    entrypoint: |
+      bash -lc '
+      set -euo pipefail
 
+      echo "[kafka-init] waiting for broker at kafka:29092"
+      for i in $(seq 1 30); do
+        if /opt/kafka/bin/kafka-broker-api-versions.sh --bootstrap-server kafka:29092 >/dev/null 2>&1; then
+          echo "[kafka-init] broker is reachable."
+          break
+        fi
+        sleep 1
+      done
+
+      /opt/kafka/bin/kafka-broker-api-versions.sh --bootstrap-server kafka:29092
+
+      echo "[kafka-init] creating topics ..."
+      /opt/kafka/bin/kafka-topics.sh --bootstrap-server kafka:29092 \
+        --create --if-not-exists --topic payment-service.payments \
+        --partitions 1 --replication-factor 1
+
+      /opt/kafka/bin/kafka-topics.sh --bootstrap-server kafka:29092 \
+        --create --if-not-exists --topic payment-service.payments-dlt \
+        --partitions 1 --replication-factor 1
+
+      echo "[kafka-init] listing topics:"
+      /opt/kafka/bin/kafka-topics.sh --bootstrap-server kafka:29092 --list
+
+      echo "[kafka-init] done."
+      '
 
   kafdrop:
     image: obsidiandynamics/kafdrop
@@ -479,6 +493,7 @@ services:
       - app-network
 
 volumes:
+  pg_data_notification:
   pg_data_flightquery:
   pg_data_flight:
   pg_data_reservation:

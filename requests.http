@@ -47,7 +47,7 @@ Content-Type: application/json
 }
 
 ### Variables
-@bookingId = cf2ad83f-3ea9-4a92-9ff2-a9af0bb642fd
+@bookingId = 5d391b28-9631-4ff6-baf3-8ce92b7bbe4e
 
 ### axon_aggregate_identifier=cf2ad83f-3ea9-4a92-9ff2-a9af0bb642fd
 

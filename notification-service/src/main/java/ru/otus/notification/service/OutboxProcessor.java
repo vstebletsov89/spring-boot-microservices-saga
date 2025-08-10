@@ -19,6 +19,7 @@ public class OutboxProcessor {
 
     @Transactional
     public void processOne(UUID id) {
+        log.info("Processing notification outbox {}", id);
         var notificationOutbox = repository.findById(id).orElseThrow();
 
         try {
