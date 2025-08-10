@@ -8,8 +8,8 @@ databaseChangeLog:
             columns:
               - column: { name: flight_number, value: "AA1001" }
               - column: { name: status, value: "SCHEDULED" }
-              - column: { name: departure_time, valueDate: "2025-08-01 08:00:00" }
-              - column: { name: arrival_time, valueDate: "2025-08-01 12:00:00" }
+              - column: { name: departure_time, valueDate: "2026-08-01 08:00:00" }
+              - column: { name: arrival_time, valueDate: "2026-08-01 12:00:00" }
               - column: { name: price, valueNumeric: 350.00 }
               - column: { name: total_seats, valueNumeric: 180 }
               - column: { name: reserved_seats, valueNumeric: 0 }
@@ -21,8 +21,8 @@ databaseChangeLog:
             columns:
               - column: { name: flight_number, value: "DL2002" }
               - column: { name: status, value: "SCHEDULED" }
-              - column: { name: departure_time, valueDate: "2025-08-02 09:00:00" }
-              - column: { name: arrival_time, valueDate: "2025-08-02 13:30:00" }
+              - column: { name: departure_time, valueDate: "2026-08-02 09:00:00" }
+              - column: { name: arrival_time, valueDate: "2026-08-02 13:30:00" }
               - column: { name: price, valueNumeric: 400.00 }
               - column: { name: total_seats, valueNumeric: 200 }
               - column: { name: reserved_seats, valueNumeric: 0 }
@@ -34,8 +34,8 @@ databaseChangeLog:
             columns:
               - column: { name: flight_number, value: "AF3003" }
               - column: { name: status, value: "SCHEDULED" }
-              - column: { name: departure_time, valueDate: "2025-08-03 10:00:00" }
-              - column: { name: arrival_time, valueDate: "2025-08-03 14:45:00" }
+              - column: { name: departure_time, valueDate: "2026-08-03 10:00:00" }
+              - column: { name: arrival_time, valueDate: "2026-08-03 14:45:00" }
               - column: { name: price, valueNumeric: 320.00 }
               - column: { name: total_seats, valueNumeric: 150 }
               - column: { name: reserved_seats, valueNumeric: 0 }
@@ -47,8 +47,8 @@ databaseChangeLog:
             columns:
               - column: { name: flight_number, value: "EK4004" }
               - column: { name: status, value: "SCHEDULED" }
-              - column: { name: departure_time, valueDate: "2025-08-04 11:30:00" }
-              - column: { name: arrival_time, valueDate: "2025-08-04 18:30:00" }
+              - column: { name: departure_time, valueDate: "2026-08-04 11:30:00" }
+              - column: { name: arrival_time, valueDate: "2026-08-04 18:30:00" }
               - column: { name: price, valueNumeric: 500.00 }
               - column: { name: total_seats, valueNumeric: 200 }
               - column: { name: reserved_seats, valueNumeric: 0 }
@@ -60,8 +60,8 @@ databaseChangeLog:
             columns:
               - column: { name: flight_number, value: "EK4005" }
               - column: { name: status, value: "SCHEDULED" }
-              - column: { name: departure_time, valueDate: "2025-08-19 11:30:00" }
-              - column: { name: arrival_time, valueDate: "2025-08-19 18:30:00" }
+              - column: { name: departure_time, valueDate: "2026-08-19 11:30:00" }
+              - column: { name: arrival_time, valueDate: "2026-08-19 18:30:00" }
               - column: { name: price, valueNumeric: 500.00 }
               - column: { name: total_seats, valueNumeric: 220 }
               - column: { name: reserved_seats, valueNumeric: 0 }
@@ -73,8 +73,8 @@ databaseChangeLog:
             columns:
               - column: { name: flight_number, value: "JL5005" }
               - column: { name: status, value: "SCHEDULED" }
-              - column: { name: departure_time, valueDate: "2025-08-05 07:45:00" }
-              - column: { name: arrival_time, valueDate: "2025-08-05 15:45:00" }
+              - column: { name: departure_time, valueDate: "2026-08-05 07:45:00" }
+              - column: { name: arrival_time, valueDate: "2026-08-05 15:45:00" }
               - column: { name: price, valueNumeric: 470.00 }
               - column: { name: total_seats, valueNumeric: 190 }
               - column: { name: reserved_seats, valueNumeric: 0 }
